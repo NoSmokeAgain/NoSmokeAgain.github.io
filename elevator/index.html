@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<!--site:meta-->
+<meta name="description" content="把各國乘客塞進電梯，不能超重">
+<link rel="canonical" href="https://nosmokeagain.github.io/elevator/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="電梯超載｜三分鐘遊樂場">
+<meta property="og:description" content="把各國乘客塞進電梯，不能超重">
+<meta property="og:url" content="https://nosmokeagain.github.io/elevator/">
+<meta property="og:image" content="https://nosmokeagain.github.io/elevator/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>電梯超載</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<style>
+:root{--bg:#f1ede4;--ink:#22201c;--mute:#7c766a;--y:#ffcf3a;--r:#e5483b;--g:#3f9b5a;--card:#fffdf7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#f1ede4;--ink:#22201c;--mute:#7c766a;--card:#fffdf7}}
+:root[data-theme="dark"]{--bg:#f1ede4;--ink:#22201c;--mute:#7c766a;--card:#fffdf7}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+#wrap{position:fixed;inset:0;display:flex;justify-content:center}
+#stage{position:relative;width:100%;max-width:520px;height:100%}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+#ctrl{position:absolute;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom));display:flex;gap:10px;justify-content:center;z-index:2;padding:0 14px}
+#ctrl[hidden]{display:none}
+.btn{border:3px solid var(--ink);background:var(--y);font-family:inherit;font-weight:900;font-size:18px;padding:13px 20px;border-radius:10px;box-shadow:0 4px 0 var(--ink);color:var(--ink);cursor:pointer;line-height:1}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn.ghost{background:var(--card);font-size:15px}
+.btn.big{font-size:22px;padding:16px 34px}
+#mute{position:absolute;top:max(10px,env(safe-area-inset-top));right:10px;z-index:3;width:38px;height:38px;border:3px solid var(--ink);border-radius:10px;background:var(--card);font-size:16px}
+.ov{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px 20px;background:rgba(241,237,228,.97);text-align:center;overflow:auto}
+.ov[hidden]{display:none!important}
+h1{margin:0;font-size:clamp(46px,14vw,66px);font-weight:900;line-height:1.05}
+h1 em{font-style:normal;color:var(--r)}
+.sub{margin:0;color:var(--mute);font-size:15px;line-height:1.7;font-weight:700}
+.rules{background:var(--card);border:3px solid var(--ink);border-radius:12px;padding:12px 16px;text-align:left;font-size:14px;font-weight:700;line-height:1.8;max-width:320px}
+.score{font-size:96px;font-weight:900;line-height:.9;margin:0;font-variant-numeric:tabular-nums}
+.score small{font-size:26px}
+.title{font-size:26px;font-weight:900;margin:0;background:var(--ink);color:var(--y);padding:4px 12px;border-radius:6px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:340px}
+.stats div{background:var(--card);border:3px solid var(--ink);border-radius:10px;padding:8px 4px}
+.stats b{display:block;font-size:22px}
+.stats span{font-size:12px;color:var(--mute);font-weight:700}
+#shot{max-width:200px;max-height:34vh;border:3px solid var(--ink);border-radius:8px;background:#fff}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.toast{margin:0;font-size:14px;font-weight:800;color:var(--g);min-height:18px}
+.hint{margin:0;font-size:12px;color:var(--mute)}
+#err{position:absolute;inset:auto 0 40% 0;text-align:center;font-weight:800;color:var(--r);z-index:9}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="stage">
+  <canvas id="cv"></canvas>
+  <button id="mute" aria-label="聲音開關">🔊</button>
+  <div id="ctrl" hidden><button class="btn ghost" id="skip">請他等下一班</button><button class="btn" id="close">關門 ▶◀</button></div>
+
+  <div class="ov" id="intro">
+    <h1>電梯<em>超載</em></h1>
+    <p class="sub">把人塞進電梯，越滿越好。<br>但超過載重，電梯會嗶。</p>
+    <div class="rules">👆 左右拖曳，放手就把人丟進去<br>🚨 超重 3 次，電梯罷工<br>🚪 門關不起來的，會被擠出去</div>
+    <button class="btn big" id="go">開門</button>
+    <p class="hint" id="best"></p>
+  </div>
+
+  <div class="ov" id="end" hidden>
+    <img id="shot" alt="塞滿的電梯">
+    <p class="score"><span id="sc">0</span><small> 分</small></p>
+    <p class="title" id="tt"></p>
+    <p class="sub" id="td"></p>
+    <div class="stats"><div><b id="sN">0</b><span>塞進幾人</span></div><div><b id="sF">0%</b><span>空間</span></div><div><b id="sK">0</b><span>公斤</span></div></div>
+    <div class="row"><button class="btn big" id="again">再搭一次</button><button class="btn ghost" id="copy">複製戰績</button></div>
+    <p class="toast" id="toast"></p>
+  </div>
+  <div id="err"></div>
+</div></div>
+
+<script>
+'use strict';
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d'),$=id=>document.getElementById(id);
+if(!window.Matter){$('err').textContent='物理引擎載入失敗，請重新整理';}
+const {Engine,Bodies,Body,Composite,Events}=window.Matter||{};
+let W=0,H=0,dpr=1;
+function resize(){const r=cv.getBoundingClientRect();dpr=Math.min(2,window.devicePixelRatio||1);W=r.width;H=r.height;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',resize);
+
+/* ---------- audio ---------- */
+let ac=null,master=null,nb=null,muted=false,music=null;
+try{muted=localStorage.getItem('el_mute')==='1'}catch(e){}
+$('mute').textContent=muted?'🔇':'🔊';
+function silentWav(){const n=800,b=new ArrayBuffer(44+n),v=new DataView(b),w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,'data');v.setUint32(40,n,true);for(let i=0;i<n;i++)v.setUint8(44+i,128);return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
+function initAudio(){if(ac){if(ac.state==='suspended')ac.resume();return}
+  try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+  try{const a=new Audio(silentWav());a.loop=true;a.play().catch(()=>{})}catch(e){}
+  const C=window.AudioContext||window.webkitAudioContext;if(!C)return;ac=new C();master=ac.createGain();master.gain.value=muted?0:.9;master.connect(ac.destination);
+  nb=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}
+function env(g,t,a,p,d){g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(p,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+d)}
+function osc(type,f,t,d,p,f2,dst){if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);env(g,t,.005,p,d);o.connect(g);g.connect(dst||master);o.start(t);o.stop(t+d+.05)}
+function noise(t,d,p,type,f,q){if(!ac)return;const s=ac.createBufferSource();s.buffer=nb;const fl=ac.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q||1;const g=ac.createGain();env(g,t,.003,p,d);s.connect(fl);fl.connect(g);g.connect(master);s.start(t,Math.random()*.5);s.stop(t+d+.05)}
+const T=()=>ac?ac.currentTime:0;
+const sfx={
+  thud(m){const t=T();osc('sine',140-Math.min(80,m*.6),t,.12,.5,45);noise(t,.05,.2,'lowpass',500)},
+  oof(){const t=T(),f=180+Math.random()*160;osc('triangle',f,t,.16,.18,f*.6)},
+  alarm(){const t=T();for(let i=0;i<4;i++)osc('square',1900,t+i*.22,.13,.12)},
+  ding(){const t=T();osc('sine',1046,t,.6,.3);osc('sine',1318,t+.25,.9,.25)},
+  door(){const t=T();noise(t,.9,.15,'bandpass',300,.8)},
+  pop(){const t=T();osc('sine',500,t,.18,.3,1400)},
+  pick(){const t=T();osc('triangle',660,t,.06,.12)}
+};
+function startMusic(){if(!ac||music)return;const bus=ac.createGain();bus.gain.value=.12;bus.connect(master);let t0=ac.currentTime+.1,i=0,alive=true;
+  const CH=[[60,64,67,71],[57,60,64,67],[62,65,69,72],[55,59,62,65]],mf=m=>440*Math.pow(2,(m-69)/12),spb=.5;
+  function tick(){if(!alive)return;while(t0<ac.currentTime+.6){const ch=CH[Math.floor(i/8)%4];osc('sine',mf(ch[i%4]+(i%8>3?12:0)),t0,spb*.9,.5,null,bus);if(i%4===0)osc('sine',mf(ch[0]-24),t0,spb*1.8,.6,null,bus);i++;t0+=spb/2}music.tm=setTimeout(tick,150)}
+  music={stop(){alive=false;clearTimeout(music.tm);bus.gain.setTargetAtTime(0,ac.currentTime,.2);music=null}};tick()}
+
+/* ---------- people ---------- */
+const SKIN=['#ffdfc4','#f0c08f','#d9a066','#b9783f','#8d5524','#5c3a1e'];
+const HAIR=['#1d1a17','#3b2416','#6a4423','#b0763a','#d9b56a','#8a8a8a','#c0392b'];
+const SHIRT=['#e5483b','#3d7ae0','#3f9b5a','#ffcf3a','#9b59b6','#ff8fab','#1abc9c','#e67e22','#34495e','#f5f5f5'];
+const PEOPLE=[['阿明','🇹🇼','借過借過'],['小美','🇹🇼','誰踩到我'],['阿嬤','🇹🇼','少年欸擠一下'],['Kenji','🇯🇵','すみません'],['Yuna','🇰🇷','죄송해요'],['Diego','🇲🇽','¡Perdón!'],['Amara','🇳🇬','Excuse me!'],['Olga','🇺🇦','Ой!'],['Priya','🇮🇳','Sorry ji'],['Tom','🇺🇸','Oops!'],['Lars','🇸🇪','Förlåt'],['Fatima','🇲🇦','Pardon'],['Linh','🇻🇳','Xin lỗi'],['Somchai','🇹🇭','ขอโทษครับ'],['Ana','🇧🇷','Desculpa!'],['Pierre','🇫🇷','Pardon!'],['Hans','🇩🇪','Entschuldigung'],['Siti','🇮🇩','Maaf ya'],['Juan','🇵🇭','Sorry po'],['Chloe','🇦🇺','No worries'],['Ahmed','🇪🇬','Pardon'],['Mei','🇸🇬','Aiyo'],['Leo','🇨🇦','Sorry!'],['Sven','🇳🇴','Unnskyld']];
+const TYPES=[// name, w, h, kg range, weight
+  ['小朋友',32,60,[18,32],1],['瘦高',38,108,[48,62],1.2],['一般',50,100,[60,78],1.6],['阿嬤',46,78,[42,58],.8],['壯碩',62,104,[86,108],1],['圓滾滾',78,94,[92,128],1],['大肚叔',66,96,[82,100],.9]];
+const SAYS=['好擠','誰在推','我的腳！','呼吸不到','有人放屁','手機掉了','往裡面一點','我要下去','好熱','頭髮被夾到','不要再進來了'];
+let u=1;
+function makePerson(){let r=Math.random()*TYPES.reduce((a,t)=>a+t[4],0),ty=TYPES[0];for(const t of TYPES){r-=t[4];if(r<=0){ty=t;break}}
+  const p=PEOPLE[Math.random()*PEOPLE.length|0];
+  return{type:ty[0],w:ty[1]*u*(.94+Math.random()*.12),h:ty[2]*u*(.95+Math.random()*.1),kg:Math.round(ty[3][0]+Math.random()*(ty[3][1]-ty[3][0])),
+    name:p[0],flag:p[1],hi:p[2],skin:SKIN[Math.random()*SKIN.length|0],hair:HAIR[Math.random()*HAIR.length|0],shirt:SHIRT[Math.random()*SHIRT.length|0],
+    style:Math.random()*6|0,glasses:Math.random()<.25,squish:0,say:null}}
+
+function drawPerson(p,x,y,ang,alpha){
+  const w=p.w,h=p.h,kid=p.type==='小朋友',sq=Math.min(.16,p.squish*.04);
+  ctx.save();ctx.translate(x,y);ctx.rotate(ang||0);ctx.scale(1+sq,1-sq*.8);if(alpha!=null)ctx.globalAlpha=alpha;
+  const ink='#22201c';ctx.lineWidth=2.5;ctx.strokeStyle=ink;ctx.lineJoin='round';
+  const hr=Math.min(w*.46,h*(kid?.3:.2)),hy=-h/2+hr,bodyTop=hy+hr*.8,legH=h*.2,bodyBot=h/2-legH;
+  // legs
+  ctx.fillStyle='#3a3f55';for(const s of [-1,1]){rr(s*w*.17-w*.12,bodyBot-2,w*.24,legH+2,3);ctx.fill();ctx.stroke()}
+  // torso
+  const tw=p.type==='圓滾滾'?w:p.type==='大肚叔'?w*.95:w*.86;ctx.fillStyle=p.shirt;
+  if(p.type==='圓滾滾'||p.type==='大肚叔'){ctx.beginPath();ctx.ellipse(0,(bodyTop+bodyBot)/2+2,tw/2,(bodyBot-bodyTop)/2+3,0,0,7);ctx.fill();ctx.stroke()}
+  else{rr(-tw/2,bodyTop,tw,bodyBot-bodyTop,Math.min(12,tw*.3));ctx.fill();ctx.stroke()}
+  // arms
+  ctx.fillStyle=p.shirt;const up=p.squish>=3;for(const s of [-1,1]){ctx.save();ctx.translate(s*tw/2,bodyTop+6);ctx.rotate(s*(up?-2.6:.15));rr(-5,0,10,(bodyBot-bodyTop)*.7,5);ctx.fill();ctx.stroke();ctx.fillStyle=p.skin;ctx.beginPath();ctx.arc(0,(bodyBot-bodyTop)*.72,5,0,7);ctx.fill();ctx.stroke();ctx.restore()}
+  // head
+  ctx.fillStyle=p.skin;ctx.beginPath();ctx.arc(0,hy,hr,0,7);ctx.fill();ctx.stroke();
+  // hair
+  ctx.fillStyle=p.hair;
+  if(p.style===0){ctx.beginPath();ctx.arc(0,hy,hr,Math.PI*1.05,Math.PI*1.95);ctx.closePath();ctx.fill()}
+  else if(p.style===1){ctx.beginPath();ctx.arc(0,hy,hr+1,Math.PI*.95,Math.PI*2.05);ctx.lineTo(hr+1,hy+hr*.9);ctx.lineTo(hr*.7,hy+hr*.9);ctx.lineTo(hr*.7,hy-hr*.2);ctx.lineTo(-hr*.7,hy-hr*.2);ctx.lineTo(-hr*.7,hy+hr*.9);ctx.lineTo(-hr-1,hy+hr*.9);ctx.closePath();ctx.fill()}
+  else if(p.style===2){for(let i=0;i<7;i++){const a=Math.PI*(1.0+i/6);ctx.beginPath();ctx.arc(Math.cos(a)*hr*.95,hy+Math.sin(a)*hr*.95,hr*.32,0,7);ctx.fill()}}
+  else if(p.style===3){ctx.beginPath();ctx.arc(0,hy,hr,Math.PI*1.05,Math.PI*1.95);ctx.closePath();ctx.fill();ctx.beginPath();ctx.arc(0,hy-hr*1.05,hr*.38,0,7);ctx.fill()}
+  else if(p.style===4){ctx.beginPath();ctx.arc(-hr*.5,hy-hr*.7,hr*.35,0,7);ctx.arc(hr*.5,hy-hr*.7,hr*.35,0,7);ctx.fill()}
+  // face
+  const ex=hr*.38,ey=hy+hr*.05;ctx.fillStyle=ink;ctx.lineWidth=2;
+  if(p.squish>=3){for(const s of [-1,1]){ctx.beginPath();ctx.moveTo(s*ex-s*3,ey-3);ctx.lineTo(s*ex+s*1,ey);ctx.lineTo(s*ex-s*3,ey+3);ctx.stroke()}ctx.beginPath();ctx.ellipse(0,hy+hr*.5,hr*.18,hr*.14,0,0,7);ctx.fill()}
+  else{for(const s of [-1,1]){ctx.beginPath();ctx.arc(s*ex,ey,Math.max(1.6,hr*.1),0,7);ctx.fill()}ctx.beginPath();if(p.squish>=1){ctx.moveTo(-hr*.25,hy+hr*.5);ctx.lineTo(hr*.25,hy+hr*.45)}else ctx.arc(0,hy+hr*.32,hr*.25,.2*Math.PI,.8*Math.PI);ctx.stroke()}
+  if(p.glasses){ctx.lineWidth=1.6;for(const s of [-1,1]){ctx.beginPath();ctx.arc(s*ex,ey,hr*.22,0,7);ctx.stroke()}}
+  if(p.squish>=2){ctx.fillStyle='#7fd3ff';ctx.beginPath();ctx.arc(hr*.85,hy-hr*.3,2.6,0,7);ctx.fill()}
+  ctx.restore()}
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+function tag(p,x,y,big){const t=`${p.flag} ${p.name}`,k=`${p.kg}kg`;ctx.font=`800 ${big?13:11}px system-ui,sans-serif`;const w=Math.max(ctx.measureText(t).width,ctx.measureText(k).width)+12;
+  ctx.fillStyle='#fffdf7';ctx.strokeStyle='#22201c';ctx.lineWidth=2;rr(x-w/2,y-(big?34:30),w,big?32:28,6);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#22201c';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(t,x,y-(big?25:22));ctx.fillStyle=p.kg>=90?'#e5483b':'#3f9b5a';ctx.fillText(k,x,y-(big?11:9))}
+
+/* ---------- game ---------- */
+const LIMIT=900,QUEUE=24,MAXSTRIKE=3;
+let E=null,S=null,L={};
+function layout(){L.qY=56;L.elTop=Math.max(300,H*.36);L.elBot=H-92;L.EH=L.elBot-L.elTop;L.EW=Math.min(W-36,L.EH*.88,380);L.x0=(W-L.EW)/2;L.x1=L.x0+L.EW;L.dropY=L.elTop-58;u=L.EW/250}
+function newGame(){initAudio();resize();layout();
+  E=Engine.create();E.gravity.y=1.1;E.positionIterations=10;E.velocityIterations=8;
+  const th=60,o={isStatic:true,friction:.5,label:'wall'};
+  Composite.add(E.world,[Bodies.rectangle(W/2,L.elBot+th/2,L.EW+th*2,th,o),Bodies.rectangle(L.x0-th/2,L.elBot-L.EH,th,L.EH*2+400,o),Bodies.rectangle(L.x1+th/2,L.elBot-L.EH,th,L.EH*2+400,o)]);
+  const queue=[];for(let i=0;i<QUEUE;i++)queue.push(makePerson());
+  S={on:true,queue,inside:[],strikes:0,aim:W/2,holding:false,cool:0,msg:null,closing:0,kicked:[],kickedN:0,t:0,lastSay:0,done:false};
+  Events.on(E,'collisionStart',ev=>{for(const pr of ev.pairs){const a=pr.bodyA,b=pr.bodyB,v=Math.hypot(a.velocity.x-b.velocity.x,a.velocity.y-b.velocity.y);if(v>4){const p=(a.person||b.person);if(p){sfx.thud(p.kg);if(Math.random()<.35)sfx.oof()}}}});
+  $('intro').hidden=true;$('end').hidden=true;$('ctrl').hidden=false;startMusic()}
+const kgIn=()=>S.inside.reduce((a,b)=>a+b.person.kg,0);
+function drop(){if(!S||!S.on||S.cool>0||!S.queue.length||S.closing)return;const p=S.queue.shift();
+  const x=Math.max(L.x0+p.w/2+2,Math.min(L.x1-p.w/2-2,S.aim));
+  const b=Bodies.rectangle(x,L.elTop-p.h/2-8,p.w,p.h,{chamfer:{radius:Math.min(p.w,p.h)*.32},friction:.55,frictionStatic:.8,restitution:.04,density:p.kg/(p.w*p.h)*.0012});
+  b.person=p;Body.setAngularVelocity(b,(Math.random()-.5)*.04);Composite.add(E.world,b);S.inside.push(b);S.cool=.35;sfx.pick();
+  if(kgIn()>LIMIT){S.over={b,t:S.t+.7}}
+  if(!S.queue.length)setTimeout(()=>closeDoor(),1600)}
+function skip(){if(!S||!S.on||S.closing||!S.queue.length)return;const p=S.queue.shift();S.msg={text:`${p.name}：好啦我等下一班`,t:S.t};sfx.pick();if(!S.queue.length)setTimeout(()=>closeDoor(),600)}
+function closeDoor(){if(!S||!S.on||S.closing)return;S.closing=S.t;$('ctrl').hidden=true;sfx.door();
+  // anyone above the door line gets pushed out
+  for(const b of [...S.inside]){if(b.bounds.min.y<L.elTop-4){S.inside.splice(S.inside.indexOf(b),1);Composite.remove(E.world,b);S.kicked.push({p:b.person,x:b.position.x,y:b.position.y,a:b.angle,vx:(b.position.x<W/2?-1:1)*(120+Math.random()*80),vy:-260,va:(Math.random()-.5)*8});S.kickedN++;sfx.pop()}}
+  setTimeout(()=>{sfx.ding()},1100);setTimeout(()=>finish(),1900)}
+
+/* ---------- input ---------- */
+let down=false;
+cv.addEventListener('pointerdown',e=>{if(!S||!S.on||S.closing)return;initAudio();down=true;const r=cv.getBoundingClientRect();S.aim=e.clientX-r.left;try{cv.setPointerCapture(e.pointerId)}catch(_){}e.preventDefault()});
+cv.addEventListener('pointermove',e=>{if(!S||!S.on)return;const r=cv.getBoundingClientRect();if(down||e.pointerType==='mouse')S.aim=e.clientX-r.left});
+const up=()=>{if(!down)return;down=false;drop()};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',()=>down=false);
+$('skip').onclick=skip;$('close').onclick=closeDoor;
+
+/* ---------- draw ---------- */
+function drawElevator(){const {x0,x1,elTop,elBot,EW,EH}=L;
+  // shaft frame
+  ctx.fillStyle='#b9b4aa';rr(x0-16,elTop-20,EW+32,EH+32,8);ctx.fill();ctx.strokeStyle='#22201c';ctx.lineWidth=3;ctx.stroke();
+  const g=ctx.createLinearGradient(x0,0,x1,0);g.addColorStop(0,'#cfd3d6');g.addColorStop(.5,'#eef0f1');g.addColorStop(1,'#c8ccd0');ctx.fillStyle=g;ctx.fillRect(x0,elTop-10,EW,EH+10);
+  ctx.strokeStyle='rgba(0,0,0,.08)';ctx.lineWidth=1;for(let x=x0+EW/4;x<x1;x+=EW/4){ctx.beginPath();ctx.moveTo(x,elTop-10);ctx.lineTo(x,elBot);ctx.stroke()}
+  ctx.strokeStyle='#9aa0a6';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x0+6,elBot-EH*.42);ctx.lineTo(x1-6,elBot-EH*.42);ctx.stroke();
+  // floor
+  for(let i=0;i<10;i++){ctx.fillStyle=i%2?'#7d7468':'#8d8478';ctx.fillRect(x0+i*EW/10,elBot-6,EW/10,6)}
+  // door line
+  ctx.setLineDash([8,6]);ctx.strokeStyle='#e5483b';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(x0,elTop);ctx.lineTo(x1,elTop);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#e5483b';ctx.font='800 11px system-ui';ctx.textAlign='right';ctx.textBaseline='bottom';ctx.fillText('門關得起來的高度',x1-4,elTop-3);
+  // header panel
+  const kg=S?kgIn():0,over=kg>LIMIT;ctx.fillStyle='#22201c';rr(x0-16,elTop-118,124,30,6);ctx.fill();
+  ctx.fillStyle=over?'#ff5a4a':'#7dff9a';ctx.font='800 13px ui-monospace,monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(`${kg}/${LIMIT}kg`,x0+46,elTop-103);
+  const bw=EW;ctx.fillStyle='rgba(0,0,0,.15)';rr(x0,elBot+8,bw,10,5);ctx.fill();ctx.fillStyle=over?'#e5483b':kg>LIMIT*.85?'#ff9f1a':'#3f9b5a';rr(x0,elBot+8,Math.max(10,Math.min(bw,bw*kg/LIMIT)),10,5);ctx.fill();ctx.strokeStyle='#22201c';ctx.lineWidth=2;rr(x0,elBot+8,bw,10,5);ctx.stroke()}
+function drawDoors(k){if(k<=0)return;const {x0,elTop,elBot,EW,EH}=L,w=EW/2*Math.min(1,k);
+  for(const s of [0,1]){const x=s?x0+EW-w:x0;const g=ctx.createLinearGradient(x,0,x+w,0);g.addColorStop(0,'#aeb4ba');g.addColorStop(1,'#d9dde0');ctx.fillStyle=g;ctx.fillRect(x,elTop-10,w,EH+10);ctx.strokeStyle='#22201c';ctx.lineWidth=2;ctx.strokeRect(x,elTop-10,w,EH+10)}}
+function drawQueue(){if(!S)return;const q=S.queue;ctx.fillStyle='#22201c';ctx.font='800 13px system-ui';ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(`排隊中 ${q.length} 人`,14,22);
+  ctx.textAlign='left';ctx.fillText('🚨'.repeat(S.strikes)+'⚪'.repeat(MAXSTRIKE-S.strikes),14,42);
+  const n=Math.min(4,q.length-1);for(let i=1;i<=n;i++){const p=q[i],sc=.42,x=W-60-(i-1)*62+ (i===1?0:0),y=34;ctx.save();ctx.translate(x,y);ctx.scale(sc,sc);drawPerson(p,0,p.h/2,0,1);ctx.restore();
+    ctx.fillStyle=p.kg>=90?'#e5483b':'#22201c';ctx.font='800 11px system-ui';ctx.textAlign='center';ctx.fillText(p.kg+'kg',x,y+p.h*sc+10)}}
+function draw(){ctx.fillStyle='#f1ede4';ctx.fillRect(0,0,W,H);if(!S){return}
+  drawElevator();
+  for(const b of S.inside)drawPerson(b.person,b.position.x,b.position.y,b.angle);
+  for(const k of S.kicked)drawPerson(k.p,k.x,k.y,k.a);
+  drawDoors(S.closing?(S.t-S.closing-.15)/.8:0);
+  // hovering current person
+  if(S.on&&!S.closing&&S.queue.length){const p=S.queue[0],x=Math.max(L.x0+p.w/2+2,Math.min(L.x1-p.w/2-2,S.aim)),bob=Math.sin(S.t*6)*2;
+    ctx.strokeStyle='rgba(34,32,28,.25)';ctx.setLineDash([4,5]);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,L.elTop);ctx.lineTo(x,L.elBot);ctx.stroke();ctx.setLineDash([]);
+    const dy=L.elTop-p.h/2-8;drawPerson(p,x,dy+bob,0,S.cool>0?.4:1);tag(p,x,dy-p.h/2+bob-4,true)}
+  drawQueue();
+  // speech bubbles
+  for(const b of S.inside){const p=b.person;if(!p.say||S.t-p.say.t>1.6)continue;const x=b.position.x,y=b.bounds.min.y-6;ctx.font='800 12px system-ui';const w=ctx.measureText(p.say.text).width+14;const bx=Math.max(4,Math.min(W-w-4,x-w/2));
+    ctx.fillStyle='#fffdf7';ctx.strokeStyle='#22201c';ctx.lineWidth=2;rr(bx,y-24,w,22,8);ctx.fill();ctx.stroke();ctx.fillStyle='#22201c';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(p.say.text,bx+w/2,y-13)}
+  // messages
+  if(S.msg&&S.t-S.msg.t<1.8){ctx.font='900 18px system-ui';const w=ctx.measureText(S.msg.text).width+24,y=78;ctx.fillStyle=S.msg.bad?'#e5483b':'#22201c';rr(W/2-w/2,y-18,w,36,10);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(S.msg.text,W/2,y)}
+  if(S.over&&S.t>S.over.t-.7&&Math.floor(S.t*6)%2){ctx.fillStyle='rgba(229,72,59,.12)';ctx.fillRect(0,0,W,H)}
+}
+
+/* ---------- loop ---------- */
+let last=performance.now();
+function loop(ts){const dt=Math.min(.05,(ts-last)/1000);last=ts;
+  try{if(S&&E){S.t+=dt;S.cool=Math.max(0,S.cool-dt);
+      Engine.update(E,1000/60);if(dt>.025)Engine.update(E,1000/60);
+      // squish = number of contacts
+      for(const b of S.inside)b.person.squish=0;
+      for(const pr of E.pairs.list){if(!pr.isActive)continue;const a=pr.bodyA.parent,b=pr.bodyB.parent;if(a.person)a.person.squish++;if(b.person)b.person.squish++}
+      // random complaints
+      if(S.on&&S.t-S.lastSay>1.1&&S.inside.length>2){const c=S.inside.filter(b=>b.person.squish>=2);if(c.length){const b=c[Math.random()*c.length|0];b.person.say={text:Math.random()<.4?b.person.hi:SAYS[Math.random()*SAYS.length|0],t:S.t};S.lastSay=S.t}}
+      // overload
+      if(S.over&&S.t>=S.over.t){const b=S.over.b;S.over=null;if(S.inside.includes(b)){S.strikes++;sfx.alarm();S.msg={text:`嗶嗶嗶！超載！${b.person.name} 請出去`,t:S.t,bad:1};
+          S.inside.splice(S.inside.indexOf(b),1);Composite.remove(E.world,b);S.kicked.push({p:b.person,x:b.position.x,y:b.position.y,a:b.angle,vx:(b.position.x<W/2?-1:1)*160,vy:-300,va:(Math.random()-.5)*6});
+          if(S.strikes>=MAXSTRIKE){S.msg={text:'電梯罷工了 🛠️',t:S.t,bad:1};setTimeout(()=>closeDoor(),900)}}}
+      for(const k of S.kicked){k.x+=k.vx*dt;k.y+=k.vy*dt;k.vy+=900*dt;k.a+=k.va*dt}S.kicked=S.kicked.filter(k=>k.y<H+200)}
+    draw()}catch(err){console.error(err)}
+  requestAnimationFrame(loop)}
+
+/* ---------- end ---------- */
+const TITLES=[[90,'人肉俄羅斯方塊大師','一公斤都沒浪費，一吋都沒空著。'],[78,'捷運尖峰老手','板南線早上八點的你，就是這樣活下來的。'],[64,'大樓管理員','塞得還行，大家都還能呼吸。'],[48,'電梯好空','這台電梯還可以放一張沙發。'],[30,'嗶嗶嗶','電梯對你很有意見。'],[0,'電梯修理中','請改走樓梯。']];
+let best=0;try{best=+localStorage.getItem('el_best')||0}catch(e){}
+if(best)$('best').textContent='你的最高分：'+best;
+let shareText='';
+function finish(){if(!S||S.done)return;S.done=true;S.on=false;if(music)music.stop();
+  let area=0;for(const b of S.inside)area+=b.area;const fill=Math.min(1,area/(L.EW*L.EH)),kg=kgIn(),n=S.inside.length;
+  let score=Math.round(Math.min(100,(fill/.8)*80+(Math.min(kg,LIMIT)/LIMIT)*20)-S.strikes*6-S.kickedN*3);if(S.strikes>=MAXSTRIKE)score=Math.min(score,25);score=Math.max(0,score);
+  const [,title,desc]=TITLES.find(([k])=>score>=k);
+  // snapshot (doors open)
+  const pad=10,sw=L.EW+pad*2,sh=L.EH+40+pad,c=document.createElement('canvas');c.width=sw*2;c.height=sh*2;const cx=c.getContext('2d');
+  const keepClosing=S.closing;S.closing=0;draw();S.closing=keepClosing;
+  cx.drawImage(cv,(L.x0-pad)*dpr,(L.elTop-30)*dpr,sw*dpr,sh*dpr,0,0,sw*2,sh*2);$('shot').src=c.toDataURL('image/png');
+  $('sc').textContent=score;$('tt').textContent=title;$('td').textContent=desc;$('sN').textContent=n;$('sF').textContent=Math.round(fill*100)+'%';$('sK').textContent=kg;
+  if(score>best){best=score;try{localStorage.setItem('el_best',best)}catch(e){}}
+  const url=/^https?:$/.test(location.protocol)&&/github\.io/.test(location.host)?'\n'+location.href.split('#')[0]:'';
+  shareText=`🛗 我把 ${n} 個人塞進電梯，空間 ${Math.round(fill*100)}%、${kg} 公斤\n拿到 ${score} 分「${title}」${S.strikes?`（嗶了 ${S.strikes} 次）`:''}\n你塞得比我滿嗎？${url}`;
+  $('toast').textContent='';$('end').hidden=false}
+function copy(t){const ok=()=>$('toast').textContent='複製好了';
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(ok,()=>fb());else fb();
+  function fb(){const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,t.length);try{document.execCommand('copy');ok()}catch(e){$('toast').textContent='長按自己複製吧'}ta.remove()}}
+$('go').onclick=()=>{if(window.Matter)newGame()};$('again').onclick=()=>{if(window.Matter)newGame()};$('copy').onclick=()=>copy(shareText);
+$('mute').onclick=()=>{muted=!muted;$('mute').textContent=muted?'🔇':'🔊';try{localStorage.setItem('el_mute',muted?'1':'0')}catch(e){}if(master)master.gain.setTargetAtTime(muted?0:.9,ac.currentTime,.02)};
+document.addEventListener('visibilitychange',()=>{if(!ac)return;document.hidden?ac.suspend():ac.resume()});
+resize();requestAnimationFrame(loop);
+</script>
+</body>
+</html>

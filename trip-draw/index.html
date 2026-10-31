@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:meta-->
+<meta name="description" content="抽你的下一個旅行城市">
+<link rel="canonical" href="https://nosmokeagain.github.io/trip-draw/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="下一站抽籤｜三分鐘遊樂場">
+<meta property="og:description" content="抽你的下一個旅行城市">
+<meta property="og:url" content="https://nosmokeagain.github.io/trip-draw/">
+<meta property="og:image" content="https://nosmokeagain.github.io/trip-draw/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>下一站抽籤</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&family=Bebas+Neue&display=swap">
+<style>
+/* Layout: one column app. Gate screen splits into two doors (她 / 他). Each side has its own skin:
+   她 = boarding-pass on blush paper (serif, soft); 他 = neon departure board (condensed caps, dark).
+   Draw = split-flap style city roll → ticket card with 6-month price bars + 5 picks. Committed per-side looks, not light/dark themes. */
+:root{
+  --f-sans:"Noto Sans TC",system-ui,sans-serif; --f-serif:"Noto Serif TC","Songti TC",serif; --f-board:"Bebas Neue","Noto Sans TC",sans-serif;
+  /* gate */
+  --g-bg:#16151a; --g-ink:#f4f1ec;
+  /* her */
+  --h-bg:#f7ece6; --h-paper:#fffaf6; --h-ink:#3a2a2c; --h-mute:#8c7377; --h-acc:#c8536b; --h-rule:#ead6d0; --h-soft:#f3dcd8;
+  /* him */
+  --m-bg:#0c0f14; --m-panel:#141a22; --m-ink:#e9eef4; --m-mute:#7f8a99; --m-acc:#ffb020; --m-hot:#ff3d5a; --m-rule:#232c38;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{margin:0;background:var(--g-bg);color:var(--g-ink);font-family:var(--f-sans);-webkit-tap-highlight-color:transparent}
+body.her{background:var(--h-bg);color:var(--h-ink)}
+body.him{background:var(--m-bg);color:var(--m-ink);color-scheme:dark}
+.wrap{max-width:480px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;display:grid;gap:16px}
+
+/* ---------- gate ---------- */
+.gate h1{font:900 40px/1.15 var(--f-sans);margin:6px 0 0;text-wrap:balance}
+.gate p{margin:0;color:#b8b2aa;font-size:15px;line-height:1.7}
+.doors{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.door{border:0;border-radius:18px;padding:22px 14px 18px;cursor:pointer;display:grid;gap:8px;justify-items:center;text-align:center;min-height:220px;align-content:center;transition:transform .15s}
+.door:active{transform:scale(.97)}
+.door:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.door.her{background:var(--h-bg);color:var(--h-ink);font-family:var(--f-serif)}
+.door.him{background:var(--m-bg);color:var(--m-ink);border:1px solid #2a3442}
+.door .big{font-size:56px;line-height:1}
+.door.her .big{font:900 56px var(--f-serif);color:var(--h-acc)}
+.door.him .big{font:400 64px var(--f-board);color:var(--m-acc);text-shadow:0 0 18px #ffb02088}
+.door b{font-size:17px}
+.door small{font:500 12px var(--f-sans);opacity:.75;line-height:1.5}
+.note{font-size:12px;line-height:1.65;margin:0;opacity:.75}
+.door.locked{filter:grayscale(.85) brightness(.7);position:relative}
+.door.locked::after{content:"🔒";position:absolute;top:10px;right:12px;font-size:20px}
+.door.nope{animation:nope .4s}
+@keyframes nope{20%{transform:translateX(-10px) rotate(-2deg)}40%{transform:translateX(9px) rotate(2deg)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+.block{margin:0;min-height:0;font:900 17px/1.5 var(--f-sans);text-align:center;color:#ff6b6b;opacity:0}
+.block.on{animation:blk .35s cubic-bezier(.2,1.6,.5,1) forwards}
+@keyframes blk{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ---------- shared bits ---------- */
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.back{background:none;border:0;cursor:pointer;font:500 14px var(--f-sans);color:inherit;opacity:.7;padding:6px 0}
+.mute{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;cursor:pointer;padding:0;border:1px solid currentColor;background:transparent;color:inherit;opacity:.8}
+.mute svg{width:18px;height:18px}
+.filters{display:grid;gap:8px}
+.flab{font:700 12px var(--f-sans);letter-spacing:.12em;opacity:.7}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);border-radius:12px;overflow:hidden}
+.seg button{border:0;background:transparent;color:inherit;font:700 13px var(--f-sans);padding:10px 2px;cursor:pointer}
+.seg.n3{grid-template-columns:repeat(3,1fr)}
+.draw{border:0;border-radius:16px;padding:18px;cursor:pointer;font:900 22px var(--f-sans);letter-spacing:.06em;touch-action:manipulation}
+.draw:disabled{opacity:.6;cursor:default}
+.draw:focus-visible,.seg button:focus-visible,.back:focus-visible,.mute:focus-visible{outline:3px solid currentColor;outline-offset:2px}
+
+/* her skin */
+body.her .seg{border:1.5px solid var(--h-acc)}
+body.her .seg button[aria-pressed="true"]{background:var(--h-acc);color:#fff}
+body.her .draw{background:var(--h-acc);color:#fff;box-shadow:0 10px 24px -10px #c8536b99;font-family:var(--f-serif)}
+body.her h2{font:900 30px/1.2 var(--f-serif);margin:0;color:var(--h-ink)}
+body.her h2 em{font-style:normal;color:var(--h-acc)}
+/* him skin */
+body.him .seg{border:1px solid var(--m-rule);background:var(--m-panel)}
+body.him .seg button[aria-pressed="true"]{background:var(--m-acc);color:#111}
+body.him .draw{background:var(--m-acc);color:#111;font-family:var(--f-board);font-size:30px;letter-spacing:.12em;box-shadow:0 0 30px -6px #ffb020aa}
+body.him h2{font:400 46px/1 var(--f-board);margin:0;letter-spacing:.04em}
+body.him h2 em{font-style:normal;color:var(--m-acc)}
+
+/* ---------- roller ---------- */
+.roller{border-radius:16px;padding:18px 14px;text-align:center;display:grid;gap:4px;min-height:116px;align-content:center;overflow:hidden;position:relative}
+body.her .roller{background:var(--h-paper);border:1.5px dashed var(--h-rule)}
+body.him .roller{background:#05070a;border:1px solid var(--m-rule);box-shadow:inset 0 0 30px #000}
+.roller .city{font-size:42px;line-height:1.1;font-weight:900}
+body.her .roller .city{font-family:var(--f-serif);color:var(--h-ink)}
+body.him .roller .city{font:400 56px var(--f-board);color:var(--m-acc);letter-spacing:.06em;text-shadow:0 0 14px #ffb02066}
+.roller .ctry{font-size:13px;opacity:.7}
+.roller.spin .city{animation:flick .07s steps(1) infinite}
+@keyframes flick{50%{opacity:.55}}
+.roller.land .city{animation:land .45s cubic-bezier(.2,1.6,.5,1)}
+@keyframes land{0%{transform:scale(1.5);filter:blur(3px)}100%{transform:scale(1)}}
+
+/* ---------- ticket ---------- */
+.ticket{border-radius:18px;overflow:hidden;display:grid;animation:rise .5s cubic-bezier(.2,1.2,.5,1)}
+@keyframes rise{from{transform:translateY(24px);opacity:0}}
+.tk-head{padding:18px 18px 14px;display:grid;gap:4px;position:relative}
+.tk-route{display:flex;align-items:center;gap:10px;font-weight:900}
+.tk-route .code{font-size:34px;line-height:1}
+.tk-route .arrow{flex:1;height:2px;position:relative;opacity:.5;background:currentColor}
+.tk-route .arrow::after{content:"✈";position:absolute;right:-4px;top:-11px;font-size:16px}
+.tk-name{font-size:14px;opacity:.8}
+.tease{font-size:15px;font-weight:700;margin-top:4px}
+body.him .tease{font-family:var(--f-sans);color:var(--m-ink);opacity:.9}
+.tk-body{padding:14px 18px 18px;display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+.tk-body>*{min-width:0}
+.tk-cut{height:0;border-top:2px dashed;position:relative;margin:0 14px}
+.tk-cut::before,.tk-cut::after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%}
+.tk-cut::before{left:-24px}.tk-cut::after{right:-24px}
+.sec{font:700 12px var(--f-sans);letter-spacing:.14em;opacity:.65;margin:0}
+.price-now{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.price-now b{font-size:30px;font-variant-numeric:tabular-nums}
+.price-now span{font-size:13px;opacity:.7}
+.bars{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;align-items:end;height:120px}
+.bars .bc{display:grid;grid-template-rows:auto 1fr auto;gap:4px;height:100%;text-align:center;min-width:0}
+.bars .v{font:700 10px var(--f-sans);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bars .col{align-self:end;border-radius:6px 6px 2px 2px;transition:height .6s cubic-bezier(.2,1.2,.5,1)}
+.bars .m{font:500 11px var(--f-sans);opacity:.75}
+.bars .bc.best .m{opacity:1;font-weight:900}
+.evt{font-size:12px;line-height:1.6;margin:0;opacity:.85;overflow-wrap:anywhere}
+.picks{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:p}
+.picks li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;counter-increment:p}
+.picks li::before{content:counter(p);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:900 13px var(--f-sans)}
+.picks b{display:block;font-size:15px}
+.picks span{font-size:13px;opacity:.75;line-height:1.55}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.cbar{display:flex;justify-content:space-between;align-items:center;gap:10px;font:700 13px var(--f-sans);color:var(--m-hot);margin:-4px 0 -2px}
+.cbar button{border:1px solid var(--m-hot);background:transparent;color:var(--m-hot);font:700 12px var(--f-sans);border-radius:999px;padding:6px 12px;cursor:pointer}
+.cbar.done{display:none}
+.picks.censor li{position:relative;cursor:pointer;border-radius:8px}
+.picks.censor li>div{transition:filter .35s}
+.picks.censor li:not(.rev)>div{filter:blur(7px);-webkit-user-select:none;user-select:none}
+.picks.censor li:not(.rev)::after{content:"";position:absolute;left:40px;right:0;top:-4px;bottom:-4px;border-radius:6px;
+  background:repeating-conic-gradient(#ffffff1c 0 25%,#00000033 0 50%) 0 0/14px 14px;pointer-events:none}
+.picks.censor li.rev>div{animation:dec .4s ease-out}
+@keyframes dec{0%{filter:blur(7px)}100%{filter:blur(0)}}
+.picks.censor li:focus-visible{outline:2px solid var(--m-acc);outline-offset:2px}
+.links a{font:700 13px var(--f-sans);text-decoration:none;padding:9px 12px;border-radius:10px}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.acts button{border-radius:12px;padding:13px;font:900 15px var(--f-sans);cursor:pointer}
+.toast{font:700 13px var(--f-sans);min-height:1.2em;margin:0;text-align:center;opacity:0}
+.toast.on{animation:toast 2.4s forwards}
+@keyframes toast{8%,80%{opacity:1}100%{opacity:0}}
+#shareTxt{position:absolute;left:-9999px}
+
+body.her .ticket{background:var(--h-paper);box-shadow:0 18px 40px -22px #8c4a5588}
+body.her .tk-head{background:var(--h-acc);color:#fff;font-family:var(--f-serif)}
+body.her .tk-cut{border-color:var(--h-rule)}
+body.her .tk-cut::before,body.her .tk-cut::after{background:var(--h-bg)}
+body.her .bars .col{background:var(--h-soft)} body.her .bars .best .col{background:var(--h-acc)}
+body.her .picks li::before{background:var(--h-soft);color:var(--h-acc)}
+body.her .links a{background:var(--h-soft);color:var(--h-ink)}
+body.her .acts button{border:1.5px solid var(--h-acc);background:transparent;color:var(--h-acc)}
+body.her .acts button.pri{background:var(--h-acc);color:#fff}
+body.her .toast{color:var(--h-acc)}
+
+body.him .ticket{background:var(--m-panel);border:1px solid var(--m-rule)}
+body.him .tk-head{background:#05070a;color:var(--m-acc);font-family:var(--f-board);border-bottom:1px solid var(--m-rule)}
+body.him .tk-head .code{font-size:44px;letter-spacing:.06em}
+body.him .tk-name{font-family:var(--f-sans);color:var(--m-ink)}
+body.him .tk-cut{border-color:var(--m-rule)}
+body.him .tk-cut::before,body.him .tk-cut::after{background:var(--m-bg)}
+body.him .bars .col{background:#2a3442} body.him .bars .best .col{background:var(--m-acc);box-shadow:0 0 14px #ffb02088}
+body.him .picks li::before{background:var(--m-hot);color:#fff}
+body.him .links a{background:#1f2833;color:var(--m-ink)}
+body.him .acts button{border:1px solid var(--m-rule);background:transparent;color:var(--m-ink)}
+body.him .acts button.pri{background:var(--m-acc);color:#111;border-color:var(--m-acc)}
+body.him .toast{color:var(--m-acc)}
+
+.fxl{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
+.cf{position:absolute;top:-16px;width:9px;height:14px;border-radius:2px;animation:fall var(--d) cubic-bezier(.25,.6,.5,1) forwards}
+@keyframes fall{to{transform:translate(var(--x),105vh) rotate(var(--r))}}
+@media (prefers-reduced-motion:reduce){.roller .city,.ticket,.cf{animation:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap" id="app"></div>
+<textarea id="shareTxt" aria-hidden="true" tabindex="-1"></textarea>
+
+<script>
+(()=>{
+const app=document.getElementById('app');
+/* ---------- data ----------
+   f = 台北出發來回經濟艙（台幣，估），h = 中等飯店雙人房一晚（台幣，估），s = 季節組
+   her / him = 5 picks [title, detail]. Estimates for planning fun, not quotes. */
+const CITIES=[
+ {id:'tyo',city:'東京',ctry:'日本',code:'TYO',f:12000,h:4200,s:'jp',
+  her:[['藥妝補貨','唐吉訶德凌晨兩點還開著，妳也是'],['日本限定彩妝','限定色一出就斷貨，看到就拿'],['伊東屋文具','九層樓的文具，進去就出不來'],['中古名牌','A 級二手包價格會讓妳懷疑人生'],['東京香蕉蛋糕','同事會問妳怎麼又去日本']],
+  him:[['新宿黃金街','巷子窄到兩個人要側身，酒倒得很滿'],['澀谷夜店','進去是晚上，出來是早上'],['東京巨蛋看棒球','啤酒小姐背著桶走過來，你會一直舉手'],['秋葉原','大人的玩具店，錢包第一個陣亡'],['居酒屋＋立飲','高架橋下一杯生啤，比任何景點都日本']]},
+ {id:'osa',city:'大阪',ctry:'日本',code:'OSA',f:11000,h:3800,s:'jp',
+  her:[['心齋橋藥妝','藥妝店一間接一間，比價比到忘了吃飯'],['美國村古著','幾百日圓一件古著，最後買了二十件'],['551 蓬萊肉包','排隊十分鐘，吃完想再排一次'],['Pablo 起司塔','剛出爐的起司會流下來'],['阪急百貨','地下街甜點區，進去就是一小時']],
+  him:[['道頓堀串炸','醬汁只能沾一次，酒可以續很多杯'],['環球影城','騎上瑪利歐賽車，你就是三十歲的小孩'],['難波夜生活','小酒館一間換一間，回飯店靠導航'],['新世界通天閣','昭和老街配燒酒，時間好像停了'],['甲子園看阪神','阪神球迷的歌聲，會在你耳朵裡迴盪三天']]},
+ {id:'fuk',city:'福岡',ctry:'日本',code:'FUK',f:9500,h:3200,s:'jp',
+  her:[['福太郎明太子','回台灣冷藏剛好，但通常撐不到下飛機'],['博多通りもん','十個裝根本不夠送'],['あまおう草莓甜點','冬天到春天限定，錯過再等一年'],['天神地下街','地下街逛一圈，購物袋多三個'],['Canal City','逛累了還有噴水秀，然後繼續逛']],
+  him:[['中洲屋台','河邊路邊攤，坐下去就是一整晚'],['博多拉麵','在發源地吃，才知道台灣吃的差在哪'],['中洲酒吧街','九州最大的夜生活區，你懂的'],['福岡巨蛋','巨蛋的啤酒，比球賽還好看'],['牛腸鍋','牛腸鍋配燒酎，明天的事明天再說']]},
+ {id:'spk',city:'札幌',ctry:'日本',code:'CTS',f:14000,h:3600,s:'jp-snow',
+  her:[['ROYCE 生巧克力','北海道限定口味，機場買會後悔沒多買'],['白色戀人','可以自己畫的白色戀人，拍照比吃重要'],['六花亭葡萄夾心','當地人也排隊，就知道多好吃'],['小樽玻璃','手工玻璃很重，但妳會說沒關係'],['北海道乳製品','霜淇淋在零下吃，才是北海道']],
+  him:[['二世谷滑雪','世界等級的粉雪，摔下去也是軟的'],['薄野夜生活','北日本最大的酒吧區，零下也很熱'],['成吉思汗烤肉','羊肉配札幌生啤，一盤接一盤'],['札幌啤酒博物館','園區餐廳啤酒暢飲，時間到才會停'],['札幌雪祭','2 月初，冰雕比你還高']]},
+ {id:'oka',city:'沖繩',ctry:'日本',code:'OKA',f:7500,h:3800,s:'jp-south',
+  her:[['紅芋塔','不買紅芋塔，等於沒來沖繩'],['宮古島雪鹽','雪鹽霜淇淋，鹹甜剛好'],['琉球玻璃','杯子會發光，行李會超重'],['黑糖製品','黑糖帶回去，媽媽會問還有沒有'],['國際通雜貨','風獅爺一對，放門口保平安']],
+  him:[['潛水','青之洞窟的藍，手機拍不出來'],['美國村夜生活','北谷的夕陽配啤酒，今天的煩惱沒了'],['海線自駕','58 號公路一路向北，音樂開最大'],['泡盛','泡盛很烈，沖繩人說慢慢喝'],['美式漢堡','駐軍風漢堡，大到要用兩隻手']]},
+ {id:'sel',city:'首爾',ctry:'韓國',code:'SEL',f:9000,h:3600,s:'kr',
+  her:[['Olive Young 保養','店員會記得妳，因為妳每天都去'],['韓系彩妝','新色上市那週去，剛好'],['聖水洞小眾品牌','咖啡廳之外，這裡的衣服才是重點'],['東大門平價服飾','東大門半夜才熱鬧，跟妳一樣'],['人蔘、紅蔘保養品','保養品界的人蔘，越貴越想買']],
+  him:[['梨泰院／江南夜店','週末的夜店，排隊排到馬路上'],['弘大 live bar','現場的吉他聲，比任何歌單都好'],['烤肉配燒酒','五花肉配燒酒，第二攤是炸雞'],['汗蒸幕','整夜泡澡、躺著睡，比飯店還舒服'],['實彈射擊','真槍實彈，一輩子至少一次']]},
+ {id:'pus',city:'釜山',ctry:'韓國',code:'PUS',f:8500,h:3000,s:'kr',
+  her:[['三進魚糕','魚糕禮盒漂亮到捨不得拆'],['西面地下街','地下街比首爾便宜，所以買更多'],['Olive Young','保養品補貨，順便補一點新品'],['甘川洞文創','彩色村的手作小物，拍照也好看'],['韓國零食泡麵','超市掃貨，行李箱最後塞不下']],
+  him:[['廣安里夜景','週六晚上有無人機秀，酒吧位子要搶'],['札嘎其生魚片','現撈現切的生魚片，燒酒一瓶接一瓶'],['海雲台酒吧','海景酒吧，越晚越熱鬧'],['汗蒸幕','泡完汗蒸幕，宿醉減半'],['豬肉湯飯','豬肉湯飯，宿醉的最佳解藥']]},
+ {id:'bkk',city:'曼谷',ctry:'泰國',code:'BKK',f:9000,h:2600,s:'th',
+  her:[['Naraya 曼谷包','一次買十個送人，最後全部自己用'],['泰國精油','HARNN 的香味，回台灣還會想念'],['Jim Thompson 泰絲','絲巾送媽媽，抱枕套留給自己'],['恰圖恰週末市集','一萬五千攤，逛不完是正常的'],['7-11 零食','小老闆海苔，每次都買太少']],
+  him:[['屋頂酒吧','高空酒吧看曼谷夜景，酒很貴但值得'],['泰拳現場賽','泰拳現場比電視看起來痛十倍'],['考山路','考山路的啤酒很便宜，你的理智也是'],['Jodd Fairs 夜市','夜市大骨湯配啤酒，吃到半夜'],['正規泰式按摩','兩小時正規泰式按摩，比台灣一小時還便宜']]},
+ {id:'cnx',city:'清邁',ctry:'泰國',code:'CNX',f:9500,h:2000,s:'th',
+  her:[['手工銀飾','銀器街的手工銀飾，戴上就不想拔'],['大象褲','大象褲穿上去，就回不去了'],['手工皂、精油','週日夜市的手工皂，香到不像話'],['泰北咖啡豆','泰北咖啡豆，帶回去會被同事搶'],['手工陶瓷','青瓷杯盤很重，但很美']],
+  him:[['泰拳體驗課','一堂課下來，你會開始尊重泰國人'],['叢林飛索','在樹梢間尖叫，沒人聽得到'],['尼曼路酒吧','清邁的夜，比你想的熱鬧'],['大象保護區','不騎大象，幫牠洗澡，牠會噴你一身'],['越野機車','騎上素帖山看日落，下山找酒']]},
+ {id:'dps',city:'峇里島',ctry:'印尼',code:'DPS',f:14000,h:3000,s:'sea',
+  her:[['藤編包','藤編包配洋裝，IG 就交給它了'],['峇里島咖啡','麝香貓咖啡，喝一次就懂'],['SPA 精油','花瓣浴配精油，人生的意義'],['波西米亞洋裝','水明漾小店的洋裝，穿回台灣也好看'],['手工銀飾','手工銀飾，Celuk 村一條街']],
+  him:[['衝浪課','衝浪課一堂，就能站起來一下下'],['Beach Club','下午喝到晚上，夕陽是配菜'],['火山日出健行','凌晨出發看火山日出，值得早起'],['潛水','沉船潛點，海裡比岸上還熱鬧'],['庫塔夜生活','庫塔的夜，比白天還長']]},
+ {id:'sin',city:'新加坡',ctry:'新加坡',code:'SIN',f:11000,h:6000,s:'sea',
+  her:[['TWG 茶','TWG 的茶罐，擺著就很好看'],['Bacha Coffee','Bacha 咖啡的包裝，送誰都有面子'],['Charles & Keith','Charles & Keith 款式比台灣多'],['Irvins 鹹蛋魚皮','鹹蛋魚皮，一開封就停不下來'],['美珍香肉乾','現烤肉乾，排隊排到口水流']],
+  him:[['克拉碼頭酒吧','河邊一整排，從第一間喝到最後一間'],['濱海灣金沙賭場','外國旅客免費入場，21 歲以上，出來的錢包不一定'],['環球影城','大人也會在雲霄飛車上叫'],['小販中心','辣椒螃蟹配虎牌，手很髒心很爽'],['高空酒吧','金沙頂樓看夜景，酒錢別看']]},
+ {id:'kul',city:'吉隆坡',ctry:'馬來西亞',code:'KUL',f:9000,h:2400,s:'sea',
+  her:[['舊街場白咖啡','白咖啡一袋接一袋，回家才發現買太多'],['Royal Selangor 錫器','錫器很重，但送長輩很體面'],['卡椰醬','咖椰醬抹吐司，早餐就有南洋味'],['Vincci 平價鞋包','平價鞋包，一次買三雙'],['蠟染布','蠟染布做成絲巾，獨一無二']],
+  him:[['亞羅街','夜市吃完，隔壁就是酒吧'],['雲頂高原','賭場和主題樂園，一小時車程，冷的只有空氣'],['雙子塔夜景','雙子塔就在眼前，酒杯也在'],['武吉免登夜店','Changkat 一條街，喝到不知道幾點'],['黑風洞','272 階彩虹樓梯，宿醉爬會後悔']]},
+ {id:'sgn',city:'胡志明市',ctry:'越南',code:'SGN',f:8000,h:2200,s:'sea',
+  her:[['越南咖啡＋滴漏壺','越南咖啡配滴漏壺，早上就有儀式感'],['訂製奧黛','三天做好一件奧黛，拍照很值得'],['刺繡包','刺繡小包，一個一個都想要'],['漆器','漆器首飾盒，放什麼都高級'],['腰果、果乾','腰果一包接一包，像不用錢']],
+  him:[['范五老街','塑膠椅一坐，就起不來了'],['屋頂酒吧','西貢河夜景配調酒'],['古芝地道','爬地道、打實彈，男人的浪漫'],['摩托車夜遊','坐在地人機車後座，吃遍路邊攤'],['bia hơi 鮮啤','一杯十幾塊台幣，誰會只喝一杯']]},
+ {id:'dad',city:'峴港',ctry:'越南',code:'DAD',f:9000,h:2600,s:'sea',
+  her:[['會安訂製服','早上量身，隔天就能穿走'],['會安燈籠','燈籠可以折疊，但妳會買太多'],['越南咖啡','椰子咖啡一喝就上癮'],['藤編包','韓市場的藤編包，便宜到不敢相信'],['芒果乾、腰果','果乾腰果，伴手禮一次搞定']],
+  him:[['美溪沙灘衝浪','全年都有浪，沒有藉口'],['巴拿山','佛手黃金橋，拍照要搶位置'],['海景夜店','Sky36 高樓夜店，峴港最高的派對'],['海鮮配啤酒','海邊大排檔，海鮮比啤酒還便宜'],['機車騎海雲嶺','越南最美的彎道']]},
+ {id:'hkg',city:'香港',ctry:'香港',code:'HKG',f:7000,h:5500,s:'hk',
+  her:[['金飾珠寶','金飾款式比台灣多，價格看金價臉色'],['珍妮曲奇','珍妮曲奇要排隊，排到才算來過'],['海港城、ifc','海港城逛一天，腳會先投降'],['莎莎化妝品','化妝品比價，省下的錢再買一支'],['奇華餅家','熊貓曲奇，可愛到捨不得吃']],
+  him:[['蘭桂坊','週五晚上，人比酒多'],['跑馬地夜馬','十塊港幣入場，下注另計'],['太平山夜景','山頂纜車上去，香港人的驕傲'],['高空酒吧','ICC 頂樓 Ozone，城市在你腳下'],['大排檔','炒蟹配啤酒，香港的靈魂']]},
+ {id:'mfm',city:'澳門',ctry:'澳門',code:'MFM',f:6500,h:5000,s:'hk',
+  her:[['鉅記杏仁餅','杏仁餅一條街試吃到飽'],['葡式蛋撻','蛋撻要吃剛出爐的'],['豬肉乾','現烤豬肉乾，越吃越想買'],['路氹免稅精品','免稅店才是真正的目的地'],['葡國瓷磚紀念品','瓷磚杯墊，送人最有葡國味']],
+  him:[['賭場體驗','威尼斯人、永利，21 歲以上，運氣自備'],['澳門塔笨豬跳','233 公尺往下跳，腿會軟三天'],['澳門大賽車','11 月中，引擎聲震整座城'],['米其林美食','一晚吃兩攤，皮帶要鬆'],['表演秀','水舞間這種秀，看完只會說哇']]},
+ {id:'ceb',city:'宿霧',ctry:'菲律賓',code:'CEB',f:8500,h:2600,s:'sea',
+  her:[['7D 芒果乾','芒果乾永遠買太少'],['南洋珍珠','南洋珍珠，比台灣便宜很多'],['椰子油保養','椰子油護髮，曬完太陽剛好用'],['手工藤編','藤編包和家飾，行李箱又滿了'],['貝殼飾品','貝殼飾品，戴著就有海島感']],
+  him:[['跳島浮潛','海水透明到看得到海龜'],['峽谷溯溪','Kawasan 瀑布往下跳，尖叫有回音'],['IT Park 酒吧','宿霧的夜生活都在這'],['潛水','沙丁魚風暴，幾萬條魚圍著你轉'],['海鮮燒烤','現撈現烤配生力啤酒']]},
+ {id:'syd',city:'雪梨',ctry:'澳洲',code:'SYD',f:28000,h:7000,s:'au',
+  her:[['UGG','UGG 在澳洲買才划算'],['Aesop','Aesop 發源地，有些台灣買不到'],['Lucas 木瓜霜','木瓜霜一次買十條'],['麥蘆卡蜂蜜','麥蘆卡蜂蜜，等級越高越心痛'],['Tim Tam','Tim Tam 限定口味，超市掃貨']],
+  him:[['邦代衝浪','浪比你想的大'],['港灣大橋攀爬','爬到拱橋頂端，腿會抖'],['The Rocks 老酒吧','雪梨最老的 pub，歷史配啤酒'],['跨年煙火','12 月 31 日歌劇院前，全世界最早的煙火之一'],['看 NRL 或板球','澳洲人的週末，你也一起吼']]},
+ {id:'par',city:'巴黎',ctry:'法國',code:'PAR',f:32000,h:7500,s:'eu',
+  her:[['精品包退稅','退稅後比台灣便宜，所以不買是虧'],['法國藥妝','城市藥局的價格，會讓妳想搬來巴黎'],['Diptyque 香氛','Diptyque 的香，帶回家一整年'],['馬卡龍','馬卡龍一盒不夠，兩盒剛好'],['Mariage Frères 茶','百年茶葉老店，包裝就是藝術']],
+  him:[['紅磨坊歌舞秀','百年 cabaret 配香檳，別問價錢'],['看 PSG 足球','王子公園的吼聲，跟電視上不一樣'],['瑪黑區酒吧','巴黎最熱鬧的夜晚'],['塞納河夜遊','鐵塔整點閃燈，酒杯舉起來'],['葡萄酒品酒','酒窖課程，越喝越懂法國']]},
+ {id:'lon',city:'倫敦',ctry:'英國',code:'LON',f:33000,h:8000,s:'eu',
+  her:[['Fortnum & Mason','百年茶葉禮盒，送誰都體面'],['Liberty 印花','Liberty 花布，一看就知道是倫敦'],['Camden 古著','Camden 古著，翻到就是賺到'],['Jo Malone','Jo Malone 本店，香味比較多'],['Burberry Outlet','Outlet 折扣，理智會先下線']],
+  him:[['英超現場','票難搶，但值得'],['Pub crawl','一晚三間老酒館，英國人都這樣'],['Soho 夜生活','倫敦最吵的地方'],['西區音樂劇','歌劇魅影看完，換你去喝一杯'],['威士忌品飲','蘇格蘭威士忌，一杯就懂']]},
+ {id:'dxb',city:'杜拜',ctry:'阿聯',code:'DXB',f:25000,h:6500,s:'me',
+  her:[['黃金市集','黃金論克賣，理智論秒算'],['阿拉伯香水','Oud 沉香，一噴就很有錢'],['椰棗巧克力','椰棗巧克力，杜拜限定'],['杜拜購物中心','世界最大商場之一，帶好運動鞋'],['駱駝奶巧克力','駱駝奶巧克力，同事一定沒吃過']],
+  him:[['沙漠衝沙','越野車衝沙丘，胃先投降'],['高空跳傘','棕櫚島上空往下跳，心跳破表'],['帆船飯店酒吧','帳單也是七星級'],['Beach club','海濱派對從下午開始'],['哈里發塔','全世界最高的觀景台，腿會軟']]},
+ {id:'lax',city:'洛杉磯',ctry:'美國',code:'LAX',f:30000,h:7500,s:'us',
+  her:[['Outlet','Desert Hills 名牌折扣，逛到天黑'],['Trader Joe\\\'s','環保袋買回去，比包包還受歡迎'],['保健品','保健品一次補半年'],['Lululemon','Lululemon 美國價，買到後悔沒多買'],['Erewhon','網紅超市一杯果汁，打卡比喝重要']],
+  him:[['看 NBA','湖人主場，買不到前排也值得'],['環球影城','好萊塢園區，電影迷的天堂'],['拉斯維加斯','開四小時到賭城，只是剛好順路'],['好萊塢夜店','週末派對，排隊很長'],['聖塔莫尼卡衝浪','加州陽光配浪']]}
+];
+const TEASE={tyo:['錢包會比腳先累','首班電車才是你的回家時間'],osa:['吃的比買的多，買的比計畫多','大阪人很吵，你會更吵'],fuk:['近到週末就能來回，所以會一直來','屋台的燈一亮，今晚就不睡了'],
+ spk:['零下的天氣，買巧克力的手不會停','雪很深，酒更深'],oka:['海很藍，行李超重','白天潛水，晚上潛酒吧'],sel:['Olive Young 會記住妳的臉','燒酒是第一攤，不是最後一攤'],
+ pus:['比首爾便宜，所以買得比首爾多','海風很大，燒酒很順'],bkk:['東西太便宜，是一種危險','曼谷的夜很長，你的假很短'],cnx:['慢活之城，刷卡很快','白天練泰拳，晚上被啤酒打敗'],
+ dps:['拍照是正事，購物是順便……才怪','浪很大，Beach Club 的音樂更大'],sin:['城市很小，購物清單很長','賭場免費進，出來就不一定了'],kul:['白咖啡會讓妳想再來一次','雲頂山上，冷的只有天氣'],
+ sgn:['三天訂一件奧黛，三秒刷一次卡','塑膠椅坐下去，就起不來了'],dad:['燈籠很美，訂製服更危險','白天衝浪，晚上衝酒吧'],hkg:['金價每天在變，心動不會','週三晚上，跑馬地見'],
+ mfm:['杏仁餅是藉口，免稅店才是目的','21 歲以上，運氣自備'],ceb:['芒果乾永遠不夠分','海水很透明，計畫很模糊'],syd:['UGG 會自己跟妳回家','跨年那晚，雪梨比你先嗨'],
+ par:['退稅單會比明信片還多','紅磨坊的香檳，別問價錢'],lon:['下雨天最適合逛街，倫敦天天下雨','英超門票難搶，酒吧位子更難'],dxb:['黃金論克賣，理智論秒算','沙漠衝沙，荷包衝浪'],
+ lax:['Outlet 開車一小時，逛要一整天','開四小時到賭城，只是剛好順路']};
+/* seasonal multipliers by calendar month (1-12) + events */
+const SEASON={
+ 'jp':{11:1.1,12:1.15,1:1.05,2:1.25,3:1.2,4:1.25},
+ 'jp-snow':{11:.95,12:1.2,1:1.2,2:1.4,3:1.05,4:.95},
+ 'jp-south':{11:.95,12:1.1,1:1,2:1.2,3:1.1,4:1.15},
+ 'kr':{11:1,12:1.1,1:1,2:1.2,3:1,4:1.15},
+ 'th':{11:1.05,12:1.2,1:1.1,2:1.25,3:.95,4:1.2},
+ 'sea':{11:1,12:1.2,1:1.1,2:1.25,3:.95,4:1.1},
+ 'hk':{11:1.05,12:1.15,1:1,2:1.25,3:1,4:1.05},
+ 'au':{11:1,12:1.3,1:1.2,2:1.15,3:1,4:1.05},
+ 'eu':{11:.9,12:1.25,1:.9,2:1.15,3:.95,4:1.05},
+ 'me':{11:1.1,12:1.25,1:1.1,2:1.15,3:1.05,4:.95},
+ 'us':{11:1.05,12:1.25,1:.95,2:1.15,3:1,4:1}
+};
+const EVENTS={tyo:{3:'櫻花季',4:'櫻花季',11:'紅葉'},osa:{3:'櫻花季',4:'櫻花季',11:'紅葉'},fuk:{3:'櫻花季',1:'草莓季',2:'草莓季'},spk:{2:'札幌雪祭',12:'滑雪季',1:'滑雪季'},
+ oka:{1:'櫻花最早開'},bkk:{4:'宋干潑水節'},cnx:{4:'宋干潑水節',11:'天燈節'},mfm:{11:'澳門大賽車'},syd:{12:'跨年煙火'},sel:{4:'櫻花季'},pus:{4:'櫻花季'},hkg:{12:'聖誕燈飾'},lon:{12:'聖誕市集'},par:{12:'聖誕櫥窗'},dxb:{12:'跨年煙火'}};
+const MN=['','1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+function months(){const d=new Date(),out=[];for(let k=1;k<=6;k++){const m=(d.getMonth()+k)%12+1;out.push(m)}return out}
+function cost(c,m,nights){const k=(SEASON[c.s]||{})[m]||1;return Math.round((c.f*k+c.h*k*nights/2)/100)*100}
+const fmt=n=>'NT$'+n.toLocaleString('en-US');
+const AP={tyo:'nrt',osa:'kix',fuk:'fuk',spk:'cts',oka:'oka',sel:'icn',pus:'pus',bkk:'bkk',cnx:'cnx',dps:'dps',sin:'sin',kul:'kul',sgn:'sgn',dad:'dad',hkg:'hkg',mfm:'mfm',ceb:'ceb',syd:'syd',par:'cdg',lon:'lhr',dxb:'dxb',lax:'lax'};
+/* trip dates: the 15th of the cheapest month, back after the chosen nights */
+function tripDates(m){const now=new Date();let y=now.getFullYear();if(m<=now.getMonth()+1)y++;const a=new Date(y,m-1,15),b=new Date(y,m-1,15+nights);return[a,b]}
+const ymd=(d,sep)=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join(sep);
+function skyUrl(c,m){const[a,b]=tripDates(m),f=d=>ymd(d,'').slice(2);return`https://www.skyscanner.com.tw/transport/flights/tpe/${AP[c.id]}/${f(a)}/${f(b)}/?adultsv2=1&cabinclass=economy`}
+function agodaUrl(c,m){const[a]=tripDates(m);return`https://www.agoda.com/zh-tw/search?textToSearch=${encodeURIComponent(c.city)}&checkIn=${ymd(a,'-')}&los=${nights}&rooms=1&adults=2`}
+
+
+/* ---------- audio ---------- */
+let ac=null,master=null,nb=null,unlockEl=null,muted=false;
+try{muted=localStorage.getItem('td_mute')==='1'}catch(e){}
+function silentWav(){const n=4000,b=new ArrayBuffer(44+n),v=new DataView(b);let o=0;const w=t=>{for(const c of t)v.setUint8(o++,c.charCodeAt(0))},u32=x=>{v.setUint32(o,x,true);o+=4},u16=x=>{v.setUint16(o,x,true);o+=2};
+  w('RIFF');u32(36+n);w('WAVE');w('fmt ');u32(16);u16(1);u16(1);u32(8000);u32(8000);u16(1);u16(8);w('data');u32(n);for(let k=0;k<n;k++)v.setUint8(o++,128);return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
+function initAudio(){try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+  try{if(!unlockEl){unlockEl=new Audio(silentWav());unlockEl.loop=true;unlockEl.setAttribute('playsinline','')}unlockEl.play().catch(()=>{})}catch(e){}
+  if(ac){ac.resume&&ac.resume();return}
+  try{ac=new (window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=muted?0:1;master.connect(ac.destination);
+    nb=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);const d=nb.getChannelData(0);for(let k=0;k<d.length;k++)d[k]=Math.random()*2-1}catch(e){ac=null}}
+function tone(f,d,t='triangle',v=.06,at=0,slide){if(!ac)return;const s=ac.currentTime+at,o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.setValueAtTime(f,s);if(slide)o.frequency.exponentialRampToValueAtTime(slide,s+d);g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(g).connect(master);o.start(s);o.stop(s+d+.02)}
+function noise(d,v,f,at=0,type='bandpass'){if(!ac)return;const s=ac.currentTime+at,src=ac.createBufferSource(),fl=ac.createBiquadFilter(),g=ac.createGain();src.buffer=nb;fl.type=type;fl.frequency.value=f;g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.0001,s+d);src.connect(fl).connect(g).connect(master);src.start(s);src.stop(s+d+.02)}
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+const SFX={
+ her:{tick(){tone(1800+Math.random()*300,.04,'sine',.035)},land(){[76,79,83,88].forEach((m,k)=>tone(mtof(m),.5,'sine',.06,k*.09))},chime(){tone(mtof(88),.8,'sine',.05);tone(mtof(95),.8,'sine',.03,.05)},pick(){tone(1200,.06,'sine',.05)}},
+ him:{tick(){noise(.025,.18,2500,0,'highpass');tone(140,.03,'square',.04)},land(){tone(70,.35,'sine',.35,0,40);[60,63,67,72].forEach((m,k)=>tone(mtof(m),.2,'sawtooth',.05,k*.07));noise(.5,.12,800,.05)},chime(){tone(mtof(72),.15,'square',.05);tone(mtof(79),.25,'square',.05,.12)},pick(){tone(200,.05,'square',.06)}}
+};
+function setMute(m,btn){muted=m;try{localStorage.setItem('td_mute',m?'1':'0')}catch(e){}if(master)master.gain.setTargetAtTime(m?0:1,ac.currentTime,.02);if(btn)btn.innerHTML=icon()}
+const icon=()=>muted?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
+const fxl=document.createElement('div');fxl.className='fxl';document.body.appendChild(fxl);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function confetti(cols,n=70){if(reduce)return;for(let k=0;k<n;k++){const e=document.createElement('i');e.className='cf';e.style.left=Math.random()*100+'vw';e.style.background=cols[k%cols.length];
+  e.style.setProperty('--x',(Math.random()*160-80)+'px');e.style.setProperty('--r',(Math.random()*900-450)+'deg');e.style.setProperty('--d',(1.4+Math.random()*1.3)+'s');e.style.animationDelay=Math.random()*.25+'s';fxl.appendChild(e);setTimeout(()=>e.remove(),3000)}}
+
+/* ---------- state ---------- */
+let side=null,budget=0,nights=4,last=null,mineMem=null;
+try{budget=+(localStorage.getItem('td_budget')||0);nights=+(localStorage.getItem('td_nights')||4)}catch(e){}
+const BUDGETS=[[0,'不限'],[20000,'2萬內'],[35000,'3.5萬內'],[60000,'6萬內']];
+const NIGHTS=[[3,'3晚'],[4,'4晚'],[6,'6晚']];
+
+function gate(){
+  side=null;document.body.className='';
+  app.innerHTML=`<div class="gate">
+    <h1>你的下一張機票，<br>早就寫好了。</h1>
+    <p>抽一下就知道是哪裡。順便幫你算好半年內什麼時候飛最便宜，省下來的錢，剛好拿去多買一點。</p>
+  </div>
+  <div class="doors">
+    <button class="door her" id="dHer"><span class="big">她</span><b>抽城市＋必買清單</b><small>行李箱記得留一半空位</small></button>
+    <button class="door him" id="dHim"><span class="big">HIS</span><b>抽城市＋夜晚行程</b><small>這頁不要給她看到</small></button>
+  </div>
+  <p class="block" id="block" role="alert"></p>
+  <p class="note">價格是估的，衝動是真的。實際票價以訂票網站為準。</p>`;
+  let mine=mineMem;try{mine=localStorage.getItem('td_side')||mineMem}catch(e){}
+  const BLOCK={her:'女生不准偷看男生行程 🙈<br>他去哪裡玩，妳不需要知道。',him:'男生不准偷看女生行程 🙅<br>她的必買清單是秘密。'};
+  const open=s=>{initAudio();
+    if(mine&&mine!==s){const d=document.getElementById(s==='her'?'dHer':'dHim'),bl=document.getElementById('block');
+      d.classList.remove('nope');void d.offsetWidth;d.classList.add('nope');bl.innerHTML=BLOCK[mine];bl.classList.remove('on');void bl.offsetWidth;bl.classList.add('on');
+      tone(220,.18,'square',.07);tone(180,.25,'square',.07,.12);try{navigator.vibrate&&navigator.vibrate([40,40,40])}catch(e){}return}
+    mine=s;mineMem=s;try{localStorage.setItem('td_side',s)}catch(e){}room(s)};
+  document.getElementById('dHer').onclick=()=>open('her');
+  document.getElementById('dHim').onclick=()=>open('him');
+  if(mine)document.getElementById(mine==='her'?'dHim':'dHer').classList.add('locked');
+}
+function segHTML(id,list,cur,n3){return`<div class="seg${n3?' n3':''}" id="${id}">${list.map(([v,l])=>`<button data-v="${v}" aria-pressed="${v===cur}">${l}</button>`).join('')}</div>`}
+function room(s){
+  side=s;document.body.className=s;last=null;
+  const H=s==='her';
+  app.innerHTML=`<div class="top"><button class="back" id="bk">← 回大廳</button><button class="mute" id="mu" aria-label="聲音開關">${icon()}</button></div>
+  <h2>${H?'她的<em>下一站</em>':'HIS <em>NEXT STOP</em>'}</h2>
+  <div class="filters">
+    <span class="flab">${H?'預算（妳說了算）':'預算（別讓她知道）'}</span>${segHTML('fb',BUDGETS,budget)}
+    <span class="flab">${H?'要待幾晚':'要消失幾晚'}</span>${segHTML('fn',NIGHTS,nights,1)}
+  </div>
+  <div class="roller" id="roller"><div class="city">${H?'？':'???'}</div><div class="ctry">${H?`${CITIES.length} 座城市在等妳翻牌`:`${CITIES.length} CITIES・一張單程好運`}</div></div>
+  <button class="draw" id="go">${H?'讓命運決定':'DRAW'}</button>
+  <div id="out"></div>`;
+  document.getElementById('bk').onclick=gate;
+  const mu=document.getElementById('mu');mu.onclick=()=>{initAudio();setMute(!muted,mu)};
+  const bind=(id,set)=>document.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{set(+b.dataset.v);SFX[side].pick();
+    document.querySelectorAll('#'+id+' button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));if(last)ticket(last,false)});
+  bind('fb',v=>{budget=v;try{localStorage.setItem('td_budget',v)}catch(e){}});
+  bind('fn',v=>{nights=v;try{localStorage.setItem('td_nights',v)}catch(e){}});
+  document.getElementById('go').onclick=spin;
+}
+function pool(){const ms=months();const ok=CITIES.filter(c=>!budget||Math.min(...ms.map(m=>cost(c,m,nights)))<=budget);return ok.length?ok:CITIES}
+function spin(){
+  const go=document.getElementById('go'),r=document.getElementById('roller'),cityEl=r.querySelector('.city'),ctryEl=r.querySelector('.ctry');
+  const P=pool();let pick=P[Math.random()*P.length|0];if(last&&P.length>1)while(pick.id===last.id)pick=P[Math.random()*P.length|0];
+  go.disabled=true;document.getElementById('out').innerHTML='';r.className='roller spin';
+  const S=SFX[side],steps=reduce?1:22;let k=0;
+  const H=side==='her';
+  const t=()=>{const c=k<steps-1?CITIES[Math.random()*CITIES.length|0]:pick;cityEl.textContent=H?c.city:c.code;ctryEl.textContent=H?c.ctry:c.city+'・'+c.ctry;S.tick();k++;
+    if(k<steps)setTimeout(t,40+k*k*.55);else{r.className='roller land';S.land();go.disabled=false;go.textContent=H?'不滿意？再抽':'NOT THIS ONE';last=pick;ticket(pick,true)}};
+  t();
+}
+function ticket(c,fresh){
+  const H=side==='her',ms=months(),cs=ms.map(m=>cost(c,m,nights)),min=Math.min(...cs),max=Math.max(...cs),bi=cs.indexOf(min);
+  const ev=EVENTS[c.id]||{},evs=ms.filter(m=>ev[m]).map(m=>`${MN[m]}${ev[m]}`);
+  const picks=H?c.her:c.him;
+    document.getElementById('out').innerHTML=`<article class="ticket">
+    <div class="tk-head"><div class="tk-route"><span class="code">TPE</span><span class="arrow"></span><span class="code">${c.code}</span></div>
+      <div class="tk-name">${H?`${c.city}・${c.ctry}`:`${c.city}・${c.ctry}　${nights} NIGHTS`}</div><div class="tease">「${(TEASE[c.id]||['',''])[H?0:1]}」</div></div>
+    <div class="tk-cut"></div>
+    <div class="tk-body">
+      <p class="sec">${H?'半年內什麼時候飛最划算':'NEXT 6 MONTHS・機＋酒／人'}</p>
+      <div class="price-now"><b>${fmt(min)}</b><span>${H?`${MN[ms[bi]]}飛最省，省下的錢剛好多買一個包`:`${MN[ms[bi]]}最便宜，剩下的預算都是酒錢`}・住 ${nights} 晚、雙人房平分</span></div>
+      <div class="bars">${cs.map((v,k)=>`<div class="bc${k===bi?' best':''}"><span class="v">${Math.round(v/1000*10)/10}k</span><span class="col" style="height:${fresh&&!reduce?0:28+72*(v-min)/((max-min)||1)}%" data-h="${28+72*(v-min)/((max-min)||1)}"></span><span class="m">${MN[ms[k]]}</span></div>`).join('')}</div>
+      ${evs.length?`<p class="evt">${H?`剛好碰上${evs.join('、')}，人會多、價錢會高，但很值得`:`EVENT：${evs.join('、')}，那幾天最熱鬧`}</p>`:''}
+      <div class="tk-cut" style="margin:0 -4px"></div>
+      <p class="sec">${H?'這 5 樣沒帶回來會後悔':'這 5 件沒做，等於沒去'}</p>
+      ${H?'':`<div class="cbar"><span>🔒 行程已打碼，點一下解碼</span><button id="uncensor">全部解碼</button></div>`}
+      <ol class="picks${H?'':' censor'}">${picks.map(([t,d])=>`<li${H?'':' tabindex="0" role="button" aria-label="點一下解碼"'}><div><b>${t}</b><span>${d}</span></div></li>`).join('')}</ol>
+      <div class="links">
+        <a href="${skyUrl(c,ms[bi])}" target="_blank" rel="noopener">${H?'Skyscanner 看今天票價':'Skyscanner 看票價'}</a>
+        <a href="${agodaUrl(c,ms[bi])}" target="_blank" rel="noopener">${H?'Agoda 先搶房':'Agoda 訂房'}</a>
+      </div>
+      <div class="acts"><button id="cp">${H?'複製去炫耀':'複製去嗆朋友'}</button><button class="pri" id="again">${H?'不滿意？再抽':'NOT THIS ONE'}</button></div>
+      <p class="toast" id="toast" role="status"></p>
+    </div></article>`;
+  if(fresh&&!reduce)requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('.bars .col').forEach(b=>b.style.height=b.dataset.h+'%')));
+  if(fresh){confetti(H?['#c8536b','#f3dcd8','#e8b4a0','#ffffff']:['#ffb020','#ff3d5a','#ffffff','#2a3442']);setTimeout(SFX[side].chime,500)}
+  if(!H){const lis=[...document.querySelectorAll('.picks.censor li')];
+    const reveal=li=>{if(li.classList.contains('rev'))return;li.classList.add('rev');li.removeAttribute('role');li.removeAttribute('aria-label');tone(900+Math.random()*300,.06,'square',.05);noise(.12,.1,4000,0,'highpass')};
+    lis.forEach(li=>{li.onclick=()=>reveal(li);li.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();reveal(li)}}});
+    document.getElementById('uncensor').onclick=e=>{lis.forEach((li,k)=>setTimeout(()=>reveal(li),k*120));e.target.closest('.cbar').classList.add('done')}}
+  document.getElementById('again').onclick=()=>{window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});spin()};
+  document.getElementById('cp').onclick=()=>{
+    const site=/github\.io$/.test(location.hostname)?'\n'+location.origin+location.pathname:'';
+    const t=H?`命運說我下一站是${c.city}🌸\n${MN[ms[bi]]}飛最划算，機＋酒才 ${fmt(min)}\n必買清單已經列好了：${picks.slice(0,3).map(p=>p[0]).join('、')}\n誰要跟？妳抽到哪👇${site}`
+             :`我抽到 ${c.city} ✈️\n${MN[ms[bi]]}去，機＋酒 ${fmt(min)}\n行程內容不方便公開😏\n你抽到哪👇${site}`;
+    const ok=()=>{say(H?'複製好了，去 Threads 炫耀':'複製好了，去 Threads 嗆朋友');SFX[side].pick()};
+    const fb=()=>{const ta=document.getElementById('shareTxt');ta.value=t;ta.select();try{document.execCommand('copy')?ok():say('瀏覽器不讓複製，請截圖分享')}catch(e){say('瀏覽器不讓複製，請截圖分享')}};
+    try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}};
+}
+function say(t){const el=document.getElementById('toast');el.textContent=t;el.classList.remove('on');void el.offsetWidth;el.classList.add('on')}
+gate();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:meta-->
+<meta name="description" content="台北、台中、高雄 30 個跑點，距離、爬升、地形示意圖一次看。">
+<link rel="canonical" href="https://nosmokeagain.github.io/run-taichung/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="北中高跑點地圖｜三分鐘遊樂場">
+<meta property="og:description" content="台北、台中、高雄 30 個跑點，距離、爬升、地形示意圖一次看。">
+<meta property="og:url" content="https://nosmokeagain.github.io/run-taichung/">
+<meta property="og:image" content="https://nosmokeagain.github.io/run-taichung/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>北中高跑點地圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Barlow+Condensed:wght@600;700;800&display=swap">
+<style>
+/* Layout: dark instrument-panel. Filter pills; spot list (desktop column / phone horizontal rail); one detail panel with rotatable terrain model, big stat numerals, elevation profile. */
+:root{
+  --bg:#0a0b0d;--card:#141619;--card2:#1b1e22;--line:#25292e;--ink:#f3f4f6;--mute:#8b929a;--dim:#5c636b;
+  --run:#ff6a2b;--runSoft:rgba(255,106,43,.14);--water:#2d5a78;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --num:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+header{display:grid;gap:6px;margin-bottom:18px}
+.bib{font:700 13px var(--num);letter-spacing:.22em;color:var(--run)}
+h1{margin:0;font-size:clamp(32px,7.4vw,48px);font-weight:900;line-height:1.15;letter-spacing:.02em;text-wrap:balance}
+.lead{margin:0;color:var(--mute);max-width:36em;font-size:14.5px}
+.cities{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px;max-width:460px}
+.c{border:1.5px solid var(--line);background:var(--card);color:var(--mute);border-radius:14px;padding:10px 6px;font:900 18px var(--sans);cursor:pointer;transition:all .2s}
+.c small{font:600 13px var(--num);margin-left:6px;opacity:.7}
+.c[aria-pressed="true"]{background:var(--run);border-color:var(--run);color:#fff}
+.c:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.fwrap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 12px;align-items:center;margin-bottom:16px}
+.flabel{font-size:12.5px;font-weight:700;color:var(--dim)}
+.filters{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:var(--card);border-radius:999px;padding:4px;width:max-content;max-width:100%}
+.filters.sm{background:none;padding:0}.filters.sm .f{padding:5px 12px;font-size:13px;border:1px solid var(--line)}.filters.sm .f[aria-pressed="true"]{border-color:var(--ink)}
+.f small{font:600 12px var(--num);opacity:.6;margin-left:4px}
+.empty{background:var(--card);border-radius:16px;padding:18px;color:var(--mute);font-size:14px}
+.filters::-webkit-scrollbar{display:none}
+.f{flex:none;border:0;background:none;color:var(--mute);border-radius:999px;padding:8px 16px;font:700 14px var(--sans);cursor:pointer;transition:background .2s,color .2s}
+.f[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:20px;align-items:start}
+.list{display:grid;gap:8px}
+@media (max-width:860px){
+  .grid{grid-template-columns:minmax(0,1fr);gap:14px}
+  .list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px));gap:8px;padding-bottom:2px}
+  .list::-webkit-scrollbar{display:none}
+  .list .spot{flex:none;width:160px;grid-template-columns:1fr;gap:8px;scroll-snap-align:start;padding:10px}
+  .list .spot canvas{width:100%;height:72px}
+  .list .spot span{white-space:nowrap}
+}
+.spot{width:100%;text-align:left;border:1.5px solid transparent;background:var(--card);color:var(--ink);border-radius:16px;padding:12px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:center;cursor:pointer;font:inherit;transition:border-color .2s,background .2s}
+.spot:hover{background:var(--card2)}
+.spot[aria-pressed="true"]{border-color:var(--run);background:var(--card2)}
+.spot:focus-visible,.f:focus-visible,a:focus-visible{outline:2px solid var(--run);outline-offset:2px}
+.spot canvas{width:56px;height:56px;border-radius:10px;background:var(--bg);display:block}
+.spot b{font-size:15.5px;font-weight:900;display:block;line-height:1.35}
+.spot span{font-size:12.5px;color:var(--mute)}
+.spot .k{font:700 15px var(--num);color:var(--ink);letter-spacing:.03em}
+.detail{background:var(--card);border-radius:22px;padding:18px;display:grid;gap:16px;min-width:0;transition:opacity .18s}
+.detail.swap{opacity:.25}
+@media (min-width:861px){.detail{position:sticky;top:calc(14px + env(safe-area-inset-top,0px))}}
+.dh{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.dh h2{margin:0;font-size:24px;font-weight:900;line-height:1.3}
+.dh p{margin:2px 0 0;font-size:13px;color:var(--mute)}
+.nav{flex:none;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:700;font-size:13.5px;border-radius:999px;padding:8px 15px}
+.terrain{position:relative;border-radius:16px;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#1a1d21,#0d0e10 75%)}
+.terrain canvas{display:block;width:100%;aspect-ratio:16/10;max-width:100%;touch-action:pan-y;cursor:grab}
+.terrain .hint{position:absolute;left:12px;bottom:10px;font-size:11.5px;color:var(--mute);pointer-events:none}
+.terrain .tag{position:absolute;right:12px;top:10px;font:700 11px var(--num);letter-spacing:.18em;color:var(--dim);pointer-events:none}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border-radius:14px;overflow:hidden}
+@media (max-width:420px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.st{background:var(--card);padding:10px 12px}
+.st small{display:block;font-size:12px;color:var(--mute)}
+.st b{font:700 32px var(--num);line-height:1.05;letter-spacing:.01em}
+.st b em{font-style:normal;font-size:15px;color:var(--mute);margin-left:3px}
+.st b.t{font:900 17px var(--sans);line-height:2}
+.prof canvas{display:block;width:100%;height:120px;max-width:100%}
+.prof h3,.info h3{margin:0 0 4px;font-size:12.5px;color:var(--mute);font-weight:700;letter-spacing:.04em}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 18px}
+.info p{margin:0;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-size:12.5px;font-weight:700;background:var(--runSoft);color:var(--run);border-radius:999px;padding:2px 11px}
+.tip{background:var(--card2);border-radius:14px;padding:12px 14px;font-size:14px}
+.tip b{color:var(--run);margin-right:6px}
+footer{margin-top:36px;font-size:12.5px;color:var(--dim);display:grid;gap:4px}
+footer a{color:var(--mute)}
+@media (prefers-reduced-motion:reduce){.detail,.f,.spot{transition:none}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<header>
+  <div class="bib" id="bib">TAIWAN RUN SPOTS</div>
+  <h1>北中高跑點地圖</h1>
+  <p class="lead">台北、台中、高雄跑者常去的地方。選城市、選區域，點跑點看距離、爬升和地形示意圖。</p>
+  <div class="cities" id="cities" role="group" aria-label="城市"></div>
+</header>
+<div class="fwrap"><div class="flabel">區域</div><div class="filters" id="zones" role="group" aria-label="區域"></div><div class="flabel">類型</div><div class="filters sm" id="filters" role="group" aria-label="類型"></div></div>
+<div class="grid">
+  <div class="list" id="list"></div>
+  <div class="detail" id="detail"></div>
+</div>
+<footer>
+  <div>地形圖和高度剖面是依路線距離、爬升做的示意，不是實測 GPS 軌跡。距離和爬升標「約」的是估算值。</div>
+  <div>資料參考：<a href="https://ctyeh.com/articles/794" target="_blank" rel="noopener">台北跑步路線 Top 10</a>、<a href="https://www.gymnomadtw.com/article/taipei-running-spots-guide" target="_blank" rel="noopener">台北跑步場地攻略</a>、<a href="https://health.tvbs.com.tw/life/347851" target="_blank" rel="noopener">木柵河濱國手之道</a>、<a href="https://running.biji.co/index.php?q=news&amp;act=info&amp;id=95109" target="_blank" rel="noopener">高雄人氣練跑路線</a>、<a href="https://www.popdaily.com.tw/travel/1616332" target="_blank" rel="noopener">高雄跑步推薦</a>、<a href="https://ctyeh.com/articles/2706" target="_blank" rel="noopener">壽山跑山路線</a>、<a href="https://ctyeh.com/routes/dadu-wanggaoliao" target="_blank" rel="noopener">大肚望高寮爬坡</a>、<a href="https://ctyeh.com/articles/4725" target="_blank" rel="noopener">台灣山徑跑訓練地點</a>、<a href="https://ctyeh.com/articles/2691" target="_blank" rel="noopener">東豐綠廊與后豐鐵馬道</a>、<a href="https://sports.eventpal.com.tw/detail.php?id=2724" target="_blank" rel="noopener">潭雅神綠園道</a>、<a href="https://www.popdaily.com.tw/travel/1616483" target="_blank" rel="noopener">台中適合跑步的地方</a></div>
+</footer>
+</div>
+
+<script>
+"use strict";
+/* ---------- noise ---------- */
+function RNG(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function noise2(seed){const R=RNG(seed),N=64,P=new Float32Array(N*N);for(let i=0;i<P.length;i++)P[i]=R();const L=(a,b,t)=>a+(b-a)*t;
+  const v=(x,y)=>{const xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi,u=xf*xf*(3-2*xf),w=yf*yf*(3-2*yf),g=(i,j)=>P[((j&63)*N)+(i&63)];return L(L(g(xi,yi),g(xi+1,yi),u),L(g(xi,yi+1),g(xi+1,yi+1),u),w)};
+  return(x,y,o=3)=>{let s=0,a=1,f=1,t=0;for(let i=0;i<o;i++){s+=v(x*f,y*f)*a;t+=a;a*=.5;f*=2}return s/t-.5}}
+
+/* ---------- route shapes (unit square) ---------- */
+const loop=(cx,cy,rx,ry,wob,seed,n=80)=>{const nz=noise2(seed),p=[];for(let i=0;i<=n;i++){const a=i/n*Math.PI*2,k=1+nz(Math.cos(a)*1.5+3,Math.sin(a)*1.5+3,2)*wob;p.push([cx+Math.cos(a)*rx*k,cy+Math.sin(a)*ry*k])}p[n]=p[0];return p};
+const curve=(pts,n=60)=>{const out=[];for(let i=0;i<pts.length-1;i++){const[a,b]=[pts[i],pts[i+1]];for(let j=0;j<n/(pts.length-1);j++){const t=j/(n/(pts.length-1));out.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t])}}out.push(pts[pts.length-1]);return out};
+
+/* ---------- spots ----------
+ terrain(u,v) returns relative height (any scale); water(u,v) true for water.
+ gain: target climb in metres for the route (vertical scale is fitted to it). */
+const SPOTS=[
+ {city:"tc",id:"central",zone:["xitun","beitun"],n:"中央公園",area:"西屯・北屯",cat:["park","flat"],type:"公園繞圈",dist:"2.6",distNote:"運動步道一圈；外圍大圈約 5.5 km",gain:10,gainEst:1,
+  surface:"步道、自行車道分開，路面平整",time:"傍晚到晚上；週末早上拉長距離",supply:"園內廁所多，周邊有超商",workout:["輕鬆跑","配速跑","夜跑"],
+  tip:"沿著最外圍跑兩大圈大約 11 km。人少又寬，適合週末 LSD。",q:"台中中央公園",
+  route:()=>loop(.5,.5,.36,.3,.35,11),terr:(u,v,nz)=>nz(u*3,v*3,3)*1.2+Math.sin(u*9)*.15,water:(u,v)=>Math.hypot(u-.42,v-.56)<.07||Math.hypot(u-.62,v-.4)<.05},
+ {city:"tc",id:"autumn",zone:["xitun"],n:"秋紅谷",area:"西屯・七期",cat:["park","flat"],type:"短圈恢復跑",dist:"1",distNote:"環湖一圈，約",distEst:1,gain:6,gainEst:1,
+  surface:"環湖步道、木棧道",time:"夜跑、晚餐前短跑",supply:"周邊百貨、超商很多",workout:["恢復跑","短間歇"],
+  tip:"下凹式的公園，湖邊比路面低，進出有小坡。晚上散步的人多，跑快要注意閃人。",q:"台中秋紅谷",
+  route:()=>loop(.5,.5,.27,.22,.15,3),terr:(u,v)=>{const r=Math.hypot((u-.5)/1.1,v-.5);return -Math.exp(-r*r/.06)*1.0},water:(u,v)=>Math.hypot((u-.5)/1.15,v-.5)<.15},
+ {city:"tc",id:"cityhall",zone:["xitun"],n:"台中市政府",area:"西屯・七期",cat:["park","flat"],type:"夜跑繞圈",dist:"1.5",distNote:"繞市府園區外圍一圈，約",distEst:1,gain:3,gainEst:1,
+  surface:"寬人行道、園區步道",time:"晚上，燈光亮、跑的人多",supply:"周邊超商、餐廳很多",workout:["夜跑","輕鬆跑","繞圈配速"],
+  tip:"晚上七期最熱門的夜跑點，市府燈光亮、人多比較安心。想拉長距離可以串國家歌劇院和秋紅谷，跑成大約 5 km。",q:"臺中市政府",
+  route:()=>curve([[.24,.3],[.76,.3],[.76,.7],[.24,.7],[.24,.3]],100),terr:(u,v)=>(u>.34&&u<.66&&v>.4&&v<.6)?.4:0,water:(u,v)=>Math.hypot(u-.5,v-.36)<.035},
+ {city:"tc",id:"oldtown",zone:["central"],n:"舊城水岸線",area:"中區・東區",cat:["flat"],type:"城市探索",dist:"6",distNote:"台中車站→綠川→綠空鐵道→柳川→台中公園，約",distEst:1,gain:10,gainEst:1,
+  surface:"水岸步道、人行道，紅綠燈多",time:"清晨 6～7 點人車少",supply:"沿路超商多，台中公園有廁所",workout:["輕鬆跑","觀光跑"],
+  tip:"新盛綠川水岸和柳川都有整治過的河岸步道，晚上燈光漂亮，但路口多不適合配速。",q:"台中綠川水岸廊道",
+  route:()=>curve([[.2,.25],[.55,.2],[.82,.3],[.78,.62],[.55,.8],[.25,.7],[.18,.45],[.2,.25]],100),terr:(u,v,nz)=>nz(u*4,v*4,2)*.4,
+  water:(u,v)=>Math.abs(u-(.62+Math.sin(v*6)*.03))<.018||Math.abs(v-(.5+Math.sin(u*5)*.04))<.016},
+ {city:"tc",id:"fazi",zone:["nantun","xitun"],n:"筏子溪迎賓水岸",area:"南屯・西屯",cat:["flat","long"],type:"河堤配速",dist:"10",distNote:"單程 5 km 來回，可再延長，約",distEst:1,gain:8,gainEst:1,
+  surface:"河堤自行車道與步道，大多沒遮蔭",time:"傍晚太陽下山後",supply:"幾個入口有廁所，補給要先帶",workout:["配速跑","LSD","節奏跑"],
+  tip:"高鐵台中站附近的整治河段，路平又長，適合跑固定配速。夏天白天很曬。",q:"筏子溪迎賓水岸廊道",
+  route:()=>{const p=[];for(let i=0;i<=40;i++){const v=.08+i/40*.84;p.push([.5+Math.sin(v*5)*.09+.13,v])}return p.concat(p.slice().reverse().map(([x,y])=>[x+.015,y]))},
+  terr:(u,v,nz)=>{const c=.5+Math.sin(v*5)*.09,d=Math.abs(u-c);return (d<.06?-1:d<.1?(d-.06)*25-1:0)+nz(u*3,v*3,2)*.3},water:(u,v)=>Math.abs(u-(.5+Math.sin(v*5)*.09))<.045},
+ {city:"tc",id:"tys",zone:["tanya"],n:"潭雅神綠園道",area:"潭子・大雅・神岡",cat:["flat","long"],type:"鐵道綠廊 LSD",dist:"13.1",distNote:"舊鐵道改建，單程",gain:30,gainEst:1,
+  surface:"人車分道，路口多有天橋",time:"早上；春天櫻花、夏天黃金雨",supply:"沿線有超商、公廁、飲水點",workout:["LSD","配速跑"],
+  tip:"台中跑者練長距離的首選之一，坡度變化不大，可以單程跑完再搭車回來。",q:"潭雅神綠園道",
+  route:()=>curve([[.1,.8],[.35,.62],[.55,.55],[.75,.38],[.9,.2]],80),terr:(u,v,nz)=>(u-v)*1.0+nz(u*3,v*3,3)*.5,water:()=>false},
+ {city:"tc",id:"dongfeng",zone:["shancheng"],n:"東豐綠廊＋后豐鐵馬道",area:"東勢・石岡・豐原・后里",cat:["long"],type:"超長距離",dist:"16",distNote:"東豐 12 km＋后豐 4.5 km，約",distEst:1,gain:40,gainEst:1,
+  surface:"舊鐵路改建自行車道，幾乎沒有車",time:"早上 7～9 點，假日腳踏車很多",supply:"石岡、朴子口有吃的，情人木橋有廁所",workout:["LSD","長距離"],
+  tip:"東勢往豐原整段微下坡。后豐的 9 號隧道約 1.3 km 沒有照明，要帶頭燈；花樑鋼橋可以看大甲溪。",q:"東豐自行車綠廊",
+  route:()=>curve([[.88,.18],[.7,.3],[.6,.5],[.42,.58],[.3,.72],[.12,.85]],90),terr:(u,v,nz)=>(u*1.2-v*.6)+nz(u*3,v*3,3)*.6+Math.max(0,.2-Math.abs(v-.55))*-2,
+  water:(u,v)=>Math.abs(v-(.62+(u-.5)*-.3+Math.sin(u*8)*.02))<.02},
+ {city:"tc",id:"metro",zone:["xitun"],n:"台中都會公園",area:"西屯・大肚山台地",cat:["park","hill"],type:"起伏跑",dist:"4",distNote:"環園步道，約",distEst:1,gain:35,gainEst:1,
+  surface:"步道、柏油園道，有緩坡",time:"週末一早；開放約 6:00～21:00",supply:"園內有廁所，補給要自己帶",workout:["輕鬆跑","起伏跑"],
+  tip:"在大肚山台地上，比市區涼一點。路線不只一條，可以組合出自己的距離。",q:"台中都會公園",
+  route:()=>loop(.5,.52,.34,.3,.5,7),terr:(u,v,nz)=>nz(u*2.4,v*2.4,4)*2+u*.6,water:(u,v)=>Math.hypot(u-.55,v-.6)<.05},
+ {city:"tc",id:"wanggaoliao",zone:["nantun"],n:"望高寮爬坡",area:"南屯・嶺東",cat:["hill"],type:"柏油練坡",dist:"3.17",distNote:"嶺東一側上大肚山稜線",gain:177,peak:382,grade:"5.6",maxGrade:"9.4",
+  surface:"柏油路，有車要靠邊",time:"傍晚上去看夜景",supply:"山頂望高寮公園有廁所",workout:["爬坡","坡度間歇"],
+  tip:"平均坡度 5.6%、最陡 9.4%。離市區近，很多人拿來做坡度間歇，山頂可以看台中夜景。",q:"望高寮夜景公園",
+  route:()=>curve([[.2,.88],[.35,.75],[.3,.6],[.48,.5],[.42,.36],[.6,.28],[.72,.14]],90),terr:(u,v,nz)=>(1-v)*1.6+nz(u*3,v*3,3)*.4-Math.abs(u-.5)*.2,water:()=>false},
+ {city:"tc",id:"dakeng5",zone:["beitun"],n:"大坑 5 號步道",area:"北屯・大坑風景區",cat:["hill","trail"],type:"越野爬升",dist:"3.5",distNote:"更硬的 10 號步道：4.5 km、爬升 650 m",gain:430,
+  surface:"石階、土徑，雨後會滑",time:"早上；避開下雨後",supply:"登山口附近有廁所，水要自己帶",workout:["越野","爬升訓練"],
+  tip:"台中最近的越野跑訓練場。上坡多是階梯，下坡注意腳踝，建議穿越野鞋。",q:"大坑5號步道",
+  route:()=>curve([[.15,.85],[.32,.78],[.28,.62],[.46,.55],[.4,.42],[.58,.36],[.55,.26],[.68,.2]],110),terr:(u,v,nz)=>Math.exp(-((u-.72)**2+(v-.18)**2)/.12)*2.2+nz(u*3.5,v*3.5,4)*.6,water:()=>false},
+];
+/* ---------- shape factories ---------- */
+const F={
+ park:(seed,ponds=[],amp=1.2)=>({route:()=>loop(.5,.5,.36,.3,.3,seed),terr:(u,v,nz)=>nz(u*3,v*3,3)*amp,water:(u,v)=>ponds.some(([x,y,r])=>Math.hypot(u-x,v-y)<r)}),
+ track:()=>({route:()=>{const p=[],L=.22,R=.17;for(let i=0;i<=120;i++){const t=i/120*2*(L*2+Math.PI*R),seg=L*2;let x,y;const a=t;
+    if(a<seg){x=.5-L+a;y=.5+R}else if(a<seg+Math.PI*R){const th=(a-seg)/R;x=.5+L+Math.sin(th)*R;y=.5+Math.cos(th)*R}else if(a<seg*2+Math.PI*R){x=.5+L-(a-seg-Math.PI*R);y=.5-R}else{const th=(a-seg*2-Math.PI*R)/R;x=.5-L-Math.sin(th)*R;y=.5-Math.cos(th)*R}p.push([x,y])}return p},
+   terr:()=>0,water:()=>false}),
+ river:(oneWay,seed,amp=.3)=>({route:()=>{const p=[];for(let i=0;i<=50;i++){const v=.06+i/50*.88;p.push([.5+Math.sin(v*5+seed)*.09+.13,v])}return oneWay?p:p.concat(p.slice().reverse().map(([x,y])=>[x+.015,y]))},
+   terr:(u,v,nz)=>{const c=.5+Math.sin(v*5+seed)*.09,d=Math.abs(u-c);return(d<.06?-1:d<.1?(d-.06)*25-1:0)+nz(u*3,v*3,2)*amp},water:(u,v)=>Math.abs(u-(.5+Math.sin(v*5+seed)*.09))<.045}),
+ island:()=>({route:()=>loop(.5,.5,.33,.24,.2,5),terr:(u,v,nz)=>{const r=Math.hypot((u-.5)/.4,(v-.5)/.3);return r>1?-1:nz(u*3,v*3,2)*.2},water:(u,v)=>Math.hypot((u-.5)/.4,(v-.5)/.3)>1.04}),
+ lake:(rx,ry,seed,amp=.3,hills=0)=>({route:()=>loop(.5,.5,rx,ry,.18,seed),terr:(u,v,nz)=>{const r=Math.hypot((u-.5)/rx,(v-.5)/ry);return(r<.78?-.6:0)+nz(u*3,v*3,3)*amp+hills*Math.sin(Math.atan2(v-.5,u-.5)*6)*Math.min(1,Math.max(0,r-.7))},water:(u,v)=>Math.hypot((u-.5)/rx,(v-.5)/ry)<.74}),
+ summit:(px,py,back,pts)=>({route:()=>{const up=curve(pts,90);return back?up.concat(up.slice().reverse().map(([x,y])=>[x+.012,y+.012])):up},terr:(u,v,nz)=>Math.exp(-((u-px)**2+(v-py)**2)/.1)*2.2+nz(u*3.5,v*3.5,4)*.5,water:()=>false}),
+ city:(pts,canal)=>({route:()=>curve(pts,100),terr:(u,v,nz)=>nz(u*4,v*4,2)*.3,water:(u,v)=>canal?Math.abs(v-(.5+Math.sin(u*5)*.05))<.02:false}),
+ coast:()=>({route:()=>curve([[.15,.85],[.3,.72],[.42,.62],[.5,.48],[.58,.4],[.7,.32],[.84,.2]],100),terr:(u,v,nz)=>(u+v<.75?-1:0)+Math.exp(-((u-.75)**2+(v-.3)**2)/.06)*1.6+nz(u*3,v*3,3)*.4,water:(u,v)=>u+v<.72}),
+};
+const SP2=[
+ /* ---- 台北 ---- */
+ {city:"tp",id:"daan",zone:["daan"],n:"大安森林公園",area:"大安",cat:["park","flat"],type:"公園繞圈",dist:"2.2",distNote:"外圈一圈，約",distEst:1,gain:0,
+  surface:"外圈柏油，內圈有泥土跑道",time:"清晨、傍晚；假日人多",supply:"公園四個角都有超商",workout:["輕鬆跑","配速跑"],
+  tip:"捷運站出來就到。內圈泥土跑道對膝蓋比較友善，信義路那側遮蔭少。",q:"大安森林公園",...F.park(21,[[.48,.52,.06]],.5)},
+ {city:"tp",id:"ntu",zone:["daan"],n:"台大田徑場",area:"大安",cat:["track","flat"],type:"操場",dist:"0.4",distNote:"標準 400 m 跑道",gain:0,
+  surface:"PU 跑道",time:"平日 4:00～8:00、18:00～22:00，假日全天",supply:"校園內有超商",workout:["間歇","速度課表"],
+  tip:"跑班和精英跑者很多，練間歇的首選。四周沒什麼遮蔭，夏天別中午去。",q:"台大田徑場",...F.track()},
+ {city:"tp",id:"guting",zone:["zz"],n:"古亭→華中河濱",area:"中正・萬華",cat:["flat","long"],type:"河濱配速",dist:"8",distNote:"來回，約",distEst:1,gain:5,
+  surface:"柏油和紅磚道",time:"清晨、傍晚",supply:"兩端和華中橋下有飲水機、販賣機",workout:["配速跑","間歇"],
+  tip:"從捷運古亭站走得到，車道寬，沿路有里程標記，很適合跑固定配速。",q:"古亭河濱公園",...F.river(false,1)},
+ {city:"tp",id:"rainbow",zone:["ss"],n:"彩虹→美堤河濱",area:"松山・中山",cat:["flat","long"],type:"河濱長距離",dist:"10",distNote:"單程，約",distEst:1,gain:5,
+  surface:"柏油為主",time:"傍晚；夏天遮蔭少",supply:"每 2～3 km 有飲水機，饒河夜市那端補給最多",workout:["LSD","配速跑"],
+  tip:"經過彩虹橋、麥帥橋，人多但維護好，跑完直接去饒河夜市。",q:"彩虹河濱公園",...F.river(true,2.2)},
+ {city:"tp",id:"dajia",zone:["ss"],n:"大佳河濱公園",area:"中山",cat:["flat"],type:"河濱繞圈",dist:"5",distNote:"環狀，約",distEst:1,gain:0,
+  surface:"全平路",time:"清晨、傍晚",supply:"有飲水機、販賣機，假日有攤販",workout:["輕鬆跑","團練"],
+  tip:"很多路跑賽的起點，距離標示清楚、視野開闊，跑團常約在這裡。",q:"大佳河濱公園",...F.river(false,3.4,.1)},
+ {city:"tp",id:"shezi",zone:["dt"],n:"大稻埕→社子島環島",area:"大同・士林",cat:["flat","long"],type:"超長距離",dist:"15",distNote:"環狀，約",distEst:1,gain:8,gainEst:1,
+  surface:"柏油，全平路",time:"日出或夕陽時段",supply:"大稻埕碼頭有店家，社子島段很少",workout:["LSD","長距離"],
+  tip:"在基隆河和淡水河交會處，視野很開，但風大，逆風段很吃力。",q:"大稻埕碼頭",...F.island()},
+ {city:"tp",id:"elephant",zone:["xy"],n:"象山步道",area:"信義",cat:["hill","trail"],type:"山徑爬升",dist:"4",distNote:"含上下山，約",distEst:1,gain:180,gainEst:1,peak:183,
+  surface:"石階和泥土山徑",time:"清晨；傍晚看夜景",supply:"山腳信義區補給很多",workout:["爬升","階梯訓練"],
+  tip:"101 旁邊的山，經過六巨石到山頂，可以再接拇指山拉長。階梯多，下山慢慢來。",q:"象山步道",...F.summit(.68,.25,true,[[.2,.85],[.32,.7],[.28,.55],[.45,.48],[.52,.35],[.66,.27]])},
+ {city:"tp",id:"jiantan",zone:["dt"],n:"劍潭山親山步道",area:"士林・中山",cat:["hill","trail"],type:"山徑爬升",dist:"5",distNote:"約",distEst:1,gain:130,gainEst:1,
+  surface:"石階和泥土山徑",time:"上班前、下班後",supply:"劍潭捷運站、士林夜市",workout:["爬升","越野入門"],
+  tip:"可以看松山機場飛機起降和基隆河，步道維護得好，捷運就到。",q:"劍潭山親山步道",...F.summit(.6,.35,false,[[.12,.82],[.3,.68],[.4,.5],[.55,.4],[.7,.3],[.88,.2]])},
+ {city:"tp",id:"maokong",zone:["ws"],n:"貓空樟樹步道環線",area:"文山",cat:["hill"],type:"起伏山路",dist:"6",distNote:"環線，約",distEst:1,gain:250,gainEst:1,
+  surface:"石板、泥土步道和產業道路",time:"早上",supply:"貓纜站附近有茶館、小店",workout:["爬升","山路 LSD"],
+  tip:"沿路是茶園，坡度適中。也可以搭纜車上去再往下跑。",q:"樟樹步道",route:()=>loop(.5,.5,.33,.28,.4,13),terr:(u,v,nz)=>Math.exp(-((u-.55)**2+(v-.42)**2)/.08)*1.6+nz(u*3,v*3,4)*.6,water:()=>false},
+ {city:"tp",id:"muzha",zone:["ws"],n:"木柵河濱（國手之道）",area:"文山",cat:["flat","long"],type:"河濱長距離",dist:"10.4",distNote:"單程（公館水岸廣場→木柵）",gain:14,
+  surface:"河濱自行車道，景美橋以後變窄",time:"早晚；有高架橋遮陽",supply:"沿路有販賣機、廁所、水",workout:["LSD","配速跑","練坡"],
+  tip:"福和橋往南 1.5 km 最寬最好跑。永福橋到福和橋有一段陡坡，可以順便練上坡。",q:"公館水岸廣場",...F.river(true,4.1,.5)},
+ {city:"tp",id:"zhuzihu",zone:["bt"],n:"陽明山竹子湖環線",area:"北投・陽明山",cat:["hill"],type:"山區環線",dist:"8",distNote:"約",distEst:1,gain:350,gainEst:1,
+  surface:"產業道路和山徑，部分跟車共用",time:"清晨；海芋季人很多",supply:"竹子湖有餐廳、小店",workout:["爬升","山路 LSD"],
+  tip:"繞竹子湖一圈，天氣好的時候很漂亮，山上溫度低、霧多，帶件薄外套。",q:"竹子湖",route:()=>loop(.5,.55,.32,.26,.45,17),terr:(u,v,nz)=>(1-v)*1.4+nz(u*2.5,v*2.5,4)*1.1,water:()=>false},
+ /* ---- 高雄 ---- */
+ {city:"ks",id:"loveriver",zone:["qj","gs"],n:"愛河河畔",area:"前金・苓雅・鼓山",cat:["flat","long"],type:"河岸夜跑",dist:"13.4",distNote:"沿愛河經駁二、美術館，約",distEst:1,gain:10,gainEst:1,
+  surface:"河岸步道",time:"晚上，燈光最漂亮",supply:"沿路店家、超商多",workout:["輕鬆跑","LSD"],
+  tip:"高雄跑者票選第一名的路線。只想短跑的話，挑一段跑 3～5 km 也很剛好。",q:"愛河之心",...F.river(true,1.7,.2)},
+ {city:"ks",id:"weiwuying",zone:["fs"],n:"衛武營都會公園",area:"鳳山",cat:["park","flat"],type:"公園繞圈",dist:"2.8",distNote:"一圈",gain:5,gainEst:1,
+  surface:"園區步道",time:"晨跑、恢復跑",supply:"補給和廁所方便",workout:["輕鬆跑","團練"],
+  tip:"樹多、空間大、沒有車，高雄跑團最常團練的地方之一。",q:"衛武營都會公園",...F.park(31,[[.55,.45,.05]],.5)},
+ {city:"ks",id:"kmfa",zone:["gs"],n:"高雄市立美術館",area:"鼓山",cat:["park","flat"],type:"公園繞圈",dist:"2.5",distNote:"外圍一圈",gain:5,gainEst:1,
+  surface:"寬敞人行步道",time:"清晨、傍晚；夜跑也夠亮",supply:"周邊超商多",workout:["輕鬆跑","配速跑"],
+  tip:"繞美術館外圍，燈光足、跑的人多，晚上一個人跑也安心。",q:"高雄市立美術館",...F.park(41,[[.45,.5,.08]],.4)},
+ {city:"ks",id:"lotus",zone:["zy"],n:"蓮池潭",area:"左營",cat:["flat"],type:"環湖",dist:"3.5",distNote:"環湖一圈，約",distEst:1,gain:5,gainEst:1,
+  surface:"環湖步道",time:"清晨、傍晚",supply:"湖邊有店家、廁所",workout:["輕鬆跑","配速跑"],
+  tip:"龍虎塔、春秋閣一路跑過去，樹蔭不少。",q:"蓮池潭",...F.lake(.4,.22,9)},
+ {city:"ks",id:"chengching",zone:["ns"],n:"澄清湖",area:"鳥松",cat:["hill","long"],type:"起伏環湖",dist:"6.4",distNote:"三景路線；勇腳環湖 11.2 km",gain:60,gainEst:1,
+  surface:"園區步道和道路",time:"週末早上",supply:"園區內有廁所",workout:["起伏跑","LSD"],
+  tip:"勇腳環湖路線有 6 個上坡，往中興塔那段最陡，適合練上坡轉換。",q:"澄清湖",...F.lake(.36,.28,15,.5,.8)},
+ {city:"ks",id:"culture",zone:["qj"],n:"高雄文化中心",area:"苓雅",cat:["park","flat"],type:"短圈",dist:"1.4",distNote:"一圈",gain:0,
+  surface:"園區步道",time:"全天，綠蔭多",supply:"周邊補給很多",workout:["恢復跑","短間歇"],
+  tip:"市中心交通方便，樹多可以全天跑，適合下班後短跑。",q:"高雄市文化中心",...F.park(51,[],.3)},
+ {city:"ks",id:"shoushan",zone:["gs"],n:"壽山（柴山）",area:"鼓山",cat:["hill","trail"],type:"山徑爬升",dist:"4",distNote:"動物園登山口線；雅座觀景台往返 6 km、300 m",distEst:1,gain:200,gainEst:1,
+  surface:"階梯為主，石灰岩濕滑",time:"清晨",supply:"登山口附近有店家",workout:["越野","爬升"],
+  tip:"獼猴很多，食物和塑膠袋不要露出來。礁岩尖又滑，穿抓地力好的鞋。",q:"壽山動物園登山口",...F.summit(.62,.3,true,[[.2,.86],[.3,.7],[.42,.62],[.46,.48],[.58,.38]])},
+ {city:"ks",id:"xiziwan",zone:["gs"],n:"西子灣山海線",area:"鼓山",cat:["long","hill"],type:"山海長距離",dist:"12",distNote:"經駁二、西子灣、柴山，約",distEst:1,gain:80,gainEst:1,
+  surface:"道路、人行道",time:"傍晚看夕陽",supply:"駁二、哈瑪星店家多",workout:["LSD","起伏跑"],
+  tip:"難度比河岸線高一點，但風景一直換，跑起來不無聊。",q:"西子灣",...F.coast()},
+ {city:"ks",id:"gangshan",zone:["gsn"],n:"岡山滯洪池",area:"岡山",cat:["flat"],type:"環湖",dist:"2.5",distNote:"一圈",gain:0,
+  surface:"環湖步道，照明足",time:"傍晚、夜跑",supply:"周邊有超商",workout:["LSD 繞圈","輕鬆跑"],
+  tip:"地勢平、燈光足，適合繞圈練 LSD，冬天還會看到候鳥。",q:"岡山滯洪池",...F.lake(.36,.26,23,.1)},
+];
+SPOTS.push(...SP2);
+const CATS=[["all","全部"],["flat","平路配速"],["park","公園繞圈"],["track","操場"],["long","長距離"],["hill","練坡"],["trail","越野"]];
+const CITIES=[["tp","台北","TAIPEI"],["tc","台中","TAICHUNG"],["ks","高雄","KAOHSIUNG"]];
+
+/* ---------- build terrain + profile per spot ---------- */
+const G=44;
+function build(s){if(s._b)return s._b;const nz=noise2(s.id.length*977+s.n.length*31);
+  const H=new Float32Array((G+1)*(G+1)),Wt=new Uint8Array((G+1)*(G+1));
+  for(let j=0;j<=G;j++)for(let i=0;i<=G;i++){const u=i/G,v=j/G;H[j*(G+1)+i]=s.terr(u,v,nz);Wt[j*(G+1)+i]=s.water(u,v)?1:0}
+  const at=(u,v)=>{const x=u*G,y=v*G,i=Math.min(G-1,Math.max(0,Math.floor(x))),j=Math.min(G-1,Math.max(0,Math.floor(y))),fx=x-i,fy=y-j,g=(a,b)=>H[b*(G+1)+a];return(g(i,j)*(1-fx)+g(i+1,j)*fx)*(1-fy)+(g(i,j+1)*(1-fx)+g(i+1,j+1)*fx)*fy};
+  const R=s.route(),prof=R.map(([u,v])=>at(u,v));
+  let g=0;for(let i=1;i<prof.length;i++)g+=Math.max(0,prof[i]-prof[i-1]);
+  const scale=g>0?s.gain/g:1; // metres per terrain unit along the route
+  let lo=Infinity,hi=-Infinity;for(const h of H){lo=Math.min(lo,h);hi=Math.max(hi,h)}
+  let len=0;const cum=[0];for(let i=1;i<R.length;i++){len+=Math.hypot(R[i][0]-R[i-1][0],R[i][1]-R[i-1][1]);cum.push(len)}
+  return s._b={H,Wt,R,prof:prof.map(h=>h*scale),cum:cum.map(c=>c/len),scale,lo,hi,at}}
+
+/* ---------- colours ---------- */
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const dark=()=>true;
+function ramp(t,shade){const L=dark()?[[40,50,46],[58,76,62],[92,94,80],[132,124,108]]:[[196,222,184],[150,194,128],[204,190,150],[176,160,132]];
+  t=Math.max(0,Math.min(1,t))*(L.length-1);const i=Math.min(L.length-2,Math.floor(t)),f=t-i;return L[i].map((c,k)=>Math.round((c+(L[i+1][k]-c)*f)*shade))}
+
+/* ---------- terrain renderer ---------- */
+function drawTerrain(cv,s,yaw,small){const b=build(s),ctx=cv.getContext("2d");const dpr=Math.min(2,devicePixelRatio||1);
+  const W=cv.clientWidth||52,Hh=cv.clientHeight||52;if(cv.width!==Math.round(W*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(Hh*dpr)}
+  ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,Hh);
+  const rel=Math.max(.0001,b.hi-b.lo),vert=Math.min(.32,Math.max(.06,s.gain/900))*(small?.9:1);
+  const S=Math.min(W,Hh*1.6)*(small?.62:.58),cy=Math.cos(yaw),sy=Math.sin(yaw),tilt=.5;
+  const P=(u,v,h)=>{const x=u-.5,y=v-.5,rx=x*cy-y*sy,ry=x*sy+y*cy;return[W/2+rx*S,Hh*(small?.56:.6)+ry*S*tilt-(h-b.lo)/rel*vert*S]};
+  const depth=(u,v)=>{const x=u-.5,y=v-.5;return x*sy+y*cy};
+  const quads=[];for(let j=0;j<G;j++)for(let i=0;i<G;i++)quads.push([i,j,depth((i+.5)/G,(j+.5)/G)]);quads.sort((a,c)=>a[2]-c[2]);
+  const wc=css("--water"),hcol="rgba(255,255,255,.035)";
+  for(const[i,j]of quads){const k=j*(G+1)+i,h00=b.H[k],h10=b.H[k+1],h01=b.H[k+G+1],h11=b.H[k+G+2];
+    const u0=i/G,v0=j/G,u1=(i+1)/G,v1=(j+1)/G;const p=[P(u0,v0,h00),P(u1,v0,h10),P(u1,v1,h11),P(u0,v1,h01)];
+    const water=b.Wt[k]&&b.Wt[k+1]&&b.Wt[k+G+1]&&b.Wt[k+G+2];
+    const dx=(h10+h11-h00-h01)/2/rel,dy=(h01+h11-h00-h10)/2/rel;const lx=-.6*cy+.4*sy,ly=.6*sy+.4*cy;const shade=Math.max(.72,Math.min(1.12,1+(dx*lx+dy*ly)*-2.4*vert*10));
+    const c=water?null:ramp(((h00+h11)/2-b.lo)/rel,shade);
+    ctx.beginPath();ctx.moveTo(...p[0]);ctx.lineTo(...p[1]);ctx.lineTo(...p[2]);ctx.lineTo(...p[3]);ctx.closePath();
+    ctx.fillStyle=water?wc:`rgb(${c})`;ctx.fill();if(!small){ctx.strokeStyle=hcol;ctx.lineWidth=.5;ctx.stroke()}else{ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=.6;ctx.stroke()}}
+  // route
+  const lift=small?1:2,pts=b.R.map(([u,v])=>{const q=P(u,v,b.at(u,v));return[q[0],q[1]-lift]});
+  ctx.lineJoin="round";ctx.lineCap="round";
+  ctx.strokeStyle="rgba(255,106,43,.28)";ctx.lineWidth=small?4:10;ctx.beginPath();pts.forEach((q,i)=>i?ctx.lineTo(...q):ctx.moveTo(...q));ctx.stroke();
+  ctx.strokeStyle=css("--run");ctx.lineWidth=small?1.8:3.4;ctx.beginPath();pts.forEach((q,i)=>i?ctx.lineTo(...q):ctx.moveTo(...q));ctx.stroke();
+  if(!small){const s0=pts[0],e0=pts[pts.length-1];const pin=(q,t,col)=>{ctx.fillStyle=col;ctx.beginPath();ctx.arc(q[0],q[1],7,0,7);ctx.fill();ctx.strokeStyle="#0a0b0d";ctx.lineWidth=2;ctx.stroke();ctx.font="700 12px "+css("--sans");ctx.fillStyle=css("--ink");ctx.textAlign="center";ctx.fillText(t,q[0],q[1]-12)};
+    const same=Math.hypot(s0[0]-e0[0],s0[1]-e0[1])<10;if(!same)pin(e0,"終點","#f3f4f6");pin(s0,same?"起終點":"起點",css("--run"))}}
+
+/* ---------- profile ---------- */
+function drawProfile(cv,s){const b=build(s),ctx=cv.getContext("2d"),dpr=Math.min(2,devicePixelRatio||1),W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+  const pr=b.prof,mn=Math.min(...pr),mx=Math.max(...pr),span=Math.max(mx-mn,Math.max(12,s.gain*.6)),base=mn-(span-(mx-mn))*(mx-mn<1?.5:.25);
+  const L=38,R=8,T=10,B=22,x=t=>L+t*(W-L-R),y=h=>T+(1-(h-base)/span)*(H-T-B),dist=parseFloat(s.dist);
+  ctx.strokeStyle=css("--line");ctx.lineWidth=1;ctx.fillStyle=css("--mute");ctx.font="500 11px "+css("--sans");
+  ctx.textAlign="right";for(const h of(mx-mn>16?[mn,(mn+mx)/2,mx]:[mn,mx])){const yy=y(h);ctx.beginPath();ctx.moveTo(L,yy);ctx.lineTo(W-R,yy);ctx.stroke();
+    const lab=s.peak?Math.round(s.peak-(mx-h)):Math.round(h-mn);ctx.fillText(s.peak?`${lab}m`:`+${lab}m`,L-5,yy+4)}
+  ctx.textAlign="center";const steps=dist<=2?[0,.5,1]:[0,.25,.5,.75,1];for(const t of steps){ctx.fillText((dist*t).toFixed(dist<5?1:0)+" km",Math.min(W-R-14,Math.max(L+14,x(t))),H-5)}
+  const g=ctx.createLinearGradient(0,T,0,H-B);const rc=css("--run");g.addColorStop(0,rc+"55");g.addColorStop(1,rc+"08");
+  ctx.beginPath();ctx.moveTo(x(0),H-B);pr.forEach((h,i)=>ctx.lineTo(x(b.cum[i]),y(h)));ctx.lineTo(x(1),H-B);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+  ctx.beginPath();pr.forEach((h,i)=>i?ctx.lineTo(x(b.cum[i]),y(h)):ctx.moveTo(x(0),y(h)));ctx.strokeStyle=rc;ctx.lineWidth=2.2;ctx.stroke();
+  const im=pr.indexOf(mx);ctx.fillStyle=rc;ctx.beginPath();ctx.arc(x(b.cum[im]),y(mx),3.5,0,7);ctx.fill()}
+
+/* ---------- UI ---------- */
+const ZONES={tc:[["all","全部"],["xitun","西屯"],["beitun","北屯"],["nantun","南屯"],["central","中區"],["tanya","潭子・大雅"],["shancheng","豐原・山城"]],
+ tp:[["all","全部"],["daan","大安"],["zz","中正・萬華"],["ss","中山・松山"],["dt","大同・士林"],["xy","信義"],["ws","文山"],["bt","北投・陽明山"]],
+ ks:[["all","全部"],["gs","鼓山"],["qj","前金・苓雅"],["zy","左營"],["fs","鳳山"],["ns","鳥松"],["gsn","岡山"]]};
+let city="tc",cat="all",zone="all",cur="central",yaw=.6;
+try{const s=JSON.parse(localStorage.getItem("tcrun")||"{}");if(s.cur&&SPOTS.some(x=>x.id===s.cur))cur=s.cur;if(s.cat)cat=s.cat;if(s.zone)zone=s.zone;if(s.city)city=s.city}catch(e){}
+const H0=location.hash.slice(1),HC={taipei:"tp",taichung:"tc",kaohsiung:"ks"};if(HC[H0]&&HC[H0]!==city){city=HC[H0];zone="all";cat="all";cur=""}
+if(!SPOTS.some(x=>x.id===cur&&x.city===city))cur="";
+const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const maps=q=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);
+const save=()=>{try{localStorage.setItem("tcrun",JSON.stringify({cur,cat,zone,city}))}catch(e){}};
+function detailHTML(s){const est=f=>f?"約":"";const word=s.gain>=150?"大爬升":s.gain>=30?"緩起伏":"平路";
+  return`<div class="dh"><div><h2>${s.n}</h2><p>${s.area}・${s.type}</p></div><a class="nav" href="${maps(s.q)}" target="_blank" rel="noopener">導航</a></div>
+  <div class="terrain"><canvas aria-label="${s.n} 地形示意圖"></canvas><span class="tag">TERRAIN</span><span class="hint">左右拖曳旋轉</span></div>
+  <div class="stats"><div class="st"><small>${est(s.distEst)}距離</small><b>${s.dist}<em>km</em></b></div><div class="st"><small>${est(s.gainEst)}爬升</small><b>${s.gain}<em>m</em></b></div>
+  ${s.grade?`<div class="st"><small>平均坡度</small><b>${s.grade}<em>%</em></b></div><div class="st"><small>最高點</small><b>${s.peak}<em>m</em></b></div>`:`<div class="st"><small>地形</small><b class="t">${word}</b></div><div class="st"><small>路面</small><b class="t">${s.cat.includes("trail")?"土徑石階":"鋪面"}</b></div>`}</div>
+  <div class="prof"><h3>高度剖面</h3><canvas aria-label="${s.n} 高度剖面示意"></canvas></div>
+  <div class="info"><div><h3>距離</h3><p>${s.distNote}${s.distEst?` ${s.dist} km`:""}</p></div><div><h3>路面</h3><p>${s.surface}</p></div><div><h3>建議時段</h3><p>${s.time}</p></div><div><h3>廁所／補給</h3><p>${s.supply}</p></div></div>
+  <div class="chips">${s.workout.map(w=>`<span>${w}</span>`).join("")}</div>
+  <div class="tip"><b>跑者筆記</b>${s.tip}</div>`}
+const D=document.getElementById("detail");let tc=null,pc=null,curSpot=null,raf=0,spin=0;
+function frame(){raf=0;if(tc&&curSpot)drawTerrain(tc,curSpot,yaw,false)}
+const req=()=>{if(!raf)raf=requestAnimationFrame(frame)};
+function showDetail(s,animate){curSpot=s;const go=()=>{D.innerHTML=detailHTML(s);tc=D.querySelector(".terrain canvas");pc=D.querySelector(".prof canvas");bindDrag();
+    drawProfile(pc,s);if(animate&&!RM){const y0=yaw-.9,t0=performance.now();cancelAnimationFrame(spin);const step=t=>{const k=Math.min(1,(t-t0)/650),e=1-Math.pow(1-k,3);yaw=y0+.9*e;drawTerrain(tc,s,yaw,false);if(k<1)spin=requestAnimationFrame(step)};spin=requestAnimationFrame(step)}else frame();D.classList.remove("swap")};
+  if(animate&&!RM&&D.innerHTML){D.classList.add("swap");setTimeout(go,120)}else go()}
+function bindDrag(){let on=false,lx=0;tc.addEventListener("pointerdown",e=>{on=true;lx=e.clientX;cancelAnimationFrame(spin);tc.setPointerCapture(e.pointerId);tc.style.cursor="grabbing"});
+  tc.addEventListener("pointermove",e=>{if(!on)return;yaw+=(e.clientX-lx)*.012;lx=e.clientX;req()});
+  const up=()=>{on=false;tc.style.cursor=""};tc.addEventListener("pointerup",up);tc.addEventListener("pointercancel",up)}
+const inZone=(s,z)=>s.city===city&&(z==="all"||s.zone.includes(z)),inCat=(s,c)=>c==="all"||s.cat.includes(c);
+function renderFilters(){document.getElementById("cities").innerHTML=CITIES.map(([k,l])=>`<button type="button" class="c" aria-pressed="${k===city}" data-k="${k}">${l}<small>${SPOTS.filter(s=>s.city===k).length}</small></button>`).join("");
+  const cc=CITIES.find(c=>c[0]===city);
+  document.getElementById("zones").innerHTML=ZONES[city].filter(([k])=>SPOTS.some(s=>inZone(s,k))).map(([k,l])=>`<button type="button" class="f" aria-pressed="${k===zone}" data-z="${k}">${l}<small>${SPOTS.filter(s=>inZone(s,k)).length}</small></button>`).join("");
+  document.getElementById("filters").innerHTML=CATS.filter(([k])=>k==="all"||SPOTS.some(s=>inZone(s,zone)&&inCat(s,k))).map(([k,l])=>`<button type="button" class="f" aria-pressed="${k===cat}" data-c="${k}">${l}</button>`).join("")}
+function renderList(){const vis=SPOTS.filter(s=>inZone(s,zone)&&inCat(s,cat));if(!vis.length){if(cat!=="all")cat="all";else zone="all";return renderList()}if(!vis.some(s=>s.id===cur))cur=vis[0].id;const L=document.getElementById("list");
+  L.innerHTML=vis.map(s=>`<button type="button" class="spot" data-id="${s.id}" aria-pressed="${s.id===cur}"><canvas aria-hidden="true"></canvas><div><b>${s.n}</b><span><span class="k">${s.distEst?"~":""}${s.dist} KM</span>　<span class="k">↑ ${s.gain} M</span></span></div></button>`).join("");
+  L.querySelectorAll(".spot").forEach(b=>drawTerrain(b.querySelector("canvas"),SPOTS.find(x=>x.id===b.dataset.id),.6,true))}
+function select(id,animate){if(id===cur&&curSpot&&curSpot.id===id)return;cur=id;save();
+  document.querySelectorAll(".spot").forEach(b=>b.setAttribute("aria-pressed",b.dataset.id===cur));
+  const btn=document.querySelector(`.spot[data-id="${cur}"]`);if(btn&&innerWidth<=860)btn.scrollIntoView({behavior:RM?"auto":"smooth",block:"nearest",inline:"center"});
+  showDetail(SPOTS.find(x=>x.id===cur),animate)}
+document.getElementById("cities").addEventListener("click",e=>{const b=e.target.closest(".c");if(!b||b.dataset.k===city)return;city=b.dataset.k;zone="all";cat="all";cur="";curSpot=null;try{history.replaceState(null,"","#"+{tp:"taipei",tc:"taichung",ks:"kaohsiung"}[city])}catch(err){}refilter()});
+function refilter(){if(!SPOTS.some(s=>inZone(s,zone)&&inCat(s,cat)))cat="all";save();renderFilters();renderList();if(!curSpot||curSpot.id!==cur)showDetail(SPOTS.find(x=>x.id===cur),true)}
+document.getElementById("zones").addEventListener("click",e=>{const b=e.target.closest(".f");if(!b||b.dataset.z===zone)return;zone=b.dataset.z;refilter()});
+document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest(".f");if(!b||b.dataset.c===cat)return;cat=b.dataset.c;refilter()});
+document.getElementById("list").addEventListener("click",e=>{const b=e.target.closest(".spot");if(b)select(b.dataset.id,true)});
+let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{renderList();if(curSpot){frame();drawProfile(pc,curSpot)}},150)});
+renderFilters();renderList();showDetail(SPOTS.find(x=>x.id===cur),false);
+</script>
+
+</body>
+</html>

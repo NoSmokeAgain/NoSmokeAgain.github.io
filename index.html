@@ -1,39 +1,106 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HappyDog 遊戲樂園</title>
-  <style>
-    body {
-      background: #141422;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 60px 20px;
-    }
-    h1 { font-size: 40px; }
-    p { color: #aaa; }
-    a {
-      display: block;
-      max-width: 300px;
-      margin: 15px auto;
-      padding: 18px;
-      background: #ffcc33;
-      color: #222;
-      border-radius: 14px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>三分鐘遊樂場｜點開就能玩的台灣小遊戲</title>
+<meta name="description" content="每個遊戲三分鐘，玩完會想傳給朋友。持續更新的台灣小遊戲合集。">
+<link rel="canonical" href="https://nosmokeagain.github.io/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="三分鐘遊樂場｜點開就能玩的台灣小遊戲">
+<meta property="og:description" content="每個遊戲三分鐘，玩完會想傳給朋友。">
+<meta property="og:url" content="https://nosmokeagain.github.io/">
+<meta property="og:image" content="https://nosmokeagain.github.io/assets/og-home.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+/* Layout: a single-column social feed. Each game is a post: avatar, name, time, text, swipeable media, action row. */
+:root{--bg:#ffffff;--ink:#101010;--mute:#8a8a8a;--line:#e6e6e6;--chip:#f3f3f3;--heart:#ff3040;--card:#101010;--cardink:#fff;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#101010;--ink:#f3f5f7;--mute:#777;--line:#2a2a2a;--chip:#1e1e1e;--heart:#ff3040;--card:#f3f5f7;--cardink:#101010;color-scheme:dark}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Helvetica Neue",sans-serif;font-size:15px;line-height:1.45}
+a{color:inherit;text-decoration:none}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg)}
+.bar{max-width:620px;margin:0 auto;height:56px;display:grid;place-items:center;position:relative}
+.logo{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:900;font-size:19px}
+.tabs{max-width:620px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);padding:0 max(8px,env(safe-area-inset-right,0px)) 0 max(8px,env(safe-area-inset-left,0px))}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1 0 auto;border:0;background:none;color:var(--mute);font-weight:600;font-size:15px;font-family:inherit;padding:12px 14px;cursor:pointer;position:relative;white-space:nowrap}
+.tab[aria-selected=true]{color:var(--ink)}
+.tab[aria-selected=true]::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:1.5px;background:var(--ink)}
+main{max-width:620px;margin:0 auto}
+.post{display:grid;grid-template-columns:36px 1fr;gap:10px;padding:14px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line)}
+.av{width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:900;font-size:18px}
+.body{min-width:0}
+.hd{display:flex;align-items:center;gap:6px;font-size:15px}
+.hd b{font-weight:600}
+.hd .t{color:var(--mute)}
+.hd .more{margin-left:auto;color:var(--ink);letter-spacing:1px}
+.pin{font-size:12.5px;color:var(--mute);margin-bottom:2px}
+.txt{margin:2px 0 0;white-space:pre-line;overflow-wrap:anywhere}
+.txt strong{font-weight:600}
+.made{margin-top:2px;font-size:12.5px;color:var(--mute)}
+.shot{display:block;width:min(52vw,210px);aspect-ratio:390/600;border-radius:10px;overflow:hidden;border:1px solid var(--line);margin-top:10px;background:var(--chip)}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.acts .go{margin-left:auto;border:1px solid var(--line);font-weight:600;font-size:14px;padding:6px 16px}
+.made span{display:inline-block;background:var(--chip);border-radius:999px;padding:1px 8px;margin-right:6px;color:var(--ink)}
+.media{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:10px -16px 0 0;padding-right:16px;scroll-snap-type:x mandatory}
+.media::-webkit-scrollbar{display:none}
+.media a{flex:none;scroll-snap-align:start;width:min(62vw,250px);aspect-ratio:390/600;border-radius:10px;overflow:hidden;border:1px solid var(--line);position:relative;background:var(--chip)}
+.media img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.media .play{background:var(--card);color:var(--cardink);display:flex;flex-direction:column;justify-content:flex-end;padding:16px;gap:6px;border-color:transparent}
+.media .play b{font-size:22px;line-height:1.25;font-weight:800}
+.media .play span{font-size:14px;opacity:.75}
+.media .play i{font-style:normal;font-weight:700;border:1.5px solid currentColor;border-radius:999px;padding:6px 14px;align-self:flex-start;margin-top:6px;font-size:14px}
+.acts{display:flex;gap:4px;align-items:center;margin:8px 0 0 -8px}
+.acts button,.acts a{border:0;background:none;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:4px;padding:6px 8px;border-radius:999px;font-weight:500;font-size:13px;font-family:inherit}
+.acts button:hover,.acts a:hover{background:var(--chip)}
+.acts svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.acts .liked{color:var(--heart)}.acts .liked svg{fill:var(--heart);stroke:var(--heart)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+.end{text-align:center;color:var(--mute);font-size:13px;padding:30px 16px 50px;line-height:1.7}
+button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+</style>
 </head>
 <body>
-  <h1>🐶 HappyDog</h1>
-  <p>歡迎來到我的小遊戲樂園！</p>
-  <a href="/2026chef/">🍳 今晚吃什麼？</a>
-  <a href="/2026TaipeiQuiz/">🗳️ 台北選舉遊戲</a>
-  <a href="/SmokeBug/">🚭 戒菸遊戲</a>
-  <p>更多遊戲即將登場 🎮</p>
+<div class="top"><div class="bar"><div class="logo" aria-label="三分鐘遊樂場">3</div></div><div class="tabs" id="tabs" role="tablist"></div></div>
+<main id="feed"></main>
+<div class="end">已經滑到底了<br>每個遊戲都是一則貼文，新作會出現在最上面。<br>本站沒有追蹤 cookie；按讚只存在你自己的手機。</div>
+<div class="toast" id="toast"></div>
+<script>
+const G=[{"slug": "chef", "title": "拿出你的手路菜", "desc": "冰箱 230 種食材，份量、火候自己來，煮出只屬於你的一道菜。", "cat": "療癒", "date": "2026-10-29T22:10:29+08:00"}, {"slug": "us-stock", "title": "美股怎麼買最省", "desc": "第一次買美股？選你的券商，告訴你最省的開始方式。", "cat": "實用", "date": "2026-10-29T19:17:02+08:00"}, {"slug": "run-taichung", "title": "北中高跑點地圖", "desc": "台北、台中、高雄 30 個跑點，距離、爬升、地形示意圖一次看。", "cat": "實用", "date": "2026-10-29T19:17:01+08:00"}, {"slug": "island", "title": "漂流：荒島求生", "desc": "鑽木取火、做釣竿、挖雞母蟲。你能在無人島活幾天？", "cat": "冒險", "date": "2026-10-29T03:24:44+08:00"}, {"slug": "michelin", "title": "台中米其林寶典", "desc": "七年米其林名單，分區看價錢，一鍵導航", "cat": "實用", "date": "2026-10-29T01:57:00+08:00"}, {"slug": "curry", "title": "我的札幌湯咖哩", "desc": "煮一碗湯咖哩，看妳的湯咖哩人格", "cat": "療癒", "date": "2026-10-28T23:37:00+08:00"}, {"slug": "first-snow", "title": "北海道，第一場雪", "desc": "算算特休，排一趟看初雪的旅行", "cat": "療癒", "date": "2026-10-28T22:58:00+08:00"}, {"slug": "snow-window", "title": "窗外的北海道", "desc": "擦開起霧的窗，接住初雪抽一張籤", "cat": "療癒", "date": "2026-10-28T18:20:00+08:00"}, {"slug": "pet", "title": "毛孩心聲所", "desc": "影片還沒傳完，溝通師就講完了", "cat": "好笑", "date": "2026-10-28T17:02:00+08:00"}, {"slug": "nails", "title": "美甲配色機", "desc": "不知道做什麼顏色？抽一組", "cat": "療癒", "date": "2026-10-28T05:57:00+08:00"}, {"slug": "shopping", "title": "雙11週年慶地圖", "desc": "2026 全台百貨週年慶日期一次看", "cat": "實用", "date": "2026-10-28T05:49:00+08:00"}, {"slug": "nba", "title": "薪水帽組隊", "desc": "用薪資上限組一支史上最強 NBA 隊", "cat": "好笑", "date": "2026-10-28T05:42:00+08:00"}, {"slug": "chihuahua", "title": "吉娃娃配種所", "desc": "生一隻專屬你的吉娃娃頭貼", "cat": "療癒", "date": "2026-10-28T03:06:00+08:00"}, {"slug": "elevator", "title": "電梯超載", "desc": "把各國乘客塞進電梯，不能超重", "cat": "好笑", "date": "2026-10-28T02:28:00+08:00"}, {"slug": "pineapple", "title": "削鳳梨", "desc": "削一顆鳳梨，看你削掉幾分", "cat": "好笑", "date": "2026-10-28T02:08:00+08:00"}, {"slug": "roll", "title": "慢慢捲", "desc": "手捲一根菸，考驗你的耐心", "cat": "好笑", "date": "2026-10-27T20:36:00+08:00"}, {"slug": "fart", "title": "噗噗節奏王", "desc": "老師放一段屁，你跟著噗回去", "cat": "好笑", "date": "2026-10-27T20:02:00+08:00"}, {"slug": "escape", "title": "準時下班大逃殺", "desc": "躲過主管，18:00 準時下班", "cat": "好笑", "date": "2026-10-27T01:52:00+08:00"}, {"slug": "dinner", "title": "下班吃什麼", "desc": "抓你附近的店，選不出來就幫你決定", "cat": "實用", "date": "2026-10-27T01:40:00+08:00"}, {"slug": "patrol", "title": "抓壞人 1987", "desc": "復古巡邏，抓壞人拚業績", "cat": "好笑", "date": "2026-10-27T01:31:00+08:00"}, {"slug": "salary", "title": "薪水撐到月底", "desc": "選你的月薪，看撐不撐得到月底", "cat": "好笑", "date": "2026-10-26T23:30:00+08:00"}, {"slug": "trip-draw", "title": "下一站抽籤", "desc": "抽你的下一個旅行城市", "cat": "療癒", "date": "2026-10-26T22:19:00+08:00"}, {"slug": "meal-dice", "title": "超商骰一餐", "desc": "中餐晚餐各骰一次，順便算營養", "cat": "實用", "date": "2026-10-26T05:00:00+08:00"}, {"slug": "hoops", "title": "鬥牛王", "desc": "45 秒街頭投籃對決", "cat": "好笑", "date": "2026-10-26T04:56:00+08:00"}, {"slug": "smokebug", "title": "菸蟲退散", "desc": "跟心裡的菸蟲對打", "cat": "好笑", "date": "2026-10-25T16:56:00+08:00"}];
+const ICO={heart:'<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-9.2-8.6C1.2 8.3 3.1 4.8 6.6 4.6c2.1-.1 3.6 1.1 5.4 3 1.8-1.9 3.3-3.1 5.4-3 3.5.2 5.4 3.7 3.8 6.8C19 15.6 12 20 12 20z"/></svg>',
+ chat:'<svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.1-4.3A8.5 8.5 0 1 1 20.5 12z"/></svg>',
+ repost:'<svg viewBox="0 0 24 24"><path d="M17 3l3 3-3 3M20 6H8a4 4 0 0 0-4 4v1M7 21l-3-3 3-3M4 18h12a4 4 0 0 0 4-4v-1"/></svg>',
+ send:'<svg viewBox="0 0 24 24"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4z"/></svg>'};
+let liked={};try{liked=JSON.parse(localStorage.getItem("sm_liked")||"{}")}catch(e){}
+const pad=n=>String(n).padStart(2,"0");
+function ago(iso){const d=new Date(iso),s=(Date.now()-d)/1000;if(s<60)return"剛剛";if(s<3600)return Math.floor(s/60)+" 分鐘";if(s<86400)return Math.floor(s/3600)+" 小時";if(s<7*86400)return Math.floor(s/86400)+" 天";return`${d.getMonth()+1}/${d.getDate()}`}
+function made(iso){const d=new Date(new Date(iso).toLocaleString("en-US",{timeZone:"Asia/Taipei"}));return`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`}
+const url=g=>new URL(`./${g.slug}/`,location.href).href;
+function post(g){const L=liked[g.slug];return`<article class="post"><div class="av">3</div><div class="body">
+ <div class="hd"><b>三分鐘遊樂場</b><span class="t">${ago(g.date)}・${g.cat}</span></div>
+ <p class="txt"><strong>${g.title}</strong>\n${g.desc}</p>
+ <a class="shot" href="./${g.slug}/"><img src="./assets/thumbs/${g.slug}.jpg" alt="${g.title} 遊戲畫面" loading="lazy"></a>
+ <div class="acts"><button type="button" data-a="like" data-s="${g.slug}" class="${L?"liked":""}" aria-label="喜歡">${ICO.heart}</button><button type="button" data-a="share" data-s="${g.slug}" aria-label="分享">${ICO.send}</button><a class="go" href="./${g.slug}/">開始玩</a></div>
+ <div class="made">製造日期 ${made(g.date)}</div>
+</div></article>`}
+const pinned=`<article class="post"><div class="av">3</div><div class="body"><div class="pin">📌 置頂</div><div class="hd"><b>三分鐘遊樂場</b></div>
+ <p class="txt"><strong>點開就能玩，玩完會想傳給朋友。</strong>\n不用下載、不用註冊。這裡每一則都是一個小遊戲，往下滑挑一個玩。目前 ${G.length} 個，持續更新。</p></div></article>`;
+const CATS=["最新",...[...new Set(G.map(g=>g.cat))]];let cur="最新";
+function render(){document.getElementById("tabs").innerHTML=CATS.map(c=>`<button class="tab" role="tab" type="button" aria-selected="${c===cur}" data-c="${c}">${c}</button>`).join("");
+ document.getElementById("feed").innerHTML=(cur==="最新"?pinned:"")+G.filter(g=>cur==="最新"||g.cat===cur).map(post).join("")}
+let tt;function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1500)}
+document.addEventListener("click",async e=>{const tb=e.target.closest(".tab");if(tb){cur=tb.dataset.c;render();scrollTo({top:0});return}
+ const b=e.target.closest("button[data-a]");if(!b)return;const g=G.find(x=>x.slug===b.dataset.s);
+ if(b.dataset.a==="like"){liked[g.slug]=!liked[g.slug];b.classList.toggle("liked",liked[g.slug]);try{localStorage.setItem("sm_liked",JSON.stringify(liked))}catch(err){}}
+ if(b.dataset.a==="copy"){try{await navigator.clipboard.writeText(url(g));toast("已複製連結")}catch(err){toast(url(g))}}
+ if(b.dataset.a==="share"){if(navigator.share){try{await navigator.share({title:g.title,text:g.desc,url:url(g)})}catch(err){}}else{try{await navigator.clipboard.writeText(url(g));toast("已複製連結")}catch(err){toast(url(g))}}}});
+render();
+</script>
 </body>
 </html>

@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:meta-->
+<meta name="description" content="躲過主管，18:00 準時下班">
+<link rel="canonical" href="https://nosmokeagain.github.io/escape/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="準時下班大逃殺｜三分鐘遊樂場">
+<meta property="og:description" content="躲過主管，18:00 準時下班">
+<meta property="og:url" content="https://nosmokeagain.github.io/escape/">
+<meta property="og:image" content="https://nosmokeagain.github.io/escape/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>準時下班大逃殺</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&family=Silkscreen&display=swap">
+<style>
+/* Layout: one-screen game. Wall-clock HUD on top (the clock is the score), top-down office canvas in the middle,
+   drag-anywhere joystick to move. Palette = fluorescent office: carpet grey-blue, desk beige, exit-sign green. Single committed look. */
+:root{
+  --bg:#1b1f27; --panel:#242a35; --ink:#f2f0ea; --mute:#9aa3b2; --exit:#2fd47a; --boss:#ff4d4d; --amber:#ffc845; --carpet:#3b4556;
+  --f:"Noto Sans TC",system-ui,sans-serif; --pix:"Silkscreen",ui-monospace,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none;-webkit-tap-highlight-color:transparent}
+.app{height:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:8px;box-sizing:border-box;
+  padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px));padding-block:10px}
+.hud{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}
+.clock{font:700 34px/1 var(--pix);background:#000;color:var(--exit);padding:6px 10px;border-radius:6px;box-shadow:inset 0 0 12px #2fd47a55;letter-spacing:2px;font-variant-numeric:tabular-nums}
+.clock.late{color:var(--boss);box-shadow:inset 0 0 12px #ff4d4d66}
+.mid{display:grid;gap:3px;font-size:12px;color:var(--mute)}
+.mid b{color:var(--ink);font-size:14px}
+.lives{font:700 13px var(--f);text-align:right;line-height:1.5}
+.lives span{color:var(--mute);font-size:11px;display:block}
+.stage{flex:1;min-height:0;position:relative;display:flex;align-items:center;justify-content:center;border-radius:10px;overflow:hidden;background:#11141a}
+canvas{display:block;touch-action:none}
+.bub{position:absolute;pointer-events:none;background:#fff;color:#111;font:900 14px var(--f);padding:6px 10px;border-radius:12px;white-space:nowrap;transform:translate(-50%,-100%);animation:bub 1.3s forwards;z-index:4}
+.bub::after{content:"";position:absolute;left:50%;top:100%;margin-left:-6px;border:6px solid transparent;border-top-color:#fff}
+.bub.good{background:var(--exit);color:#04210f}.bub.good::after{border-top-color:var(--exit)}
+@keyframes bub{0%{opacity:0;transform:translate(-50%,-70%) scale(.6)}12%{opacity:1;transform:translate(-50%,-100%) scale(1.08)}85%{opacity:1}100%{opacity:0}}
+.joy{position:absolute;width:90px;height:90px;border-radius:50%;border:2px solid #ffffff44;background:#ffffff10;transform:translate(-50%,-50%);pointer-events:none;z-index:3}
+.joy i{position:absolute;left:50%;top:50%;width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:50%;background:#ffffff55}
+.hint{font-size:12px;color:var(--mute);text-align:center;margin:0}
+.mute{position:absolute;right:8px;top:8px;z-index:5;width:34px;height:34px;border-radius:8px;border:1px solid #ffffff22;background:#0008;color:var(--ink);display:grid;place-items:center;cursor:pointer;padding:0}
+.mute svg{width:16px;height:16px}
+.ov{position:absolute;inset:0;z-index:8;background:#11141af0;display:flex;align-items:center;justify-content:center;padding:20px;text-align:center;overflow:auto}
+.ov[hidden]{display:none}
+.panel{display:grid;gap:14px;max-width:340px;width:100%}
+.ttl{font:900 34px/1.15 var(--f);margin:0}
+.ttl em{font-style:normal;color:var(--exit);display:block;font:700 13px var(--pix);letter-spacing:3px;margin-bottom:6px}
+.txt{font:500 14px/1.7 var(--f);color:#cfd5e0;margin:0}
+.txt b{color:var(--amber)}
+.rules{display:grid;gap:7px;text-align:left;font-size:13px;color:#cfd5e0}
+.rules span{display:inline-block;width:26px}
+.btn{font:900 17px var(--f);border:0;border-radius:12px;padding:14px;background:var(--exit);color:#04210f;cursor:pointer;box-shadow:0 5px 0 #188a4c;touch-action:manipulation}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #188a4c}
+.btn:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+.btn.ghost{background:var(--panel);color:var(--ink);box-shadow:0 5px 0 #000}
+.big{font:700 44px var(--pix);color:var(--exit)}
+.big.late{color:var(--boss)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.small{font:500 12px var(--f);color:var(--mute);margin:0}
+.toast{min-height:1.2em;font:700 12px var(--f);color:var(--exit);margin:0}
+@media (prefers-reduced-motion:reduce){.bub{animation:none;opacity:1}}
+</style>
+</head>
+<body>
+
+
+<div class="app">
+  <div class="hud">
+    <div class="clock" id="clock">18:00</div>
+    <div class="mid"><span>第 <b id="lv">1</b> 關・<span id="lvname">普通的週一</span></span><span id="goal">走到出口電梯就下班</span></div>
+    <div class="lives"><span>被抓</span><b id="caught">0</b> 次</div>
+  </div>
+  <div class="stage" id="stage">
+    <canvas id="cv"></canvas>
+    <button class="mute" id="mute" aria-label="聲音開關"></button>
+    <div class="ov" id="title">
+      <div class="panel">
+        <p class="ttl"><em>18:00 SHARP</em>準時下班<br>大逃殺</p>
+        <p class="txt">時鐘一跳到 18:00，你就想走。<br>但主管、會議和「你有空嗎」都在等你。</p>
+        <div class="rules">
+          <div><span>👆</span>手指按住畫面任何地方拖曳，往那個方向走</div>
+          <div><span>👔</span>主管看過來的扇形範圍不要踩進去</div>
+          <div><span>📅</span>飛過來的會議邀請不要碰</div>
+          <div><span>🙋</span>晃來晃去的同事會問「你有空嗎」</div>
+          <div><span>☕</span>咖啡加速、🎧耳機三秒隱形</div>
+          <div><span>⏰</span>被抓一次加班 30 分鐘，拖過 21:00 就輸了</div>
+        </div>
+        <button class="btn" id="start">打卡，準備下班</button>
+        <p class="small" id="bestT"></p>
+      </div>
+    </div>
+    <div class="ov" id="mid" hidden><div class="panel" id="midP"></div></div>
+  </div>
+  <p class="hint">按住畫面拖曳移動・綠色的 EXIT 是電梯</p>
+</div>
+
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d'),stage=$('stage');
+const COLS=9,ROWS=15;let TS=32,W=COLS*TS,H=ROWS*TS,DPR=1;
+function fit(){const r=stage.getBoundingClientRect();TS=Math.floor(Math.min(r.width/COLS,r.height/ROWS));W=COLS*TS;H=ROWS*TS;DPR=Math.min(2,devicePixelRatio||1);
+  cv.width=W*DPR;cv.height=H*DPR;cv.style.width=W+'px';cv.style.height=H+'px';ctx.setTransform(DPR,0,0,DPR,0,0)}
+addEventListener('resize',fit);
+
+/* ---------- audio ---------- */
+let ac=null,master=null,bgmG=null,nb=null,unlockEl=null,muted=false,seq=null;
+try{muted=localStorage.getItem('esc_mute')==='1'}catch(e){}
+function silentWav(){const n=4000,b=new ArrayBuffer(44+n),v=new DataView(b);let o=0;const w=t=>{for(const c of t)v.setUint8(o++,c.charCodeAt(0))},u32=x=>{v.setUint32(o,x,true);o+=4},u16=x=>{v.setUint16(o,x,true);o+=2};
+  w('RIFF');u32(36+n);w('WAVE');w('fmt ');u32(16);u16(1);u16(1);u32(8000);u32(8000);u16(1);u16(8);w('data');u32(n);for(let k=0;k<n;k++)v.setUint8(o++,128);return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
+function initAudio(){try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+  try{if(!unlockEl){unlockEl=new Audio(silentWav());unlockEl.loop=true;unlockEl.setAttribute('playsinline','')}unlockEl.play().catch(()=>{})}catch(e){}
+  if(ac){ac.resume&&ac.resume();return}
+  try{ac=new (window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=muted?0:1;master.connect(ac.destination);
+    bgmG=ac.createGain();bgmG.gain.value=.3;bgmG.connect(master);nb=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);const d=nb.getChannelData(0);for(let k=0;k<d.length;k++)d[k]=Math.random()*2-1}catch(e){ac=null}}
+function T(at){return at>10?at:ac.currentTime+(at||0)}
+function tone(f,d,type='square',v=.06,at=0,dest,slide){if(!ac)return;const t=T(at),o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(slide,t+d);
+  g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(dest||master);o.start(t);o.stop(t+d+.02)}
+function noise(d,v,f,at=0,type='bandpass',dest){if(!ac)return;const t=T(at),s=ac.createBufferSource(),fl=ac.createBiquadFilter(),g=ac.createGain();s.buffer=nb;fl.type=type;fl.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(fl).connect(g).connect(dest||master);s.start(t);s.stop(t+d+.02)}
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+const sfx={
+  step(){noise(.03,.03,900)},
+  caught(){tone(523,.12,'square',.07);tone(392,.12,'square',.07,.12);tone(262,.35,'sawtooth',.07,.24)},
+  meeting(){[0,.08,.16].forEach(d=>tone(880,.06,'square',.05,d))},
+  pick(){[76,81,88].forEach((m,k)=>tone(mtof(m),.08,'square',.05,k*.05))},
+  exit(){tone(1046,.25,'sine',.08);tone(1318,.4,'sine',.07,.15)},
+  win(){[60,64,67,72,76,79,84].forEach((m,k)=>tone(mtof(m),.16,'square',.06,k*.08))},
+  lose(){[67,63,60,55,48].forEach((m,k)=>tone(mtof(m),.3,'triangle',.08,k*.2))},
+  alarm(){tone(1200,.08,'square',.05);tone(1200,.08,'square',.05,.15)}
+};
+/* sneaky office loop: walking bass + muted stabs */
+function bgmStart(){if(!ac||seq)return;let st=0,nt=ac.currentTime+.05;const B=[45,48,50,52,53,52,50,48],dt=60/112/2;
+  seq=setInterval(()=>{while(nt<ac.currentTime+.12){if(st%2===0)tone(mtof(B[(st/2|0)%8]),dt*1.6,'triangle',.16,nt,bgmG);
+    if(st%4===1)tone(mtof(69+((st/4|0)%2?3:0)),dt*.4,'square',.03,nt,bgmG);if(st%2===1)noise(.02,.04,8000,nt,'highpass',bgmG);if(st%8===0)tone(110,.08,'sine',.2,nt,bgmG,50);nt+=dt;st++}},25)}
+function bgmStop(){clearInterval(seq);seq=null}
+const ICON=()=>muted?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
+function setMute(m){muted=m;try{localStorage.setItem('esc_mute',m?'1':'0')}catch(e){}if(master)master.gain.setTargetAtTime(m?0:1,ac.currentTime,.02);$('mute').innerHTML=ICON()}
+$('mute').onclick=e=>{e.stopPropagation();initAudio();setMute(!muted)};setMute(muted);
+function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+
+/* ---------- levels (tile coords; desks are rects in tiles) ---------- */
+const LEVELS=[
+ {name:'普通的週一',desks:[[1,3,2,1],[5,3,3,1],[1,6,3,1],[6,6,2,1],[1,9,2,1],[4,9,4,1],[2,12,5,1]],
+  bosses:[{path:[[4.5,5],[4.5,7.6],[0.6,7.6],[0.6,5]],spd:1.1}],cows:1,meet:0},
+ {name:'月底結帳日',desks:[[0,3,3,1],[4,3,4,1],[1,6,2,1],[5,6,3,1],[0,9,4,1],[5,9,3,1],[1,12,3,1],[5,12,3,1]],
+  bosses:[{path:[[4,4.6],[8.4,4.6],[8.4,7.6],[4,7.6]],spd:1.2},{path:[[0.5,10.6],[4.5,10.6]],spd:1}],cows:1,meet:1},
+ {name:'老闆今天心情不好',desks:[[1,3,7,1],[0,6,3,1],[4,6,4,1],[1,9,2,1],[4,9,2,1],[7,9,2,1],[0,12,4,1],[5,12,3,1]],
+  bosses:[{path:[[0.5,4.6],[8.4,4.6]],spd:1.4},{path:[[3.5,7.6],[3.5,10.6],[6.5,10.6],[6.5,7.6]],spd:1.3}],cows:2,meet:2},
+ {name:'專案上線前一天',desks:[[0,3,4,1],[5,3,4,1],[2,5,5,1],[0,7,3,1],[6,7,3,1],[2,9,5,1],[0,11,4,1],[5,11,4,1]],
+  bosses:[{path:[[4.5,2.3],[4.5,4.4]],spd:1},{path:[[0.5,6.2],[8.4,6.2]],spd:1.6},{path:[[0.5,10.3],[8.4,10.3]],spd:1.5}],cows:2,meet:3},
+ {name:'年終考核週',desks:[[1,2,2,1],[4,2,1,1],[6,2,2,1],[0,4,3,1],[4,4,5,1],[1,6,7,1],[0,8,2,1],[3,8,3,1],[7,8,2,1],[1,10,3,1],[5,10,3,1],[2,12,5,1]],
+  bosses:[{path:[[0.5,3.2],[8.4,3.2]],spd:1.7},{path:[[0.5,7.2],[8.4,7.2]],spd:1.7},{path:[[2.5,11.2],[6.5,11.2]],spd:1.5}],cows:3,meet:4}
+];
+const BOSS_LINES=['你有空嗎？','這個幫我看一下','明天早上要給客戶','你先別走','開個小會就好','剛好你在'];
+const COW_LINES=['你有空嗎？','可以問你一下嗎','你知道印表機怎麼用嗎','一起訂晚餐嗎？','這個 Excel 怎麼了'];
+const MEET_LINES=['會議邀請：18:30 緊急討論','會議：檢討上一個會議','會議：快速對焦 5 分鐘'];
+let best=null;try{best=JSON.parse(localStorage.getItem('esc_best')||'null')}catch(e){}
+
+const S={on:false,lv:0,min:0,caught:0,freeze:0,speedT:0,ghostT:0,t:0,totalLate:0,results:[]};
+let P,bosses,cows,meets,items,desks,exit;
+function rectHit(x,y,r){for(const d of desks){const rx=d[0]*TS,ry=d[1]*TS,rw=d[2]*TS,rh=d[3]*TS;const cx=Math.max(rx,Math.min(x,rx+rw)),cy=Math.max(ry,Math.min(y,ry+rh));if((x-cx)**2+(y-cy)**2<r*r)return true}return false}
+function lineBlocked(x1,y1,x2,y2){for(let k=1;k<10;k++){const x=x1+(x2-x1)*k/10,y=y1+(y2-y1)*k/10;for(const d of desks){if(x>d[0]*TS&&x<(d[0]+d[2])*TS&&y>d[1]*TS&&y<(d[1]+d[3])*TS)return true}}return false}
+function freeSpot(){for(let k=0;k<60;k++){const x=(.6+Math.random()*(COLS-1.2))*TS,y=(2.5+Math.random()*(ROWS-5))*TS;if(!rectHit(x,y,TS*.45))return[x,y]}return[W/2,H/2]}
+function load(i){const L=LEVELS[i];desks=L.desks;exit={x:W/2,y:TS*.9};
+  P={x:W/2,y:H-TS*1.1,r:TS*.32,face:-Math.PI/2,walk:0};
+  bosses=L.bosses.map(b=>({path:b.path.map(([x,y])=>[x*TS,y*TS]),i:0,x:b.path[0][0]*TS,y:b.path[0][1]*TS,spd:b.spd*TS,dir:0,wait:0,look:0}));
+  cows=Array.from({length:L.cows},()=>{const[x,y]=freeSpot();return{x,y,tx:x,ty:y,t:0,col:['#ff9f43','#a29bfe','#55efc4'][Math.random()*3|0]}});
+  meets=[];S.meetT=2;S.meetN=L.meet;
+  items=[];for(let k=0;k<2;k++){const[x,y]=freeSpot();items.push({x,y,t:k?'phones':'coffee'})}
+  S.min=0;S.freeze=0;S.speedT=0;S.ghostT=0;
+  $('lv').textContent=i+1;$('lvname').textContent=L.name;hudClock()}
+
+/* ---------- input: floating joystick ---------- */
+let joy=null,joyEl=null;
+stage.addEventListener('pointerdown',e=>{if(!S.on||e.target.closest('button')||e.target.closest('.ov'))return;const r=stage.getBoundingClientRect();
+  joy={id:e.pointerId,x0:e.clientX,y0:e.clientY,dx:0,dy:0};joyEl=document.createElement('div');joyEl.className='joy';joyEl.innerHTML='<i></i>';
+  joyEl.style.left=(e.clientX-r.left)+'px';joyEl.style.top=(e.clientY-r.top)+'px';stage.appendChild(joyEl);try{stage.setPointerCapture(e.pointerId)}catch(_){}});
+stage.addEventListener('pointermove',e=>{if(!joy||joy.id!==e.pointerId)return;let dx=e.clientX-joy.x0,dy=e.clientY-joy.y0;const m=Math.hypot(dx,dy),R=40;if(m>R){dx*=R/m;dy*=R/m}
+  joy.dx=dx/R;joy.dy=dy/R;const k=joyEl.firstChild;k.style.transform=`translate(${dx}px,${dy}px)`});
+const endJ=e=>{if(joy&&joy.id===e.pointerId){joy=null;joyEl&&joyEl.remove();joyEl=null}};stage.addEventListener('pointerup',endJ);stage.addEventListener('pointercancel',endJ);
+const keys={};addEventListener('keydown',e=>keys[e.key]=1);addEventListener('keyup',e=>keys[e.key]=0);
+
+/* ---------- bubbles ---------- */
+function bubble(x,y,t,good){const c=cv.getBoundingClientRect(),s=stage.getBoundingClientRect();const d=document.createElement('div');d.className='bub'+(good?' good':'');d.textContent=t;
+  d.style.left=Math.max(70,Math.min(s.width-70,c.left-s.left+x/W*c.width))+'px';d.style.top=(c.top-s.top+y/H*c.height-10)+'px';stage.appendChild(d);setTimeout(()=>d.remove(),1300)}
+
+/* ---------- update ---------- */
+function caught(by,x,y,line){if(S.freeze>0||S.ghostT>0)return;S.caught++;S.min+=30;S.freeze=1.2;sfx.caught();buzz([50,40,50]);bubble(x,y,line);
+  setTimeout(()=>bubble(P.x,P.y-20,'加班 +30 分鐘'),400);P.x=W/2;P.y=H-TS*1.1;hudClock();$('caught').textContent=S.caught;if(S.min>=180)setTimeout(lose,900)}
+function step(dt){
+  S.t+=dt;if(S.freeze>0){S.freeze-=dt;return}
+  const before=Math.floor(S.min);S.min+=dt*1.0;if(Math.floor(S.min)!==before)hudClock();if(S.min>=180){lose();return}
+  if(S.speedT>0)S.speedT-=dt;if(S.ghostT>0)S.ghostT-=dt;
+  let dx=joy?joy.dx:0,dy=joy?joy.dy:0;if(keys.ArrowLeft)dx=-1;if(keys.ArrowRight)dx=1;if(keys.ArrowUp)dy=-1;if(keys.ArrowDown)dy=1;
+  const mag=Math.hypot(dx,dy);if(mag>.15){const sp=TS*(S.speedT>0?4.6:3.2)*Math.min(1,mag);const vx=dx/Math.max(1,mag)*sp*dt,vy=dy/Math.max(1,mag)*sp*dt;
+    if(!rectHit(P.x+vx,P.y,P.r)&&P.x+vx>P.r&&P.x+vx<W-P.r)P.x+=vx;if(!rectHit(P.x,P.y+vy,P.r)&&P.y+vy>P.r&&P.y+vy<H-P.r)P.y+=vy;
+    P.face=Math.atan2(dy,dx);const w=P.walk;P.walk+=dt*10;if(Math.floor(w)!==Math.floor(P.walk)&&Math.floor(P.walk)%2)sfx.step()}
+  /* exit */
+  if(Math.hypot(P.x-exit.x,P.y-exit.y)<TS*.8){win();return}
+  /* bosses patrol + vision cone */
+  for(const b of bosses){if(b.wait>0){b.wait-=dt;b.look+=dt*2.2;b.dir+=Math.sin(b.look)*dt*1.4}else{const [tx,ty]=b.path[(b.i+1)%b.path.length],vx=tx-b.x,vy=ty-b.y,d=Math.hypot(vx,vy);
+      if(d<2){b.i=(b.i+1)%b.path.length;b.wait=.9}else{b.x+=vx/d*b.spd*dt;b.y+=vy/d*b.spd*dt;b.dir=Math.atan2(vy,vx)}}
+    const ex=P.x-b.x,ey=P.y-b.y,dd=Math.hypot(ex,ey);let ang=Math.atan2(ey,ex)-b.dir;ang=Math.atan2(Math.sin(ang),Math.cos(ang));
+    if((dd<TS*3.2&&Math.abs(ang)<.55&&!lineBlocked(b.x,b.y,P.x,P.y))||dd<TS*.7)caught('boss',b.x,b.y-14,BOSS_LINES[Math.random()*BOSS_LINES.length|0])}
+  /* wandering coworkers */
+  for(const c of cows){c.t-=dt;if(c.t<=0){const[x,y]=freeSpot();c.tx=x;c.ty=y;c.t=2+Math.random()*2}const vx=c.tx-c.x,vy=c.ty-c.y,d=Math.hypot(vx,vy);
+    if(d>2){const nx=c.x+vx/d*TS*1.4*dt,ny=c.y+vy/d*TS*1.4*dt;if(!rectHit(nx,ny,TS*.3)){c.x=nx;c.y=ny}else c.t=0}
+    if(Math.hypot(P.x-c.x,P.y-c.y)<TS*.7)caught('cow',c.x,c.y-14,COW_LINES[Math.random()*COW_LINES.length|0])}
+  /* meeting invites fly across */
+  if(S.meetN){S.meetT-=dt;if(S.meetT<=0){S.meetT=2.6-S.lv*.25;const fromL=Math.random()<.5;meets.push({x:fromL?-14:W+14,y:(2.5+Math.random()*(ROWS-5))*TS,vx:(fromL?1:-1)*TS*(1.8+S.lv*.3)});sfx.meeting()}}
+  for(const m of meets){m.x+=m.vx*dt;if(Math.abs(m.x-P.x)<TS*.55&&Math.abs(m.y-P.y)<TS*.5){m.dead=1;caught('meet',m.x,m.y-12,MEET_LINES[Math.random()*MEET_LINES.length|0])}}
+  meets=meets.filter(m=>!m.dead&&m.x>-30&&m.x<W+30);
+  for(const it of items){if(!it.dead&&Math.hypot(P.x-it.x,P.y-it.y)<TS*.6){it.dead=1;sfx.pick();if(it.t==='coffee'){S.speedT=5;bubble(it.x,it.y,'咖啡因上線，加速！',1)}else{S.ghostT=3;bubble(it.x,it.y,'戴上耳機，沒人叫得到你',1)}}}
+}
+function hudClock(){const m=Math.floor(S.min),h=18+Math.floor(m/60),mm=String(m%60).padStart(2,'0');$('clock').textContent=`${h}:${mm}`;$('clock').classList.toggle('late',m>=30)}
+const fmt=m=>{m=Math.floor(m);return`${18+Math.floor(m/60)}:${String(m%60).padStart(2,'0')}`};
+
+/* ---------- draw ---------- */
+function draw(){
+  ctx.fillStyle='#3b4556';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#36404f';for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if((x+y)%2)ctx.fillRect(x*TS,y*TS,TS,TS);
+  /* top wall + exit */
+  ctx.fillStyle='#262c38';ctx.fillRect(0,0,W,TS*.55);ctx.fillStyle='#596374';ctx.fillRect(exit.x-TS*.9,0,TS*1.8,TS*.55);
+  const gl=.6+.4*Math.sin(S.t*4);ctx.fillStyle=`rgba(47,212,122,${gl})`;ctx.fillRect(exit.x-TS*.7,TS*.05,TS*1.4,TS*.38);ctx.fillStyle='#04210f';ctx.font=`700 ${TS*.32}px Silkscreen, monospace`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('EXIT',exit.x,TS*.25);
+  ctx.strokeStyle=`rgba(47,212,122,${.35*gl})`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(exit.x,exit.y,TS*.8,0,7);ctx.stroke();
+  /* bottom: your desk */
+  ctx.fillStyle='#8a6f4d';ctx.fillRect(W/2-TS*.9,H-TS*.45,TS*1.8,TS*.45);ctx.fillStyle='#fff';ctx.font=`900 ${TS*.26}px "Noto Sans TC",sans-serif`;ctx.fillText('你的座位',W/2,H-TS*.22);
+  /* desks */
+  for(const d of desks){const x=d[0]*TS,y=d[1]*TS,w=d[2]*TS,h=d[3]*TS;ctx.fillStyle='#00000040';ctx.fillRect(x+3,y+4,w,h);ctx.fillStyle='#d9c7a3';ctx.fillRect(x,y,w,h);
+    ctx.fillStyle='#b9a582';ctx.fillRect(x,y+h-4,w,4);for(let k=0;k<d[2];k++){ctx.fillStyle='#2b2f38';ctx.fillRect(x+k*TS+TS*.25,y+TS*.15,TS*.5,TS*.32);ctx.fillStyle='#7fd3ff';ctx.fillRect(x+k*TS+TS*.29,y+TS*.18,TS*.42,TS*.24)}}
+  /* items */
+  for(const it of items){if(it.dead)continue;const bob=Math.sin(S.t*4)*2;ctx.font=`${TS*.6}px sans-serif`;ctx.fillText(it.t==='coffee'?'☕':'🎧',it.x,it.y+bob)}
+  /* boss cones */
+  for(const b of bosses){ctx.fillStyle='rgba(255,77,77,.18)';ctx.beginPath();ctx.moveTo(b.x,b.y);ctx.arc(b.x,b.y,TS*3.2,b.dir-.55,b.dir+.55);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='rgba(255,77,77,.5)';ctx.lineWidth=1.5;ctx.stroke()}
+  /* meetings */
+  for(const m of meets){ctx.fillStyle='#fff';ctx.fillRect(m.x-TS*.35,m.y-TS*.3,TS*.7,TS*.6);ctx.fillStyle='#ff4d4d';ctx.fillRect(m.x-TS*.35,m.y-TS*.3,TS*.7,TS*.16);ctx.fillStyle='#111';ctx.font=`900 ${TS*.26}px sans-serif`;ctx.fillText('會',m.x,m.y+TS*.06)}
+  /* people */
+  const person=(x,y,body,head,face,tag)=>{ctx.fillStyle='#0004';ctx.beginPath();ctx.ellipse(x,y+TS*.3,TS*.3,TS*.1,0,0,7);ctx.fill();
+    ctx.fillStyle=body;ctx.beginPath();ctx.arc(x,y+TS*.05,TS*.28,0,7);ctx.fill();ctx.fillStyle=head;ctx.beginPath();ctx.arc(x,y-TS*.2,TS*.2,0,7);ctx.fill();
+    if(face){ctx.font=`${TS*.42}px sans-serif`;ctx.fillText(face,x,y-TS*.62)}if(tag){ctx.fillStyle='#fff';ctx.font=`900 ${TS*.22}px "Noto Sans TC",sans-serif`;ctx.fillText(tag,x,y+TS*.05)}};
+  for(const c of cows)person(c.x,c.y,c.col,'#f1c27d','🙋','');
+  for(const b of bosses)person(b.x,b.y,'#2d3436','#f1c27d','👔','');
+  const blink=(S.freeze>0||S.ghostT>0)&&Math.floor(S.t*10)%2;ctx.globalAlpha=S.ghostT>0?.45:1;if(!blink||S.ghostT>0)person(P.x,P.y,'#2fd47a','#f1c27d',S.speedT>0?'☕':'','你');ctx.globalAlpha=1;
+}
+let last=0;function loop(ts){const dt=Math.min(.05,(ts-(last||ts))/1000);last=ts;if(S.on)step(dt);if(P)draw();requestAnimationFrame(loop)}
+
+/* ---------- flow ---------- */
+function intro(i){S.on=false;S.lv=i;load(i);const L=LEVELS[i];
+  $('midP').innerHTML=`<p class="ttl" style="font-size:26px"><em>LEVEL ${i+1}/${LEVELS.length}</em>${L.name}</p>
+   <p class="txt">${L.bosses.length} 個主管在巡、${L.cows} 個同事在晃${L.meet?`、會議邀請滿天飛`:''}。<br>時鐘已經 18:00，衝。</p><button class="btn" id="go">開始逃</button>`;
+  $('mid').hidden=false;$('go').onclick=()=>{$('mid').hidden=true;S.on=true;initAudio();bgmStart();sfx.alarm()}}
+function win(){S.on=false;sfx.exit();setTimeout(sfx.win,250);const m=S.min;S.results.push(m);S.totalLate+=m;
+  const line=m<5?'電梯門剛好關上，完美':m<30?'還算準時，主管沒發現':m<90?'晚了一點，但至少走得掉':'走出公司，天已經全黑了';
+  bubble(exit.x,exit.y+TS,'打卡下班！',1);
+  setTimeout(()=>{const lastLv=S.lv>=LEVELS.length-1;
+    $('midP').innerHTML=`<p class="ttl" style="font-size:22px"><em>CLEAR</em>${LEVELS[S.lv].name}</p><div class="big${m>=30?' late':''}">${fmt(m)}</div><p class="txt">${line}<br>這關被抓 ${S.caught} 次（累計）</p>
+     <button class="btn" id="go">${lastLv?'看總結':'下一關'}</button>`;$('mid').hidden=false;$('go').onclick=()=>lastLv?final(true):intro(S.lv+1)},700)}
+function lose(){if(!S.on&&S.min<180)return;S.on=false;bgmStop();sfx.lose();final(false)}
+function final(ok){bgmStop();const avg=S.results.length?S.totalLate/S.results.length:180;
+  const title=!ok?'加班之王':avg<5?'準時下班之神':avg<20?'下班忍者':avg<45?'普通社畜':'責任制受害者';
+  const desc=!ok?`第 ${S.lv+1} 關拖到 21:00，又是加班的一天。`:avg<5?'主管到現在還不知道你幾點走的。':avg<20?'你在辦公室的存在感，跟空氣一樣。':avg<45?'偶爾被抓，偶爾成功，跟大家一樣。':'你每天都想準時，但公司不這麼想。';
+  const score=ok?Math.max(0,Math.round(5000-S.totalLate*20-S.caught*100)):S.lv*500;
+  if(!best||score>best.score){best={score,title};try{localStorage.setItem('esc_best',JSON.stringify(best))}catch(e){}}
+  const share=ok?`《準時下班大逃殺》全破！平均 ${fmt(avg)} 下班，被抓 ${S.caught} 次，稱號「${title}」🏃‍♂️💨\n你每天幾點走得掉？`
+                :`《準時下班大逃殺》我卡在第 ${S.lv+1} 關「${LEVELS[S.lv].name}」，被抓 ${S.caught} 次，加班到 21:00😩\n你能準時下班嗎？`;
+  $('midP').innerHTML=`<p class="ttl" style="font-size:22px"><em>${ok?'ALL CLEAR':'GAME OVER'}</em>${title}</p><p class="txt">${desc}</p>
+    ${ok?`<div class="big${avg>=30?' late':''}">${fmt(avg)}</div><p class="small">五關平均下班時間・被抓 ${S.caught} 次</p>`:`<div class="big late">21:00</div>`}
+    <div class="row"><button class="btn ghost" id="cp">複製戰績</button><button class="btn" id="again">再逃一次</button></div><p class="toast" id="toast"></p>
+    <p class="small">最佳：${best.title}・${best.score} 分</p>`;
+  $('mid').hidden=false;
+  $('again').onclick=()=>{Object.assign(S,{caught:0,totalLate:0,results:[]});$('caught').textContent=0;intro(0)};
+  $('cp').onclick=()=>{const site=/github\.io$/.test(location.hostname)?'\n'+location.origin+location.pathname:'';
+    try{navigator.clipboard.writeText(share+site).then(()=>$('toast').textContent='已複製，去 Threads 炫耀',()=>$('toast').textContent='瀏覽器不讓複製，請截圖')}catch(e){$('toast').textContent='瀏覽器不讓複製，請截圖'}}}
+$('start').onclick=()=>{initAudio();$('title').hidden=true;Object.assign(S,{caught:0,totalLate:0,results:[]});intro(0)};
+$('bestT').textContent=best?`最佳紀錄：${best.title}・${best.score} 分`:'';
+fit();load(0);requestAnimationFrame(loop);
+})();
+</script>
+
+</body>
+</html>

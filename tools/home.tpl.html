@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>{{BRAND}}｜點開就能玩的台灣小遊戲</title>
+<meta name="description" content="每個遊戲三分鐘，玩完會想傳給朋友。持續更新的台灣小遊戲合集。">
+<link rel="canonical" href="{{BASE}}/">
+<link rel="icon" href="{{ICON}}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{BRAND}}">
+<meta property="og:title" content="{{BRAND}}｜點開就能玩的台灣小遊戲">
+<meta property="og:description" content="每個遊戲三分鐘，玩完會想傳給朋友。">
+<meta property="og:url" content="{{BASE}}/">
+<meta property="og:image" content="{{BASE}}/assets/og-home.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+/* Layout: a single-column social feed. Each game is a post: avatar, name, time, text, swipeable media, action row. */
+:root{--bg:#ffffff;--ink:#101010;--mute:#8a8a8a;--line:#e6e6e6;--chip:#f3f3f3;--heart:#ff3040;--card:#101010;--cardink:#fff;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#101010;--ink:#f3f5f7;--mute:#777;--line:#2a2a2a;--chip:#1e1e1e;--heart:#ff3040;--card:#f3f5f7;--cardink:#101010;color-scheme:dark}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Helvetica Neue",sans-serif;font-size:15px;line-height:1.45}
+a{color:inherit;text-decoration:none}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg)}
+.bar{max-width:620px;margin:0 auto;height:56px;display:grid;place-items:center;position:relative}
+.logo{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:900;font-size:19px}
+.tabs{max-width:620px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);padding:0 max(8px,env(safe-area-inset-right,0px)) 0 max(8px,env(safe-area-inset-left,0px))}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1 0 auto;border:0;background:none;color:var(--mute);font-weight:600;font-size:15px;font-family:inherit;padding:12px 14px;cursor:pointer;position:relative;white-space:nowrap}
+.tab[aria-selected=true]{color:var(--ink)}
+.tab[aria-selected=true]::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:1.5px;background:var(--ink)}
+main{max-width:620px;margin:0 auto}
+.post{display:grid;grid-template-columns:36px 1fr;gap:10px;padding:14px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line)}
+.av{width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:900;font-size:18px}
+.body{min-width:0}
+.hd{display:flex;align-items:center;gap:6px;font-size:15px}
+.hd b{font-weight:600}
+.hd .t{color:var(--mute)}
+.hd .more{margin-left:auto;color:var(--ink);letter-spacing:1px}
+.pin{font-size:12.5px;color:var(--mute);margin-bottom:2px}
+.txt{margin:2px 0 0;white-space:pre-line;overflow-wrap:anywhere}
+.txt strong{font-weight:600}
+.made{margin-top:2px;font-size:12.5px;color:var(--mute)}
+.shot{display:block;width:min(52vw,210px);aspect-ratio:390/600;border-radius:10px;overflow:hidden;border:1px solid var(--line);margin-top:10px;background:var(--chip)}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.acts .go{margin-left:auto;border:1px solid var(--line);font-weight:600;font-size:14px;padding:6px 16px}
+.made span{display:inline-block;background:var(--chip);border-radius:999px;padding:1px 8px;margin-right:6px;color:var(--ink)}
+.media{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:10px -16px 0 0;padding-right:16px;scroll-snap-type:x mandatory}
+.media::-webkit-scrollbar{display:none}
+.media a{flex:none;scroll-snap-align:start;width:min(62vw,250px);aspect-ratio:390/600;border-radius:10px;overflow:hidden;border:1px solid var(--line);position:relative;background:var(--chip)}
+.media img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.media .play{background:var(--card);color:var(--cardink);display:flex;flex-direction:column;justify-content:flex-end;padding:16px;gap:6px;border-color:transparent}
+.media .play b{font-size:22px;line-height:1.25;font-weight:800}
+.media .play span{font-size:14px;opacity:.75}
+.media .play i{font-style:normal;font-weight:700;border:1.5px solid currentColor;border-radius:999px;padding:6px 14px;align-self:flex-start;margin-top:6px;font-size:14px}
+.acts{display:flex;gap:4px;align-items:center;margin:8px 0 0 -8px}
+.acts button,.acts a{border:0;background:none;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:4px;padding:6px 8px;border-radius:999px;font-weight:500;font-size:13px;font-family:inherit}
+.acts button:hover,.acts a:hover{background:var(--chip)}
+.acts svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.acts .liked{color:var(--heart)}.acts .liked svg{fill:var(--heart);stroke:var(--heart)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+.end{text-align:center;color:var(--mute);font-size:13px;padding:30px 16px 50px;line-height:1.7}
+button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="top"><div class="bar"><div class="logo" aria-label="{{BRAND}}">3</div></div><div class="tabs" id="tabs" role="tablist"></div></div>
+<main id="feed"></main>
+<div class="end">已經滑到底了<br>每個遊戲都是一則貼文，新作會出現在最上面。<br>本站沒有追蹤 cookie；按讚只存在你自己的手機。</div>
+<div class="toast" id="toast"></div>
+<script>
+const G={{GAMES}};
+const ICO={heart:'<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-9.2-8.6C1.2 8.3 3.1 4.8 6.6 4.6c2.1-.1 3.6 1.1 5.4 3 1.8-1.9 3.3-3.1 5.4-3 3.5.2 5.4 3.7 3.8 6.8C19 15.6 12 20 12 20z"/></svg>',
+ chat:'<svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.1-4.3A8.5 8.5 0 1 1 20.5 12z"/></svg>',
+ repost:'<svg viewBox="0 0 24 24"><path d="M17 3l3 3-3 3M20 6H8a4 4 0 0 0-4 4v1M7 21l-3-3 3-3M4 18h12a4 4 0 0 0 4-4v-1"/></svg>',
+ send:'<svg viewBox="0 0 24 24"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4z"/></svg>'};
+let liked={};try{liked=JSON.parse(localStorage.getItem("sm_liked")||"{}")}catch(e){}
+const pad=n=>String(n).padStart(2,"0");
+function ago(iso){const d=new Date(iso),s=(Date.now()-d)/1000;if(s<60)return"剛剛";if(s<3600)return Math.floor(s/60)+" 分鐘";if(s<86400)return Math.floor(s/3600)+" 小時";if(s<7*86400)return Math.floor(s/86400)+" 天";return`${d.getMonth()+1}/${d.getDate()}`}
+function made(iso){const d=new Date(new Date(iso).toLocaleString("en-US",{timeZone:"Asia/Taipei"}));return`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`}
+const url=g=>new URL(`./${g.slug}/`,location.href).href;
+function post(g){const L=liked[g.slug];return`<article class="post"><div class="av">3</div><div class="body">
+ <div class="hd"><b>{{BRAND}}</b><span class="t">${ago(g.date)}・${g.cat}</span></div>
+ <p class="txt"><strong>${g.title}</strong>\n${g.desc}</p>
+ <a class="shot" href="./${g.slug}/"><img src="./assets/thumbs/${g.slug}.jpg" alt="${g.title} 遊戲畫面" loading="lazy"></a>
+ <div class="acts"><button type="button" data-a="like" data-s="${g.slug}" class="${L?"liked":""}" aria-label="喜歡">${ICO.heart}</button><button type="button" data-a="share" data-s="${g.slug}" aria-label="分享">${ICO.send}</button><a class="go" href="./${g.slug}/">開始玩</a></div>
+ <div class="made">製造日期 ${made(g.date)}</div>
+</div></article>`}
+const pinned=`<article class="post"><div class="av">3</div><div class="body"><div class="pin">📌 置頂</div><div class="hd"><b>{{BRAND}}</b></div>
+ <p class="txt"><strong>點開就能玩，玩完會想傳給朋友。</strong>\n不用下載、不用註冊。這裡每一則都是一個小遊戲，往下滑挑一個玩。目前 ${G.length} 個，持續更新。</p></div></article>`;
+const CATS=["最新",...[...new Set(G.map(g=>g.cat))]];let cur="最新";
+function render(){document.getElementById("tabs").innerHTML=CATS.map(c=>`<button class="tab" role="tab" type="button" aria-selected="${c===cur}" data-c="${c}">${c}</button>`).join("");
+ document.getElementById("feed").innerHTML=(cur==="最新"?pinned:"")+G.filter(g=>cur==="最新"||g.cat===cur).map(post).join("")}
+let tt;function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1500)}
+document.addEventListener("click",async e=>{const tb=e.target.closest(".tab");if(tb){cur=tb.dataset.c;render();scrollTo({top:0});return}
+ const b=e.target.closest("button[data-a]");if(!b)return;const g=G.find(x=>x.slug===b.dataset.s);
+ if(b.dataset.a==="like"){liked[g.slug]=!liked[g.slug];b.classList.toggle("liked",liked[g.slug]);try{localStorage.setItem("sm_liked",JSON.stringify(liked))}catch(err){}}
+ if(b.dataset.a==="copy"){try{await navigator.clipboard.writeText(url(g));toast("已複製連結")}catch(err){toast(url(g))}}
+ if(b.dataset.a==="share"){if(navigator.share){try{await navigator.share({title:g.title,text:g.desc,url:url(g)})}catch(err){}}else{try{await navigator.clipboard.writeText(url(g));toast("已複製連結")}catch(err){toast(url(g))}}}});
+render();
+</script>
+</body>
+</html>

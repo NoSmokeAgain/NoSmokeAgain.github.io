@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:meta-->
+<meta name="description" content="選你的月薪，看撐不撐得到月底">
+<link rel="canonical" href="https://nosmokeagain.github.io/salary/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="薪水撐到月底｜三分鐘遊樂場">
+<meta property="og:description" content="選你的月薪，看撐不撐得到月底">
+<meta property="og:url" content="https://nosmokeagain.github.io/salary/">
+<meta property="og:image" content="https://nosmokeagain.github.io/salary/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>薪水撐到月底</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&family=IBM+Plex+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: a bank passbook. Top = balance + day stamp + mood/health gauges; middle = today's event card (swipe or tap A/B);
+   bottom = passbook ledger printing each day's line. Paper/ink/stamp-red palette, works in light and dark. */
+:root{
+  --bg:#e9e5da; --paper:#fbf8f0; --ink:#1f2a2e; --mute:#6f756f; --rule:#d6d0bf; --stamp:#c8372d; --plus:#1f7a4d; --minus:#b3261e; --mood:#e8a317; --hp:#2f8f6b; --cover:#14453d;
+  --f:"Noto Sans TC",system-ui,sans-serif; --serif:"Noto Serif TC",serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121513;--paper:#1c201d;--ink:#ece8dc;--mute:#9aa197;--rule:#333a34;--stamp:#ff6a5e;--plus:#5fd39a;--minus:#ff7b70;--mood:#f2bd4a;--hp:#5fc79f;--cover:#0d2f29;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121513;--paper:#1c201d;--ink:#ece8dc;--mute:#9aa197;--rule:#333a34;--stamp:#ff6a5e;--plus:#5fd39a;--minus:#ff7b70;--mood:#f2bd4a;--hp:#5fc79f;--cover:#0d2f29;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);-webkit-tap-highlight-color:transparent}
+.wrap{max-width:460px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px;display:grid;gap:14px}
+.wrap>*{min-width:0}
+.book{background:var(--cover);color:#f3ecd6;border-radius:14px;padding:16px 18px;display:grid;gap:10px;box-shadow:0 12px 30px -18px #000a}
+.bk-top{display:flex;justify-content:space-between;align-items:center;font:700 12px var(--mono);letter-spacing:.14em;opacity:.8}
+.bal{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.bal b{font:700 38px/1 var(--mono);font-variant-numeric:tabular-nums}
+.bal b.neg{color:#ff8a80}
+.day{font:900 15px var(--serif);border:2px solid #f3ecd6aa;border-radius:8px;padding:6px 10px;text-align:center;line-height:1.2;transform:rotate(-4deg)}
+.day small{display:block;font:500 10px var(--f);opacity:.8}
+.gauges{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g{display:grid;gap:4px;font:700 12px var(--f)}
+.g .t{height:8px;border-radius:4px;background:#ffffff26;overflow:hidden}
+.g .t i{display:block;height:100%;border-radius:4px;transition:width .4s}
+.g.m .t i{background:#f2bd4a}.g.h .t i{background:#7fe0b4}
+.card{background:var(--paper);border-radius:16px;padding:20px 18px;display:grid;gap:14px;box-shadow:0 1px 0 var(--rule),0 16px 30px -22px #0008;touch-action:pan-y;position:relative;transition:transform .25s;will-change:transform}
+.card.in{animation:in .4s cubic-bezier(.2,1.3,.5,1)}
+@keyframes in{from{transform:translateY(30px) rotate(3deg);opacity:0}}
+.card .emo{font-size:46px;line-height:1}
+.card h2{font:900 22px/1.4 var(--f);margin:0;text-wrap:balance}
+.card p{margin:0;color:var(--mute);font-size:14px;line-height:1.6}
+.opts{display:grid;gap:10px}
+.opt{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;text-align:left;border:1.5px solid var(--ink);border-radius:12px;padding:12px 14px;background:transparent;color:var(--ink);cursor:pointer;font:700 15px var(--f);touch-action:manipulation}
+.opt .k{font:700 13px var(--mono);color:var(--stamp);grid-row:span 2;align-self:center}
+.opt .fx{font:500 12px var(--mono);color:var(--mute)}
+.opt:active{transform:scale(.98)}
+.opt:focus-visible{outline:3px solid var(--stamp);outline-offset:2px}
+@media (hover:hover){.opt:hover{background:var(--bg)}}
+.swipe-hint{font-size:12px;color:var(--mute);text-align:center;margin:0}
+.instbar{font:700 12px var(--f);background:#ffffff1f;border-radius:8px;padding:6px 10px}
+.quip{position:fixed;left:50%;top:30%;transform:translateX(-50%);background:var(--ink);color:var(--paper);font:900 15px var(--f);padding:8px 14px;border-radius:999px;z-index:31;pointer-events:none;white-space:nowrap;animation:qp 1.5s forwards}
+@keyframes qp{0%{opacity:0;transform:translate(-50%,10px) scale(.8)}12%{opacity:1;transform:translate(-50%,0) scale(1.05)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-10px)}}
+.ledger{background:var(--paper);border-radius:12px;padding:12px 14px;display:grid;gap:0;max-height:240px;overflow:auto}
+.ledger h3{font:700 12px var(--mono);letter-spacing:.14em;color:var(--mute);margin:0 0 6px}
+.ln{display:grid;grid-template-columns:44px 1fr auto;gap:8px;padding:6px 0;border-bottom:1px dashed var(--rule);font-size:13px;align-items:baseline}
+.ln:first-of-type{animation:print .35s ease-out}
+@keyframes print{from{background:var(--bg);opacity:0;transform:translateY(-6px)}}
+.ln .d{font:500 12px var(--mono);color:var(--mute)}
+.ln .a{font:700 13px var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.ln .a.p{color:var(--plus)}.ln .a.n{color:var(--minus)}
+.float{position:fixed;left:50%;top:22%;transform:translateX(-50%);font:700 30px var(--mono);pointer-events:none;z-index:30;animation:fl 1s forwards;text-shadow:0 2px 0 #0003}
+.float.p{color:var(--plus)}.float.n{color:var(--minus)}
+@keyframes fl{0%{opacity:0;transform:translate(-50%,10px) scale(.7)}20%{opacity:1;transform:translate(-50%,0) scale(1.1)}100%{opacity:0;transform:translate(-50%,-50px)}}
+/* setup + end */
+.hero h1{font:900 40px/1.15 var(--serif);margin:0}
+.hero h1 em{font-style:normal;color:var(--stamp)}
+.hero p{margin:6px 0 0;color:var(--mute);font-size:15px;line-height:1.7}
+.sal{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.sal button{border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:12px;padding:14px 10px;cursor:pointer;display:grid;gap:2px;text-align:left}
+.sal button b{font:700 20px var(--mono)}
+.sal button span{font-size:12px;color:var(--mute)}
+.sal button:focus-visible{outline:3px solid var(--stamp);outline-offset:2px}
+.btn{border:0;border-radius:12px;padding:15px;background:var(--stamp);color:#fff;font:900 17px var(--f);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.end{background:var(--paper);border-radius:16px;padding:22px 18px;display:grid;gap:12px;text-align:center}
+.stampbig{justify-self:center;font:900 26px var(--serif);color:var(--stamp);border:4px double var(--stamp);border-radius:10px;padding:8px 16px;transform:rotate(-6deg);animation:stamp .4s cubic-bezier(.2,1.6,.5,1)}
+@keyframes stamp{from{transform:rotate(-20deg) scale(2.4);opacity:0}}
+.end .big{font:700 40px var(--mono)}
+.end p{margin:0;color:var(--mute);font-size:14px;line-height:1.7}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rcard{width:100%;max-width:100%;border-radius:14px;box-shadow:0 14px 30px -18px #000a;animation:in .5s cubic-bezier(.2,1.3,.5,1)}
+.lbl{margin:0;font:700 12px var(--f);color:var(--mute);letter-spacing:.1em}
+.who{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sal.hid{grid-template-columns:repeat(3,1fr)}
+.sal.hid button.lock{border-style:dashed;opacity:.85}
+.sal.hid button.lock b{filter:blur(1px)}
+.sal.hid button.gold{background:linear-gradient(135deg,#f6d77a,#c9962c);color:#2b1d00;border-color:#8a6414}
+.sal.hid button.gold span{color:#3b2a06}
+.qov{position:fixed;inset:0;z-index:50;background:#000b;display:flex;align-items:center;justify-content:center;padding:16px}
+.qbox{background:var(--paper);color:var(--ink);border-radius:16px;padding:20px;max-width:400px;width:100%;display:grid;gap:12px;animation:in .35s cubic-bezier(.2,1.3,.5,1)}
+.qbox h2{font:900 20px/1.45 var(--f);margin:0}
+.qbox.shake{animation:shk .4s}
+@keyframes shk{20%{transform:translateX(-10px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(3px)}}
+.opt.right{background:#1f7a4d;color:#fff;border-color:#1f7a4d}.opt.wrong{opacity:.4;text-decoration:line-through}
+.qmsg{margin:0;font-size:14px;line-height:1.6;min-height:1.2em}
+.gold-c{position:fixed;top:-40px;font-size:28px;z-index:60;pointer-events:none;font-style:normal;animation:gfall 2s linear forwards}
+@keyframes gfall{to{transform:translateY(110vh) rotate(360deg)}}
+.who button{border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:12px;padding:12px 6px;font:700 14px var(--f);cursor:pointer}
+.who button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.who button:focus-visible{outline:3px solid var(--stamp);outline-offset:2px}
+.year{border:2px dashed var(--rule);border-radius:12px;padding:12px;display:grid;gap:4px}
+.year span{font:700 12px var(--f);letter-spacing:.12em;color:var(--mute)}
+.year p{font:700 17px var(--f)!important;color:var(--ink)!important}
+.year p b{font:700 22px var(--mono);color:var(--stamp)}
+.year small{font:500 12px var(--mono);color:var(--mute)}
+.year em{font-style:normal;font-weight:700;font-size:14px}
+.sal button span+span{font:500 11px var(--mono)}
+.toast{min-height:1.2em;font:700 12px var(--f);color:var(--plus);margin:0}
+.fixed{font:500 12px var(--mono);color:var(--mute);line-height:1.8;margin:0}
+.mute{justify-self:end;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:8px;width:34px;height:34px;display:grid;place-items:center;cursor:pointer;padding:0}
+.mute svg{width:16px;height:16px}
+@media (prefers-reduced-motion:reduce){.card.in,.ln,.float,.stampbig{animation:none}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap" id="app"></div>
+
+<script>
+(()=>{
+const app=document.getElementById('app'),$=id=>document.getElementById(id);
+/* ---------- events: [emoji, title, desc, [label, money, mood, health]...]; money may be [min,max] for random ---------- */
+/* events: [emoji, title, line, ...options]; option = [label, money, mood, health, installment?]
+   installment = [monthly, months] → money is ignored, this month pays one installment, the rest is owed. One theme per event, no repeats. */
+const EV=[
+ ['🍲','同事揪火鍋','「欸下班吃火鍋，你來吧？」群組已經 8 個人 +1 了。',['+1，人情要顧',-650,8,-1],['「我今天要加班欸」（其實沒有）',0,-6,0]],
+ ['🧋','第二杯半價','手搖店門口寫著第二杯半價，你的腳自己停下來了。',['兩杯，一杯給明天的我',-110,4,-2],['喝水，我是自律的人',0,-1,2]],
+ ['📱','新手機發表會','你的電池健康度 79%，新機廣告一直跑出來。',['分期換新機，未來的我會處理',0,12,0,[1350,24]],['再撐一年，我可以',0,-4,0]],
+ ['🛞','機車爆胎','早上牽車，後輪扁得很徹底。你在遲到邊緣。',['衝車行，遲到也認了',-500,-1,0],['搭公車一週，順便減肥',-150,-5,-1]],
+ ['💌','好朋友的喜帖','「你一定要來喔❤️」最好的朋友要結婚了。',['包大包，到場哭得比新娘慘',-3600,6,0],['禮到人不到，包小包',-1200,-3,0]],
+ ['🛒','購物車降價通知','你收藏半年的東西，今天突然降價 30%。',['全部結帳，這叫投資自己',-2800,10,0],['關掉通知，我很理性',0,-2,0]],
+ ['🏋️','健身房業務','「今天簽約送 3 個月，明天就沒有了喔。」',['簽了，從今天開始變壯',0,2,8,[1500,12]],['回家做伏地挺身（做了 3 下）',0,-2,1]],
+ ['🎂','媽媽生日','家族群組：「今年媽媽生日怎麼過？」大家都在等你回。',['「我來訂餐廳！」',-2500,8,0],['買個蛋糕回家吃',-600,3,0]],
+ ['🌀','颱風假宣布了','晚上 8 點宣布明天放假，你的手已經打開外送 App。',['外送＋運費＋小費，認了',-380,5,0],['泡麵配颱風新聞',-45,1,-3]],
+ ['🎤','演唱會開搶','偶像來台開唱，9:59 你已經坐在電腦前。',['搶到了！！刷！！',-3800,15,0],['放棄，在家聽專輯哭',0,-8,0]],
+ ['🦷','牙齒好酸','喝冰的會痛，咬東西也會痛。',['乖乖去看牙醫',-650,-1,6],['換邊咬，忍',0,-4,-8]],
+ ['🏖️','連假要去哪','朋友：「宜蘭兩天一夜，民宿我訂好了，你來不來？」',['來！！',-2400,10,1],['在家耍廢才是真的放假',0,2,2]],
+ ['🐶','狗狗拉肚子','牠一直用那個眼神看著你。',['馬上帶去看獸醫',-1800,-1,0],['先觀察一天⋯',0,-7,0]],
+ ['🍗','凌晨一點','肚子叫了，鹹酥雞開到兩點。',['加大，九層塔多一點',-180,5,-4],['喝水睡覺，明天會感謝自己',0,-2,3]],
+ ['📺','訂閱自動續約','「您的方案即將續訂」。你上次打開是兩週前。',['續，下個月一定會看',-390,3,0],['退訂，省一點是一點',0,-2,0]],
+ ['❄️','冷氣吹出熱風','外面 33 度，房間冷氣壞了。',['直接換變頻新機，分期',0,6,2,[2200,12]],['叫師傅修修看',-1800,-2,0]],
+ ['🎁','同事要離職','群組：「大家湊錢送 Amy 禮物～」',['湊一份，好聚好散',-300,1,0],['已讀，假裝沒看到',0,-3,0]],
+ ['🥪','早餐店','老闆娘：「帥哥／美女，今天一樣喔？」',['「一樣！」大冰奶加蘿蔔糕',-95,2,0],['不吃了，省錢',0,-1,-3]],
+ ['💆','被主管念第三次','這週第三次被叫進會議室。你需要一點什麼。',['按摩兩小時，誰都別找我',-1200,10,4],['回家睡一整天',0,3,1]],
+ ['🎮','等了兩年的遊戲','今天上市，朋友都在群組炫耀了。',['首日購入，今晚不睡',-1790,9,-1],['等特價，忍住',0,-3,0]],
+ ['🌧️','下班大雨','捷運站還要走 10 分鐘，雨大到像有人在潑。',['叫 Uber，加價也認了',-320,2,0],['衝了，淋一身',0,-3,-3]],
+ ['👪','家族聚餐要結帳','服務生拿著帳單，所有人都看向你。',['「我來我來！」',-3200,6,0],['默默去上廁所',0,-2,0]],
+ ['💸','朋友又來借錢','「下個月一定還你，真的。」這是他第三次說。',['借他（就當送了）',-3000,2,0],['「我最近也很緊欸」',0,-4,0]],
+ ['📈','同事報明牌','「這支下週一定漲，我表哥說的。」',['跟一點試試',[-3000,2500],3,-1],['不碰，我不信表哥',0,0,0]],
+ ['👕','最愛的衣服破了','腋下破了一個洞，你昨天才發現。',['買新的，順便多拿兩件',-990,4,0],['縫一縫，還能穿',0,-1,0]],
+ ['🍜','12:00 吃什麼','同事轉頭問你：「午餐吃什麼？」',['日式定食，生活要有品質',-280,3,0],['超商御飯糰，30 秒解決',-55,-1,0]],
+ ['🎰','福委會抽獎','主持人開始唸號碼了，你握緊手上的號碼牌。',['屏住呼吸⋯',[0,3000],4,0]],
+ ['🧾','發票 App 跳通知','「您有發票中獎」？！',['點開看看',[200,1000],2,0]],
+ ['💼','加班費入帳','上個月加的班終於算錢了。肝換來的。',['收下，謝謝我的肝',1800,-2,-2]],
+ ['🚓','信箱裡的紅色信封','違規停車，罰單 900。',['乖乖繳⋯',-900,-5,0]],
+ ['⛰️','週末爬山邀約','朋友：「象山看夜景，走嗎？」',['走，順便運動',-60,4,6],['我的山是棉被',0,1,-1]],
+ ['☕','主管心情很好','今天請全辦公室喝咖啡。',['「謝謝老大！」',0,3,0]],
+ ['💇','瀏海戳到眼睛','鏡子裡的你看起來有點落魄。',['找設計師，順便染',-1500,6,0],['快剪（其實早就不是十元）',-150,-1,0]],
+ ['🍰','網美甜點店','朋友傳連結：「這週去？」',['去，拍照比吃重要',-420,5,-1],['已讀不回',0,-1,0]],
+ ['🛵','機車發動要踩三次','騎了十年的老車，最近一直在抗議。',['換電動車，分期',0,8,0,[1900,36]],['再修一次',-1200,-2,0]],
+ ['💻','筆電開 Excel 要三分鐘','風扇聲像飛機要起飛。',['換新筆電，分期',0,7,0,[1800,24]],['重灌，再戰一年',0,-3,0]],
+ ['📦','衣櫃塞爆了','有人在二手平台收衣服，你翻出一堆只穿過一次的。',['全部上架賣掉',1800,3,0],['整袋捐出去',0,4,0]],
+ ['💰','國稅局的簡訊','「您的退稅款已匯入帳戶。」',['爽，收下',2600,5,0]],
+ ['🍜','團購群組又在揪','這次是韓國泡麵一箱，「再 3 個就成團！」',['+1，團購是信仰',-650,3,0],['潛水不說話',0,-1,0]],
+ ['🎓','線上課程限時 5 折','「三個月學會 Python，年薪翻倍！」',['買了，明天開始上',-2990,4,0],['收藏起來（永遠不會打開）',0,-1,0]],
+ ['🏥','健檢報告一片紅字','膽固醇和肝指數都紅了。',['自費加做檢查，買保健食品',-4800,-2,8],['戒宵夜就好',0,-3,3]],
+ ['🚿','熱水器壞了','冬天洗冷水澡，你尖叫了三聲。',['馬上換新的',-6500,3,2],['先去健身房洗',0,-5,-2]],
+ ['🎤','朋友揪唱歌','「今晚歡唱到天亮，誰先睡誰請客」',['唱到天亮',-900,8,-4],['回家洗澡睡覺',0,-1,2]],
+ ['💳','信用卡年費帳單','那張很少用的卡，被收了年費。',['乖乖繳',-1800,-4,0],['打給客服硬凹免年費',0,2,0]],
+ ['⚾','朋友有多的球票','主場、前排、還有應援棒。',['去！順便買球衣',-1800,10,-1],['在家看轉播',0,2,0]],
+ ['📺','直播主喊「最後 10 組」','回過神來，你已經按下購買。',['就買吧',-1290,5,0],['關掉直播，冷靜',0,-1,0]],
+ ['🧸','娃娃機的公仔快掉了','爪子每次都差一點點。',['再一次就好⋯',[-600,-50],3,0],['走開，這是陷阱',0,-1,0]],
+ ['🧴','保養品見底','化妝台最後一罐也空了。',['專櫃買整組',-3200,6,0],['開架平替',-650,1,0]],
+ ['📚','主管說考證照有加分','考績跟年終都看這個。',['報補習班，分期',0,2,0,[1800,6]],['自己讀，看書看到睡著',0,-2,-1]],
+ ['🏠','房東說要漲房租','「下個月開始，每月多 1,000。」',['吞了，搬家更累',-1000,-6,0],['開始看房子',-300,-3,-3]],
+ ['🤖','掃地機器人特價','網路上大家都說「買了人生變彩色」。',['分 12 期買',0,6,1,[1100,12]],['自己掃，順便運動',0,-1,1]],
+ ['🛡️','保險業務是高中同學','「老同學，聽我講十分鐘就好。」',['買一張意外險，給他面子',-1500,-1,0],['已讀不回',0,-2,0]],
+ ['📺','半夜地震','書櫃沒倒，但電視倒了。',['換新電視，分期',0,5,0,[900,12]],['用平板看就好',0,-2,0]],
+ ['🍥','IG 爆紅的拉麵店','要排兩小時。',['排！',-380,6,-1],['吃隔壁沒人排的',-150,0,0]],
+ ['🧴','朋友說這不是直銷','「是創業機會，先買入門組就好。」',['好啦先買一組',-4800,-3,0],['封鎖',0,2,0]],
+ ['🏥','阿嬤住院了','家人在討論輪班照顧。',['請看護幾天',-4500,-2,2],['自己請假去顧',-1500,-1,-5]],
+ ['👛','錢包掉在計程車上','證件、悠遊卡、信用卡全在裡面。',['全部重辦',-650,-5,0],['打給車行碰運氣',[-650,0],-2,0]],
+ ['🏃','朋友揪報名路跑','報名費含完賽獎牌和毛巾。',['報了，說不定會變健康',-1200,4,6],['去終點幫他們加油',0,1,0]],
+ ['💵','同事突然還錢','上次借他的錢，你早就忘了。',['收下，人間有溫暖',2000,5,0]]
+];
+/* salary tiers: [monthly, label, fixed monthly costs]. Lifestyle scales with income: 賺越多，花越多 */
+const SAL=[
+ [30000,'基本工資附近',[['房租',8000],['交通月票',1200],['電話費',599],['保險',1500]]],
+ [35000,'社會新鮮人',[['房租',9000],['孝親費',2000],['交通月票',1200],['電話費',599],['保險',2000]]],
+ [40000,'一般上班族',[['房租',10000],['孝親費',3000],['交通月票',1200],['電話費',599],['保險',2000]]],
+ [50000,'資深專員',[['房租',12000],['孝親費',5000],['交通',1500],['電話費',799],['保險',3000]]],
+ [60000,'小主管',[['房租',15000],['孝親費',6000],['油錢停車',2500],['電話費',999],['保險',4000]]],
+ [80000,'經理',[['房貸',22000],['孝親費',5000],['車貸',6000],['電話費',999],['保險',3000]]],
+ [100000,'資深經理',[['房貸',28000],['孝親費',6000],['車貸',8000],['小孩學費',5000],['保險',3000]]],
+ [150000,'高階主管',[['房貸',40000],['孝親費',10000],['車貸',12000],['小孩補習',8000],['保險',5000],['電話費',1399]]]
+];
+/* 主計總處 113 年工業及服務業受僱員工全年總薪資分布（官方十分位，PR10–PR90）。年薪以月薪 × 13.5（含約 1.5 個月獎金）估算 */
+const PRT=[[0,0],[330000,10],[381000,20],[432000,30],[487000,40],[546000,50],[628000,60],[753000,70],[959000,80],[1336000,90]];
+const BONUS=1.5;
+function pr(month){const y=month*(12+BONUS);if(y>=PRT[PRT.length-1][0])return 90;for(let k=1;k<PRT.length;k++){const[a,pa]=PRT[k-1],[b,pb]=PRT[k];if(y<=b)return Math.round(pa+(pb-pa)*(y-a)/(b-a))}return 90}
+const prText=m=>m>=300000?'金字塔頂端':pr(m)>=90?'前 10%':`贏過 ${pr(m)}% 上班族`;
+const kName=s=>s>=100000?(s/10000)+'萬':(s/1000)+'K';
+/* high-income only events, amounts are absolute (not lifestyle-scaled) */
+const RICH=[
+ ['⛳','客戶約打高爾夫','「週六早上，球場見？」老闆也會去。',['去，順便談生意',-6800,4,-1],['說小孩要補習',0,-3,0]],
+ ['👜','精品週年慶','那個包你看了半年，今天刷卡分期零利率。',['刷，12 期零利率',0,14,0,[2700,12]],['拍照當作買過',0,-5,0]],
+ ['🚗','車子進廠保養','技師：「輪胎也該換了喔。」',['原廠全套',-12000,0,0],['外面輪胎行',-5500,-2,0]],
+ ['🍷','品酒會邀請','朋友說這次有波爾多五大酒莊。',['參加，學一點品味',-8800,8,-2],['在家喝超商紅酒',-299,-2,0]],
+ ['🧒','小孩說同學都在學程式','「我也想學，拜託～」',['報名，分 6 期',0,3,0,[2700,6]],['先看 YouTube 自學',0,-4,0]],
+ ['🏠','房貸利率又調升','銀行寄來一封你不想打開的信。',['乖乖繳',-3500,-6,0]],
+ ['📉','上個月買的股票','打開 App 前，你深呼吸了一下。',['看',[-15000,20000],2,-2]],
+ ['🏡','看到心動的大房子','仲介說「這間下午還有人要來看」。',['先付訂金',-50000,8,0],['再看看',0,-3,0]],
+ ['💎','結婚週年','另一半說「今年不用了啦」。',['買鑽石項鍊，分 12 期',0,10,0,[4500,12]],['寫一張卡片',-300,-3,0]],
+ ['🌏','小孩要出國遊學','暑假三週的遊學團。',['報名，分 6 期',0,4,0,[9000,6]],['國內夏令營',-12000,1,0]],
+ ['🏦','私人銀行推薦私募','「門檻 100 萬，年化 12%。」',['先投一點',[-30000,40000],3,-2],['看不懂的不碰',0,0,0]]
+];
+/* who you are: different events and fixed costs */
+const WHO={single:['單身','🙋'],couple:['有另一半','💑'],kid:['有小孩','👶']};
+const IDEV={
+ single:[
+  ['💘','交友軟體第一次約會','吃完飯，帳單放在桌子中間。',['我請，展現誠意',-1800,6,0],['AA，現代人',-800,2,0]],
+  ['🎂','一個人的生日','沒有人約，自己過。',['帶自己去吃 buffet',-1200,6,-1],['滷味配 Netflix',-200,1,0]],
+  ['👀','前任傳訊息','「最近好嗎？要不要吃個飯？」',['去吃，就吃個飯',-1500,-4,0],['已讀不回，帥',0,3,0]],
+  ['🐱','中途之家的貓','牠隔著玻璃一直看著你。',['認養！用品一次買齊',-6000,12,0],['去貓咪咖啡廳就好',-350,4,0]],
+  ['🍻','單身朋友聚會','「今晚不醉不歸，誰先走誰買單」',['喝到第三攤',-1600,8,-4],['第一攤就回家',-500,1,1]]],
+ couple:[
+  ['💑','交往紀念日','對方已經暗示了一個禮拜。',['高級餐廳加一束花',-3600,10,0],['在家煮燭光晚餐',-800,5,0]],
+  ['💍','對方一直在看婚戒','滑手機時停在戒指頁面很久。',['偷偷訂一個，分期',0,12,0,[3000,24]],['假裝沒看到',0,-5,0]],
+  ['🐶','另一半想養狗','「我們養一隻好不好？」',['去領養，用品一次買齊',-5500,10,0],['先養多肉植物練習',-300,-2,0]],
+  ['✈️','另一半說想出國','「我們好久沒出去玩了⋯」',['日本機加酒，刷卡分 6 期',0,14,1,[4000,6]],['國旅兩天一夜',-3500,6,0]],
+  ['🎁','另一半生日','對方說「不用買禮物啦」。你知道這是考題。',['還是要買，精品分期',0,10,0,[1800,12]],['手寫卡片加蛋糕',-800,2,0]]],
+ kid:[
+  ['🍼','尿布奶粉又見底','小孩的東西永遠在補貨。',['好市多一次補滿',-3200,0,0],['藥局先買小包',-1400,-2,0]],
+  ['📲','小孩想要平板','「全班只有我沒有！」',['買新的，分 12 期',0,4,0,[900,12]],['二手的就好',-3500,1,0]],
+  ['🎠','週末親子樂園','小孩說想去兒童新樂園。',['全家去，門票加吃',-2400,6,-2],['公園溜滑梯',0,-2,1]],
+  ['🤒','小孩半夜發燒','38.9 度，小孩一直哭。',['衝夜間急診',-900,-3,-4],['先退燒，明早再看',-300,-5,-3]],
+  ['🎹','「隔壁小明都在學鋼琴」','才藝班剛好在招生。',['報名，分 6 期',0,2,0,[3000,6]],['公園就是最好的才藝班',0,-3,1]],
+  ['🎈','同學的生日派對','小孩說：「我要帶禮物去！」',['買一盒樂高',-600,1,0],['包個小紅包',-200,0,0]]]
+};
+/* real-month events: the game month follows today's date */
+const SEASON={
+ 1:[['🧹','年前大掃除','家裡的吸塵器發出奇怪的聲音。',['買無線吸塵器，分期',0,4,0,[1500,12]],['借媽媽的',0,-1,0]],['🧧','年終下週發','人資說年終快入帳了。',['先吃頓大餐慶祝',-2000,8,0],['等入帳再說',0,0,0]]],
+ 2:[['🧧','過年紅包','爸媽、姪子、外甥⋯紅包袋已經排好一排。',['每個都包大一點',-12000,6,0],['意思意思就好',-6000,-2,0]],['💝','情人節','餐廳價格全部翻倍。',['訂景觀餐廳',-4500,10,0],['在家煮',-600,3,0]]],
+ 3:[['🌸','賞櫻季','朋友揪去武陵看櫻花。',['去，凌晨出發搶車位',-1800,7,1],['看別人的 IG 就好',0,-2,0]]],
+ 4:[['🏮','清明連假','要回老家掃墓。',['高鐵來回',-2600,3,-1],['客運慢慢坐',-900,-2,-2]]],
+ 5:[['🌹','母親節','餐廳早就訂滿了。',['訂飯店自助餐',-3600,8,0],['自己下廚',-800,5,0]]],
+ 6:[['🛶','端午節','粽子要買哪一家？',['名店禮盒',-1200,4,0],['吃媽媽包的',0,3,0]]],
+ 7:[['🌞','暑假電費帳單','冷氣開了一整個月。',['乖乖繳',-2400,-3,0]],['🏝️','暑假出國','機票每天都在漲。',['分期出國',0,12,1,[3500,6]],['國旅就好',-3000,5,0]]],
+ 8:[['🌞','暑假電費帳單','冷氣開了一整個月。',['乖乖繳',-2400,-3,0]],['👻','鬼月','長輩說這個月不要買大東西。',['聽話，什麼都不買',0,-2,0],['才不管，照買',-1500,5,0]]],
+ 9:[['🌕','中秋烤肉','鄰居揪烤肉，每家帶一樣。',['帶一箱肉',-1500,7,-1],['帶一包木炭',-150,2,0]]],
+ 10:[['🎃','萬聖節派對','朋友要辦變裝派對。',['買整套服裝',-1600,8,0],['披床單當鬼',0,2,0]]],
+ 11:[['🛍️','雙 11 倒數 2 小時','購物車放了一整年，今天全面 5 折。',['全部結帳，這叫投資自己',-2800,10,0],['只買衛生紙，我很理性',-399,-2,0]],['🧥','突然變冷了','衣櫃裡找不到一件像樣的外套。',['買新外套',-2400,5,1],['多穿兩件衛生衣',0,-2,-1]]],
+ 12:[['🎄','公司交換禮物','上限 500，但大家都會偷偷超過。',['偷偷超過上限，面子要顧',-800,3,0],['剛好上限，規則就是規則',-500,0,0]],['🍻','尾牙續攤','第二攤 KTV，第三攤熱炒。',['續到天亮',-1500,8,-5],['第一攤就溜',0,-2,1]],['🎆','跨年夜','朋友揪去看 101 煙火。',['去，人擠人也要',-600,8,-2],['在家看轉播',0,1,1]]]
+};
+const GAME_MONTH=(()=>{const d=new Date();let m=d.getMonth()+1;if(d.getDate()>=25)m=m%12+1;return m})();
+const STEPS=15;
+/* hidden tiers: unlocked by answering one question each */
+const HIDDEN=[
+ [300000,'創業老闆',[['房貸',80000],['孝親費',20000],['名車貸款',35000],['小孩私校',25000],['保險',20000],['公司周轉',40000]],
+  {q:'依主計總處統計，年薪大約多少，就贏過台灣 90% 的受僱員工？',o:['約 80 萬','約 134 萬','約 300 萬'],a:1,ex:'官方數字是 133.6 萬。年薪破 134 萬，你就在前 10% 了。'}],
+ [500000,'上市公司高層',[['房貸',120000],['孝親費',30000],['雙 B 車貸',50000],['小孩國際學校',60000],['保險',30000],['管家',35000]],
+  {q:'每月定期定額投資 1 萬，年化報酬 8%，30 年後大約會有多少？',o:['約 500 萬','約 1,500 萬','約 4,000 萬'],a:1,ex:'本金只投了 360 萬，複利滾到約 1,490 萬。時間才是有錢人的朋友。'}],
+ [1000000,'財富自由',[['豪宅房貸＋管理費',200000],['孝親費',50000],['超跑保養',80000],['小孩國際學校',90000],['保險',60000],['私人助理',70000],['慈善捐款',50000]],
+  {q:'台灣綜合所得稅，最高一級的稅率是多少？',o:['30%','40%','45%'],a:1,ex:'所得淨額最高那一級適用 40%。賺到這裡，國家也是你的合夥人。'}]
+];
+/* luxury events for hidden tiers, amounts at the 30萬 level, scaled by income */
+const LUX=[
+ ['🛥️','朋友的遊艇派對','「這週末出海，帶瓶好酒來。」',['帶一瓶頂級勃艮第',-30000,10,-1],['帶超商紅酒，說是年份酒',-300,-3,0]],
+ ['⌚','名錶店來電','「您等的那支到貨了，全台只有一支。」',['分 24 期帶走',0,14,0,[25000,24]],['再等等，看二手價',0,-4,0]],
+ ['🎨','藝術品拍賣會','一幅畫的估價，是一般人一年的薪水。',['舉牌，藝術是投資',[-200000,60000],8,0],['只喝香檳不舉牌',0,2,-1]],
+ ['🍣','Omakase 包場','重要客戶下週來台灣。',['我來包場',-48000,8,0],['讓公司報帳',0,-1,0]],
+ ['📊','理專推薦結構債','「保本、年化 8%，名額只剩兩個。」',['先投一筆',[-90000,60000],3,-2],['我只買 ETF',0,0,0]],
+ ['🏎️','超跑發表會','業務說你是第一個被邀請的。',['訂一台，分 60 期',0,16,0,[60000,60]],['拍照打卡就走',0,-3,0]],
+ ['👨‍💻','核心員工被挖角','他說對方開了兩倍薪水。',['加薪留人',-40000,-2,0],['祝福他',0,-6,0]],
+ ['🎗️','慈善晚宴','主持人當眾點名，請你上台。',['捐一張大支票',-100000,9,0],['說公司另有安排',-10000,-5,0]],
+ ['🏔️','家族旅行','家人想去瑞士滑雪。',['頭等艙＋五星飯店，分 6 期',0,15,2,[80000,6]],['北海道就好',-90000,6,0]],
+ ['🧾','稅務顧問來電','「今年要不要調整一下架構？」',['請顧問規劃',-60000,2,0],['自己報，應該沒事吧',0,-4,0]],
+ ['🏝️','峇里島別墅持分','朋友說「一起買，度假隨時去」。',['買一份',-300000,12,0],['只去度假',-60000,6,2]],
+ ['🐎','另一半想學馬術','「聽說可以訓練核心。」',['報名年課，分期',0,6,1,[30000,12]],['先騎 YouBike',0,-2,1]],
+ ['🍷','酒窖放不下了','你的收藏已經滿到門口。',['擴建，分期',0,8,0,[40000,12]],['先喝掉一些',0,5,-3]]
+];
+const LUXS=new Set(LUX);
+let unlocked=[];try{unlocked=JSON.parse(localStorage.getItem('pd_unlock')||'[]')}catch(e){}
+const ABS=new Set(RICH);
+const E=1.4;/* each question covers two days */
+const kOf=ev=>LUXS.has(ev)?S.X:ABS.has(ev)?S.R:S.L;
+const val=(ev,o)=>{const k=kOf(ev)*E;const r=x=>Math.round(x*k/10)*10;if(o[4])return -instAmt(ev,o);return Array.isArray(o[1])?[r(o[1][0]),r(o[1][1])]:r(o[1])};
+const instAmt=(ev,o)=>{const k=kOf(ev);return Math.round(o[4][0]*k/10)*10};
+
+/* ---------- audio (plays in iOS silent mode) ---------- */
+let ac=null,master=null,bgmG=null,nb=null,unlockEl=null,seq=null,muted=false;try{muted=localStorage.getItem('pd_mute')==='1'}catch(e){}
+function silentWav(){const n=4000,b=new ArrayBuffer(44+n),v=new DataView(b);let o=0;const w=t=>{for(const c of t)v.setUint8(o++,c.charCodeAt(0))},u32=x=>{v.setUint32(o,x,true);o+=4},u16=x=>{v.setUint16(o,x,true);o+=2};
+  w('RIFF');u32(36+n);w('WAVE');w('fmt ');u32(16);u16(1);u16(1);u32(8000);u32(8000);u16(1);u16(8);w('data');u32(n);for(let k=0;k<n;k++)v.setUint8(o++,128);return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
+function initAudio(){try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+  try{if(!unlockEl){unlockEl=new Audio(silentWav());unlockEl.loop=true;unlockEl.setAttribute('playsinline','')}unlockEl.play().catch(()=>{})}catch(e){}
+  if(ac){ac.resume&&ac.resume();return}
+  try{ac=new (window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=muted?0:1;master.connect(ac.destination);
+    bgmG=ac.createGain();bgmG.gain.value=.28;bgmG.connect(master);nb=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);const d=nb.getChannelData(0);for(let k=0;k<d.length;k++)d[k]=Math.random()*2-1}catch(e){ac=null}}
+function T(at){return at>10?at:ac.currentTime+(at||0)}
+function tone(f,d,t='square',v=.05,at=0,dest){if(!ac)return;const s=T(at),o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(g).connect(dest||master);o.start(s);o.stop(s+d+.02)}
+function noise(d,v,f,at=0,type='bandpass',dest){if(!ac)return;const t=T(at),src=ac.createBufferSource(),fl=ac.createBiquadFilter(),g=ac.createGain();src.buffer=nb;fl.type=type;fl.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);src.connect(fl).connect(g).connect(dest||master);src.start(t);src.stop(t+d+.02)}
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+const sfx={
+  coin(){[88,95,100].forEach((m,k)=>tone(mtof(m),.12,'square',.045,k*.06))},
+  kaching(){noise(.05,.25,3000,0,'highpass');tone(mtof(91),.08,'triangle',.07,.04);tone(mtof(96),.35,'sine',.07,.1)},
+  swipe(){noise(.18,.12,1800,0,'bandpass');tone(2200,.07,'square',.035,.18);tone(2200,.07,'square',.035,.3)},
+  big(){noise(.05,.25,3000,0,'highpass');[60,55,52,48].forEach((m,k)=>tone(mtof(m),.14,'sawtooth',.05,.05+k*.08))},
+  flip(){noise(.06,.08,4000,0,'highpass');tone(1400,.03,'triangle',.04)},
+  win(){[60,64,67,72,76,79,84].forEach((m,k)=>tone(mtof(m),.16,'square',.05,k*.08))},
+  lose(){[67,63,60,55,51].forEach((m,k)=>tone(mtof(m),.35,'triangle',.07,k*.22))},
+  stamp(){noise(.12,.4,300,0,'lowpass');tone(80,.18,'square',.12)}
+};
+/* lazy lo-fi loop: soft kick, brushed snare, Rhodes-ish chords */
+const CHORDS=[[57,60,64,67],[53,57,60,64],[50,53,57,60],[52,55,59,62]];
+function bgmStart(){if(!ac||seq)return;let st=0,nt=ac.currentTime+.05;const dt=60/82/4;
+  seq=setInterval(()=>{while(nt<ac.currentTime+.12){const bar=(st/16|0)%4,c=CHORDS[bar],p=st%16;
+    if(p===0||p===7||p===10)tone(58,.22,'sine',.3,nt,bgmG);if(p===4||p===12)noise(.14,.08,2200,nt,'bandpass',bgmG);if(p%2===0)noise(.025,.03,8000,nt,'highpass',bgmG);
+    if(p===0)c.forEach(m=>tone(mtof(m),dt*15,'sine',.028,nt,bgmG));if(p===8)c.slice(1).forEach(m=>tone(mtof(m+12),dt*6,'triangle',.012,nt,bgmG));
+    nt+=dt;st++}},25)}
+function bgmStop(){clearInterval(seq);seq=null}
+const ICON=()=>muted?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
+function toggleMute(btn){muted=!muted;try{localStorage.setItem('pd_mute',muted?'1':'0')}catch(e){}initAudio();if(master)master.gain.setTargetAtTime(muted?0:1,ac.currentTime,.02);if(!muted)bgmStart();btn.innerHTML=ICON()}
+
+/* ---------- state ---------- */
+let S={};
+const fmt=n=>(n<0?'-':'')+'$'+Math.abs(Math.round(n)).toLocaleString('en-US');
+function shuffle(a){for(let k=a.length-1;k>0;k--){const j=Math.random()*(k+1)|0;[a[k],a[j]]=[a[j],a[k]]}return a}
+let best=null;try{best=JSON.parse(localStorage.getItem('pd_best')||'null')}catch(e){}
+
+function setup(){
+  let who='single';try{who=localStorage.getItem('pd_who')||'single'}catch(e){}
+  app.innerHTML=`<div class="hero"><h1>你的薪水，<br>撐得到<em>月底</em>嗎？</h1>
+    <p>15 題，看你是存到出國，還是 20 號就吃土。</p></div>
+    <p class="lbl">你是</p>
+    <div class="who" id="who">${Object.entries(WHO).map(([k,[l,e]])=>`<button data-w="${k}" aria-pressed="${k===who}">${e} ${l}</button>`).join('')}</div>
+    <p class="lbl">月薪多少？（沒人會知道🤫）</p>
+    <div class="sal">${SAL.map(([s,l,f],i)=>{const fx=f.reduce((a,b)=>a+b[1],0);return`<button data-i="${i}"><b>${kName(s)}</b><span>${prText(s)}</span></button>`}).join('')}</div>
+    <p class="lbl">🔒 隱藏級距・答對才能玩</p>
+    <div class="sal hid">${HIDDEN.map(([v,l],i)=>{const open=unlocked.includes(v);return`<button data-h="${i}" class="${open?'gold':'lock'}"><b>${open?kName(v):'??萬'}</b><span>${open?l:'點我挑戰'}</span></button>`}).join('')}</div>
+    <p class="fixed">百分比依主計總處 113 年薪資分布估算</p>
+    ${best?`<p class="fixed">你的最佳紀錄：${best.title}・剩 ${fmt(best.money)}</p>`:''}`;
+  app.querySelectorAll('#who button').forEach(b=>b.onclick=()=>{who=b.dataset.w;try{localStorage.setItem('pd_who',who)}catch(e){}initAudio();sfx.flip();app.querySelectorAll('#who button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'))});
+  app.querySelectorAll('.sal button[data-i]').forEach(b=>b.onclick=()=>{initAudio();bgmStart();start(+b.dataset.i,who)});
+  app.querySelectorAll('.sal button[data-h]').forEach(b=>b.onclick=()=>{initAudio();const h=+b.dataset.h,v=HIDDEN[h][0];if(unlocked.includes(v)){bgmStart();start(SAL.length+h,who)}else quiz(h,who)});
+}
+function quiz(h,who){const [v,l,,Q]=HIDDEN[h];const ov=document.createElement('div');ov.className='qov';
+  ov.innerHTML=`<div class="qbox"><p class="lbl">解鎖 ${kName(v)}・${l}</p><h2>${Q.q}</h2><div class="opts">${Q.o.map((t,k)=>`<button class="opt" data-k="${k}"><span class="k">${'ABC'[k]}</span><span>${t}</span></button>`).join('')}</div><p class="qmsg" id="qmsg"></p><button class="btn ghost" id="qx">先不要</button></div>`;
+  document.body.appendChild(ov);ov.querySelector('#qx').onclick=()=>ov.remove();
+  ov.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const k=+b.dataset.k,box=ov.querySelector('.qbox'),msg=ov.querySelector('#qmsg');
+    if(k===Q.a){unlocked.push(v);try{localStorage.setItem('pd_unlock',JSON.stringify(unlocked))}catch(e){}b.classList.add('right');sfx.win();msg.innerHTML=`<b>答對了，歡迎來到 ${kName(v)} 的世界💰</b><br>${Q.ex}`;
+      ov.querySelectorAll('.opt').forEach(x=>x.disabled=true);ov.querySelector('#qx').textContent='開始過這個月';ov.querySelector('#qx').onclick=()=>{ov.remove();bgmStart();start(SAL.length+h,who)};goldRain()}
+    else{b.classList.add('wrong');b.disabled=true;sfx.big();box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake');msg.innerHTML=pickQ(['你還沒準備好面對這麼多錢😏 再想想','有錢人不會這樣答喔','差一點，你離財富自由還有一題的距離'])}})}
+function goldRain(){for(let k=0;k<50;k++){const e=document.createElement('i');e.className='gold-c';e.textContent=k%3?'💰':'🪙';e.style.left=Math.random()*100+'vw';e.style.animationDuration=(1.4+Math.random()*1.4)+'s';e.style.animationDelay=Math.random()*.4+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),3200)}}
+function buildFixed(sal,fixed,who,L){const kidRe=/小孩|學校|私校/;let f=fixed.filter(([t])=>who==='kid'||!kidRe.test(t));
+  if(who==='kid'&&!f.some(([t])=>kidRe.test(t)))f.push(['小孩開銷（托育、奶粉）',Math.round(sal*.12/100)*100]);
+  if(who==='couple')f.push(['約會基金',Math.round(1500*L/100)*100]);return f}
+function start(i,who){const [sal,,fixed]=i<SAL.length?SAL[i]:HIDDEN[i-SAL.length];const L=Math.max(.9,Math.min(3,Math.pow(sal/35000,.65)));
+  const season=(SEASON[GAME_MONTH]||[]).filter(e=>!(e[1]==='情人節'&&who==='single'));
+  const pool=shuffle(EV.concat(sal>=300000?LUX:sal>=80000?RICH:[],IDEV[who]));
+  const idPick=shuffle(IDEV[who].slice()).slice(0,2);
+  const chosen=[...season.slice(0,2),...idPick];for(const e of pool){if(chosen.length>=STEPS)break;if(!chosen.includes(e))chosen.push(e)}
+  S={sal,who,L,X:sal/300000,R:Math.min(1.25,sal/120000),daily:Math.round(200*L/10)*10,step:0,day:1,money:0,mood:70,hp:70,deck:shuffle(chosen),log:[],inst:[],instTotal:0,instOwe:0};
+  push('薪水入帳',sal);for(const [t,a] of buildFixed(sal,fixed,who,L))push(t,-a,1,'fix');
+  sfx.coin();render(true)}
+function push(t,a,d=S.day,k=''){S.log.unshift({d,t,a,k});S.money+=a}
+function render(fresh){
+  const ev=S.deck[S.step];S.ev=ev;
+  const opts=ev.slice(3);
+  app.innerHTML=`<div class="book">
+      <div class="bk-top"><span>${GAME_MONTH} 月・薪轉帳戶・${WHO[S.who][1]} ${WHO[S.who][0]}</span><button class="mute" id="mu" aria-label="聲音開關" style="background:transparent;border-color:#f3ecd655;color:#f3ecd6">${ICON()}</button></div>
+      <div class="bal"><div><div style="font:500 12px var(--f);opacity:.8">目前餘額</div><b id="bal" class="${S.money<0?'neg':''}">${fmt(S.money)}</b></div>
+        <div class="day">${S.day}–${S.day+1} 號<small>第 ${S.step+1}/${STEPS} 題・${31-S.day<=5?`再 ${30-S.day} 天！撐住`:`離發薪 ${30-S.day} 天`}</small></div></div>
+      ${S.instTotal?`<div class="instbar">💳 每月分期 ${fmt(S.instTotal)}・還有 ${fmt(S.instOwe)} 沒繳完</div>`:''}
+      <div class="gauges"><div class="g m">😊 心情 ${Math.round(S.mood)}<div class="t"><i style="width:${S.mood}%"></i></div></div><div class="g h">💪 健康 ${Math.round(S.hp)}<div class="t"><i style="width:${S.hp}%"></i></div></div></div>
+    </div>
+    <article class="card in" id="card">
+      <div class="emo">${ev[0]}</div><h2>${ev[1]}</h2><p>${ev[2]}</p>
+      <div class="opts">${opts.map((o,k)=>{const v=val(ev,o),m=o[4]?`每月 ${fmt(instAmt(ev,o))} × ${o[4][1]} 期（總共 ${fmt(instAmt(ev,o)*o[4][1])}）`:Array.isArray(v)?`${fmt(v[0])} ~ ${fmt(v[1])}，看運氣`:(v===0?'不花錢':(v>0?'+':'')+fmt(v));
+        return`<button class="opt" data-k="${k}"><span class="k">${'AB'[k]}</span><span>${o[0]}</span><span class="fx">${m}</span></button>`}).join('')}</div>
+    </article>
+    ${opts.length>1?'<p class="swipe-hint">👈 滑 A　卡片可以滑　B 滑 👉</p>':''}
+    <section class="ledger"><h3>錢都去哪了</h3>${S.log.slice(0,40).map(l=>`<div class="ln"><span class="d">${l.d} 號</span><span>${l.t}</span><span class="a ${l.a>=0?'p':'n'}">${l.a>=0?'+':''}${fmt(l.a)}</span></div>`).join('')}</section>`;
+  $('mu').onclick=()=>toggleMute($('mu'));
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>choose(+b.dataset.k));
+  swipe($('card'),opts.length);
+}
+function swipe(card,n){if(n<2)return;let x0=null,dx=0;
+  card.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;x0=e.clientX;dx=0;card.style.transition='none'});
+  card.addEventListener('pointermove',e=>{if(x0==null)return;dx=e.clientX-x0;card.style.transform=`translateX(${dx}px) rotate(${dx/20}deg)`});
+  const end=()=>{if(x0==null)return;card.style.transition='';if(Math.abs(dx)>90){card.style.transform=`translateX(${dx>0?600:-600}px) rotate(${dx/10}deg)`;setTimeout(()=>choose(dx<0?0:1),180)}else card.style.transform='';x0=null};
+  card.addEventListener('pointerup',end);card.addEventListener('pointercancel',end)}
+function floatTxt(a){const d=document.createElement('div');d.className='float '+(a>=0?'p':'n');d.textContent=(a>=0?'+':'')+fmt(a);document.body.appendChild(d);setTimeout(()=>d.remove(),1000)}
+const QUIP={big:['刷卡的手比腦袋還快','這筆先不要讓家人知道','錢不是問題，問題是沒錢','月底的你正在看著你'],small:['小確幸，可以','錢包輕了一點點','這點錢，算了啦'],
+ save:['省到了，但心有點痛','理智贏了這一局','錢包感謝你的不殺之恩'],gain:['錢從天上掉下來','爽，存起來（應該吧）','今天是好日子'],inst:['未來的我會處理的','分期的時候最快樂','每個月都會想起今天的決定']};
+const pickQ=a=>a[Math.random()*a.length|0];
+function quip(t){document.querySelectorAll('.quip').forEach(x=>x.remove());const d=document.createElement('div');d.className='quip';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1500)}
+function choose(k){const o=S.ev[3+k];if(!o)return;
+  const v=val(S.ev,o);let m=Array.isArray(v)?Math.round((v[0]+Math.random()*(v[1]-v[0]))/10)*10:v;
+  if(o[4]){const a=instAmt(S.ev,o),n=o[4][1];S.inst.push({t:S.ev[1],a,n});S.instTotal+=a;S.instOwe+=a*(n-1);push(`${S.ev[1]}・分期 1/${n}`,-a,S.day,'inst');floatTxt(-a);sfx.swipe();quip(pickQ(QUIP.inst))}
+  else if(m!==0){push(`${S.ev[1]}・${o[0]}`,m,S.day,'ev');floatTxt(m);m>0?sfx.coin():(m<=-2000?sfx.big():sfx.kaching());quip(pickQ(m>0?QUIP.gain:m<=-1500?QUIP.big:QUIP.small))}
+  else{sfx.flip();if(S.ev.length>4)quip(pickQ(QUIP.save))}
+  S.mood=Math.max(0,Math.min(100,S.mood+o[2]-2.8));S.hp=Math.max(0,Math.min(100,S.hp+o[3]));
+  push('兩天的伙食和雜支',-S.daily*2);
+  if(S.money<0)return end('broke');if(S.mood<=0)return end('mood');if(S.hp<=0)return end('hp');
+  S.step++;S.day+=2;if(S.step>=STEPS)return end('win');render(true)}
+function end(why){
+  const M=S.money,md=S.mood;let title,desc,stamp;
+  if(why==='win'){stamp='撐到發薪日';
+    if(M>=10000&&md>=50){title='理財高手';desc='存到錢又過得開心，你是傳說中的那種人。'}
+    else if(M>=10000){title='苦行僧';desc='錢是存下來了，但你上一次笑是什麼時候？'}
+    else if(M<2000&&md>=60){title='快樂月光族';desc='錢花光了，但這個月過得很精彩。'}
+    else if(M<2000){title='月底吃土人';desc='錢沒了，心情也沒了，還好明天發薪水。'}
+    else{title='平凡上班族';desc='不多不少，跟大部分人一樣活下來了。'}
+    sfx.win()}
+  else{stamp=`${Math.min(30,S.day+1)} 號陣亡`;
+    title=why==='broke'?'跟爸媽借錢':why==='mood'?'崩潰想離職':'累到掛急診';
+    desc=why==='broke'?`${Math.min(30,S.day+1)} 號帳戶就見底了，打電話回家的手在抖。`:why==='mood'?`${Math.min(30,S.day+1)} 號心情歸零，開始在 104 找工作。`:`${Math.min(30,S.day+1)} 號身體撐不住，急診掛號費又是一筆。`;
+    sfx.lose()}
+  setTimeout(sfx.stamp,250);
+  const monthly=why==='win'?M:Math.round(M*30/Math.max(1,S.day)),bonus=Math.round(S.sal*BONUS),instY=S.inst.reduce((a,x)=>a+x.a*Math.min(x.n-1,11),0),year=monthly*12+(why==='win'?bonus:0)-instY;
+  const yLine=year>=0?`照這個月的過法，一年可以存 <b>${fmt(year)}</b>`:`照這個月的過法，一年會負債 <b>${fmt(-year)}</b>`;
+  const yNote=`每月${monthly>=0?'存':'虧'} ${fmt(Math.abs(monthly))} × 12${why==='win'?`，加年終約 ${BONUS} 個月 ${fmt(bonus)}`:'（年終先拿去補洞，不算）'}${instY?`，再扣接下來的分期 ${fmt(instY)}`:''}`;
+  const yComment=year>=S.sal*12?'一年存一年份薪水？你是存錢機器人吧🤖':year>=S.sal*4?'照這樣存，頭期款在向你招手🏠':year>=0?(instY?'有存到，但卡費帳單會一直來敲門💳':'有存，但財富自由還在很遠的地方揮手👋'):'年終拿去補洞都不夠，卡費會先找上你😱';
+  const score={title,money:M,day:Math.min(S.day,30)};
+  if(why==='win'&&(!best||M>best.money)){best=score;try{localStorage.setItem('pd_best',JSON.stringify(best))}catch(e){}}
+  const site=/github\.io$/.test(location.hostname)?location.origin+location.pathname:'';
+  const dayDead=Math.min(30,S.day+1);
+  const pains=S.log.filter(l=>(l.k==='ev'||l.k==='inst')&&l.a<0).sort((a,b)=>a.a-b.a).slice(0,3);
+  const head=why==='win'?'撐到發薪日':`${dayDead} 號陣亡`;
+  const share=(why==='win'?`月薪 ${kName(S.sal)}，${GAME_MONTH} 月撐到發薪日，還剩 ${fmt(M)}💰\n照這樣過，一年${year>=0?'能存':'會負債'} ${fmt(Math.abs(year))}\n稱號「${title}」，你撐得到月底嗎？`
+                         :`月薪 ${kName(S.sal)}，${GAME_MONTH} 月我只撐到 ${dayDead} 號就「${title}」😭\n最痛的一筆：${pains[0]?pains[0].t.split('・')[0]:'生活'}\n你的薪水撐得到月底嗎？`)+(site?'\n'+site:'');
+  app.innerHTML=`<div class="end"><p class="lbl" style="margin:0">你的 ${GAME_MONTH} 月月結單（長按圖片存起來）</p>
+    <img class="rcard" id="rcard" alt="${head}・${title}・剩 ${fmt(M)}">
+    <div class="row"><button class="btn ghost" id="cp">複製文案</button><button class="btn" id="sh">${site&&navigator.share?'分享圖片':'再過一個月'}</button></div>
+    ${site&&navigator.share?'<button class="btn ghost" id="again">再過一個月</button>':''}<p class="toast" id="toast"></p>
+    <div class="year"><span>一年存款試算</span><p>${yLine}</p><small>${yNote}</small><em>${yComment}</em></div>
+    <p>月薪 ${kName(S.sal)}（${prText(S.sal)}）・${WHO[S.who][0]}・心情 ${Math.round(S.mood)}・健康 ${Math.round(S.hp)}</p></div>
+    <section class="ledger"><h3>這個月錢都去哪了</h3>${S.log.slice(0,60).map(l=>`<div class="ln"><span class="d">${l.d} 號</span><span>${l.t}</span><span class="a ${l.a>=0?'p':'n'}">${l.a>=0?'+':''}${fmt(l.a)}</span></div>`).join('')}</section>`;
+  const img=$('rcard');const paint=()=>{img.src=drawCard({why,head,title,desc,M,year,pains,site}).toDataURL('image/png')};
+  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(paint);paint();
+  const again=()=>{sfx.flip();setup()};
+  if(site&&navigator.share){$('again').onclick=again;$('sh').onclick=async()=>{try{const b=await (await fetch(img.src)).blob(),f=new File([b],'薪水撐到月底.png',{type:'image/png'});
+      if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],text:share});else await navigator.share({text:share,url:site})}catch(e){}}}
+  else $('sh').onclick=again;
+  $('cp').onclick=()=>{try{navigator.clipboard.writeText(share).then(()=>$('toast').textContent='已複製，配上圖片去 Threads 討拍',()=>$('toast').textContent='瀏覽器不讓複製，請長按圖片存起來')}catch(e){$('toast').textContent='瀏覽器不讓複製，請長按圖片存起來'}};
+  window.scrollTo({top:0})}
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+function drawCard(o){const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  const F='"Noto Sans TC","PingFang TC",sans-serif',SF='"Noto Serif TC","Songti TC",serif',MF='"IBM Plex Mono",ui-monospace,monospace';
+  const red='#c8372d',ink='#1f2a2e',mute='#6f756f',paper='#fbf8f0',green='#14453d';
+  x.fillStyle='#e9e5da';x.fillRect(0,0,W,H);x.fillStyle=paper;rr(x,40,40,W-80,H-80,36);x.fill();
+  x.fillStyle=green;rr(x,40,40,W-80,170,36);x.fill();x.fillRect(40,150,W-80,60);
+  x.fillStyle='#f3ecd6';x.font=`700 30px ${F}`;x.fillText(`${GAME_MONTH} 月・薪轉帳戶月結單`,90,112);x.font=`500 26px ${F}`;x.globalAlpha=.8;
+  x.fillText(`月薪 ${kName(S.sal)}・${WHO[S.who][0]}・${prText(S.sal)}`,90,160);x.globalAlpha=1;
+  /* stamp */
+  x.save();x.translate(W-250,330);x.rotate(-.12);x.strokeStyle=red;x.lineWidth=8;rr(x,-170,-70,340,140,18);x.stroke();x.lineWidth=3;rr(x,-156,-56,312,112,12);x.stroke();
+  x.fillStyle=red;x.font=`900 ${o.head.length>5?50:58}px ${SF}`;x.textAlign='center';x.textBaseline='middle';x.fillText(o.head,0,4);x.restore();x.textAlign='left';x.textBaseline='alphabetic';
+  x.fillStyle=mute;x.font=`500 30px ${F}`;x.fillText('月底剩下',90,300);
+  x.fillStyle=o.M<0?red:ink;x.font=`700 104px ${MF}`;x.fillText(fmt(o.M),84,410);
+  x.fillStyle=ink;x.font=`900 72px ${SF}`;x.fillText(o.title,90,530);
+  x.fillStyle=mute;x.font=`500 32px ${F}`;wrapT(x,o.desc,90,590,W-180,46);
+  /* pains */
+  x.strokeStyle='#d6d0bf';x.setLineDash([10,8]);x.lineWidth=2;x.beginPath();x.moveTo(90,680);x.lineTo(W-90,680);x.stroke();x.setLineDash([]);
+  x.fillStyle=mute;x.font=`700 28px ${F}`;x.fillText('這個月最痛的三筆',90,735);
+  o.pains.forEach((p,k)=>{const y=800+k*70;x.fillStyle=ink;x.font=`700 34px ${F}`;let t=p.t.split('・')[0];if(t.length>14)t=t.slice(0,13)+'…';x.fillText(t,90,y);
+    x.fillStyle=red;x.font=`700 34px ${MF}`;x.textAlign='right';x.fillText(fmt(p.a),W-90,y);x.textAlign='left'});
+  if(!o.pains.length){x.fillStyle=ink;x.font=`700 34px ${F}`;x.fillText('這個月幾乎沒亂花，佩服',90,800)}
+  /* year box */
+  x.strokeStyle='#d6d0bf';x.lineWidth=3;x.setLineDash([12,10]);rr(x,90,1030,W-180,150,20);x.stroke();x.setLineDash([]);
+  x.fillStyle=mute;x.font=`700 26px ${F}`;x.fillText('照這樣過一整年',120,1080);
+  x.fillStyle=o.year>=0?'#1f7a4d':red;x.font=`700 56px ${MF}`;x.fillText((o.year>=0?'存 ':'欠 ')+fmt(Math.abs(o.year)),120,1150);
+  x.fillStyle=ink;x.font=`900 40px ${F}`;x.fillText('你的薪水撐得到月底嗎？',90,1250);
+  if(o.site){x.fillStyle=mute;x.font=`500 24px ${MF}`;x.fillText(o.site.replace(/^https?:\/\//,''),90,1292)}
+  return c}
+function wrapT(c,t,x,y,mw,lh){let line='';for(const ch of t){const tt=line+ch;if(c.measureText(tt).width>mw&&line){c.fillText(line,x,y);line=ch;y+=lh}else line=tt}c.fillText(line,x,y)}
+setup();
+})();
+</script>
+
+</body>
+</html>

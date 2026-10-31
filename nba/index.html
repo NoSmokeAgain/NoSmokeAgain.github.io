@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<!--site:meta-->
+<meta name="description" content="用薪資上限組一支史上最強 NBA 隊">
+<link rel="canonical" href="https://nosmokeagain.github.io/nba/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="薪水帽組隊｜三分鐘遊樂場">
+<meta property="og:description" content="用薪資上限組一支史上最強 NBA 隊">
+<meta property="og:url" content="https://nosmokeagain.github.io/nba/">
+<meta property="og:image" content="https://nosmokeagain.github.io/nba/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>薪水帽組隊</title>
+<style>
+:root{--bg:#10131c;--panel:#1a1f2d;--panel2:#232a3c;--ink:#f3f1ec;--mute:#8e95a8;--o:#ff7a2f;--y:#ffd23f;--g:#3ddc84;--r:#ff4d5e;--line:#2e3650}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#10131c;--panel:#1a1f2d;--panel2:#232a3c;--ink:#f3f1ec;--mute:#8e95a8}}
+:root[data-theme="light"]{--bg:#10131c;--panel:#1a1f2d;--panel2:#232a3c;--ink:#f3f1ec;--mute:#8e95a8}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;-webkit-tap-highlight-color:transparent}
+body{background-image:repeating-linear-gradient(90deg,rgba(255,122,47,.035) 0 60px,transparent 60px 120px)}
+main{max-width:520px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 14px 120px}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+h1{margin:4px 0 0;font-size:28px;font-weight:900;letter-spacing:-.02em}
+h1 em{font-style:normal;color:var(--o)}
+.lead{margin:2px 0 12px;color:var(--mute);font-size:13px;font-weight:700}
+#mute{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:16px;flex:none}
+.cap{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;position:sticky;top:0;z-index:5;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.capt{display:flex;justify-content:space-between;align-items:baseline;font-weight:900}
+.capt b{font-size:22px;font-variant-numeric:tabular-nums}.capt span{color:var(--mute);font-size:12px}
+.bar{height:10px;border-radius:99px;background:var(--panel2);margin:8px 0 10px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--g),var(--y),var(--o));transition:width .25s}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.slot{border:2px dashed var(--line);border-radius:12px;min-height:74px;padding:6px 4px;text-align:center;cursor:pointer;background:var(--panel2);position:relative;transition:transform .1s}
+.slot.sel{border-color:var(--o);border-style:solid;box-shadow:0 0 0 3px rgba(255,122,47,.25)}
+.slot.full{border-style:solid;border-color:#3b4563;background:linear-gradient(#2a3247,#1e2436)}
+.slot .p{font-size:11px;font-weight:900;color:var(--o)}
+.slot .n{font-size:12px;font-weight:900;margin-top:4px;line-height:1.2;word-break:break-all}
+.slot .m{font-size:11px;color:var(--mute);font-weight:700}
+.slot .x{position:absolute;top:2px;right:5px;font-size:11px;color:var(--mute)}
+.acts{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-top:10px}
+.btn{appearance:none;border:0;border-radius:12px;padding:12px;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;color:#16110d;background:var(--y)}
+.btn.o{background:var(--o);color:#fff}
+.btn.gh{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.4;pointer-events:none}
+.tabs{display:flex;gap:6px;margin:14px 0 10px;overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-weight:800;font-size:13px;padding:7px 12px;border-radius:99px;font-family:inherit}
+.tabs button[aria-pressed=true]{background:var(--o);border-color:var(--o);color:#fff}
+.list{display:grid;gap:8px}
+.pl{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:9px 10px;cursor:pointer}
+.pl.on{border-color:var(--g);background:#17271f}
+.pl.no{opacity:.38}
+.jer{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:18px;color:#fff}
+.pl .nm{font-weight:900;font-size:16px}
+.pl .tg{font-size:11px;color:var(--mute);font-weight:700;margin-top:1px}
+.pl .tg em{font-style:normal;color:var(--o)}
+.st{display:flex;gap:6px;margin-top:5px}
+.st span{font-size:10px;color:var(--mute);font-weight:700;display:flex;align-items:center;gap:3px}
+.st i{display:inline-block;width:22px;height:5px;border-radius:3px;background:var(--panel2);position:relative;overflow:hidden}
+.st i b{position:absolute;inset:0;right:auto;background:var(--o)}
+.pr{text-align:right}
+.pr .ovr{font-size:22px;font-weight:900;font-variant-numeric:tabular-nums}
+.pr .pz{font-size:13px;font-weight:900;color:var(--g)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--r);color:#fff;font-weight:900;padding:10px 16px;border-radius:12px;z-index:30;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1}
+.ov{position:fixed;inset:0;z-index:20;background:rgba(10,12,18,.96);overflow:auto;display:flex;justify-content:center}
+.ov[hidden]{display:none}
+.res{max-width:480px;width:100%;padding:max(20px,env(safe-area-inset-top)) 16px 30px;text-align:center}
+.tname{font-size:15px;color:var(--mute);font-weight:800;cursor:pointer}
+.tname b{color:var(--ink);font-size:22px;display:block}
+.score{font-size:92px;font-weight:900;line-height:1;margin:8px 0 0;font-variant-numeric:tabular-nums;background:linear-gradient(#ffd23f,#ff7a2f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lab{display:inline-block;background:var(--o);color:#fff;font-weight:900;font-size:20px;padding:5px 14px;border-radius:10px;margin:6px 0}
+.lsub{color:var(--mute);font-weight:700;font-size:14px;margin:0 0 12px}
+.kp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.kp div{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px}
+.kp b{display:block;font-size:24px;font-variant-numeric:tabular-nums}.kp span{font-size:12px;color:var(--mute);font-weight:700}
+.notes{text-align:left;display:grid;gap:6px;margin:12px 0}
+.notes div{background:var(--panel);border-radius:10px;padding:8px 10px;font-size:14px;font-weight:700}
+.notes .good{border-left:4px solid var(--g)}.notes .bad{border-left:4px solid var(--r)}
+.lu{display:grid;gap:4px;margin:10px 0;text-align:left}
+.lu div{display:flex;justify-content:space-between;font-size:14px;font-weight:800;background:var(--panel2);border-radius:8px;padding:6px 10px}
+.lu span{color:var(--mute)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.imgov{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px}
+.imgov[hidden]{display:none}
+.imgov img{max-width:100%;max-height:72vh;border-radius:10px}
+.imgov p{margin:0;color:#fff;font-weight:800}
+.note{color:var(--mute);font-size:11px;text-align:center;margin-top:16px;line-height:1.6}
+</style>
+</head>
+<body>
+<main>
+  <header><div><h1>薪水帽<em>組隊</em></h1><p class="lead">預算有限，挑 5 個人，看你組出冠軍還是擺爛隊。</p></div><button id="mute" aria-label="聲音開關">🔊</button></header>
+  <section class="cap">
+    <div class="capt"><span>薪資上限 $<span id="capv">120</span>M</span><b id="used">$0M</b></div>
+    <div class="bar"><i id="ub" style="width:0"></i></div>
+    <div class="slots" id="slots"></div>
+    <div class="acts"><button class="btn gh" id="rand">🎲 隨機組隊</button><button class="btn o" id="go" disabled>開打！</button></div>
+  </section>
+  <div class="tabs" id="tabs"></div>
+  <div class="list" id="list"></div>
+  <p class="note">球員都是「巔峰版」，數值與身價是遊戲設定，不代表真實薪資。<br>本遊戲與 NBA 及各球隊無關。</p>
+</main>
+<div class="toast" id="toast"></div>
+<div class="ov" id="ov" hidden><div class="res">
+  <p class="tname" id="tname" title="點一下換隊名"></p>
+  <p class="score" id="score">0</p>
+  <span class="lab" id="lab"></span>
+  <p class="lsub" id="lsub"></p>
+  <div class="kp"><div><b id="rec">0-0</b><span>例行賽戰績</span></div><div><b id="odds">0%</b><span>奪冠機率</span></div></div>
+  <div class="lu" id="lu"></div>
+  <div class="notes" id="notes"></div>
+  <div class="row"><button class="btn o" id="save">📸 存戰績卡</button><button class="btn" id="copy">複製戰績</button></div>
+  <div class="row"><button class="btn gh" id="back">改陣容</button><button class="btn gh" id="reset">重新組隊</button></div>
+  <p class="lsub" id="ctoast" style="margin-top:10px"></p>
+</div></div>
+<div class="imgov" id="imgov" hidden><img id="img" alt="戰績卡"><p>長按圖片儲存</p><div class="row" style="width:260px"><a class="btn o" id="dl" download="team.png" style="text-decoration:none;text-align:center">⬇️ 下載</a><button class="btn gh" id="imgx">關閉</button></div></div>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+/* name, decade, positions, OVR, off, def, 3pt, reb, ego(ball dominance), price $M */
+const P=[
+['喬丹','90s','SG/SF',99,99,95,72,70,98,45],['詹姆斯','10s','SF/PF',98,96,88,78,85,95,44],['約基奇','20s','C',97,97,78,80,96,70,43],['歐尼爾','00s','C',97,96,85,5,95,92,42],
+['柯比','00s','SG',96,97,88,80,66,97,41],['柯瑞','10s','PG',96,98,72,99,60,88,41],['賈霸','70s','C',96,94,88,20,92,85,40],['魔術強森','80s','PG',96,95,78,60,84,90,40],
+['鄧肯','00s','PF/C',96,88,97,20,94,60,40],['歐拉朱萬','90s','C',96,92,98,20,93,75,40],['大鳥柏德','80s','SF/PF',95,95,82,88,86,88,39],['杜蘭特','10s','SF/PF',95,98,80,92,76,85,39],
+['字母哥','20s','PF',95,94,92,40,93,88,39],['張伯倫','60s','C',95,95,85,10,99,92,38],['唐西奇','20s','PG/SG',94,97,68,85,84,96,37],['亞歷山大','20s','PG/SG',94,95,84,78,60,90,37],
+['比爾·羅素','60s','C',94,75,99,5,98,40,36],['賈奈特','00s','PF',94,86,97,30,92,80,36],['韋德','00s','SG',94,92,88,45,68,90,36],['恩比德','20s','C',93,95,85,70,90,88,35],
+['諾威斯基','00s','PF',93,95,70,92,84,75,34],['卡爾·馬龍','90s','PF',93,92,82,25,90,75,34],['雷納德','10s','SF',93,90,97,84,76,75,34],['文班亞馬','20s','C/PF',92,88,98,75,90,75,33],
+['皮朋','90s','SF',92,84,97,66,76,65,31],['巴克利','90s','PF',92,93,70,50,95,90,32],['保羅','10s','PG',92,88,88,85,52,78,32],['麥葛瑞迪','00s','SG/SF',92,96,78,80,68,92,32],
+['艾佛森','00s','PG/SG',91,94,75,60,50,99,30],['奈許','00s','PG',91,92,60,94,45,65,30],['塔圖姆','20s','SF',90,90,84,84,78,82,28],['姚明','00s','C',90,88,86,30,88,60,28],
+['史塔克頓','90s','PG',90,85,82,80,40,40,28],['艾德華茲','20s','SG',89,90,82,85,64,88,27],['雷·艾倫','00s','SG',89,90,70,98,50,60,27],['基德','00s','PG',89,80,88,72,75,50,26],
+['布倫森','20s','PG',88,91,68,84,50,88,25],['湯普森','10s','SG',88,86,84,97,45,45,25],['巴特勒','20s','SF',88,86,90,62,72,85,25],['布克','20s','SG',88,92,70,86,58,86,25],
+['雷吉·米勒','90s','SG',87,89,65,96,40,70,24],['哈利伯頓','20s','PG',87,86,70,88,55,70,23],['吉諾比利','00s','SG',86,88,78,80,55,60,22],['格林','10s','PF',86,70,96,55,80,55,21],
+['羅德曼','90s','PF',85,55,96,20,99,40,18],['班·華勒斯','00s','C',84,50,97,5,96,30,15],['伊戈達拉','10s','SF',82,72,90,72,65,35,12],['林書豪','10s','PG',78,82,62,70,40,75,6],
+['卡魯索','20s','SG',78,65,90,76,45,20,7],['費雪','00s','PG',76,72,78,80,35,30,5],['霍里','00s','PF',76,70,78,82,70,25,5],['科爾','90s','SG',74,74,60,99,30,20,4],
+['塔克','20s','PF',74,55,85,76,60,20,4],['帕金斯','10s','C',72,45,80,0,78,40,3]
+].map(([n,d,pos,ovr,off,def,t3,reb,ego,price],i)=>({id:i,n,d,pos:pos.split('/'),ovr,off,def,t3,reb,ego,price}));
+const CAP=120,POS=['PG','SG','SF','PF','C'],POSN={PG:'控衛',SG:'得分後衛',SF:'小前鋒',PF:'大前鋒',C:'中鋒'};
+const DEC={'60s':'#6b5bd2','70s':'#b05bd2','80s':'#d25b9e','90s':'#d2463c','00s':'#e07a1f','10s':'#2f8fd8','20s':'#1fae7a'};
+let team={PG:null,SG:null,SF:null,PF:null,C:null},sel='PG',tab='全部';
+/* ---------- audio ---------- */
+let ac=null,master=null,muted=false;try{muted=localStorage.getItem('nb_mute')==='1'}catch(e){}$('mute').textContent=muted?'🔇':'🔊';
+function silentWav(){const n=800,b=new ArrayBuffer(44+n),v=new DataView(b),w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,'data');v.setUint32(40,n,true);for(let i=0;i<n;i++)v.setUint8(44+i,128);return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
+function initAudio(){if(ac){if(ac.state==='suspended')ac.resume();return}try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}try{const a=new Audio(silentWav());a.loop=true;a.play().catch(()=>{})}catch(e){}const C=window.AudioContext||window.webkitAudioContext;if(!C)return;ac=new C();master=ac.createGain();master.gain.value=muted?0:.8;master.connect(ac.destination)}
+function tone(type,f,t,d,p,f2){if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(p,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(master);o.start(t);o.stop(t+d+.05)}
+const T=()=>ac?ac.currentTime:0;
+const sfx={pick(){tone('triangle',660,T(),.08,.18,990)},drop(){tone('triangle',500,T(),.1,.15,300)},bad(){tone('square',180,T(),.18,.12,120)},
+  buzzer(){const t=T();tone('sawtooth',220,t,.7,.18,210);tone('sawtooth',223,t,.7,.14,212)},
+  swish(){const t=T();for(let i=0;i<5;i++)tone('triangle',[523,659,784,1046,1318][i],t+i*.07,.25,.16)},
+  bounce(i){tone('sine',110,T()+i*.12,.1,.5,60)}};
+/* ---------- UI ---------- */
+const used=()=>POS.reduce((a,k)=>a+(team[k]?team[k].price:0),0);
+function renderSlots(){$('slots').innerHTML=POS.map(k=>{const p=team[k];return`<div class="slot ${p?'full':''} ${sel===k?'sel':''}" data-k="${k}"><div class="p">${k}</div>${p?`<div class="n">${p.n}</div><div class="m">$${p.price}M</div><span class="x">✕</span>`:`<div class="m" style="margin-top:8px">${POSN[k]}</div>`}</div>`}).join('');
+  const u=used();$('used').textContent=`$${u}M`;$('used').style.color=u>CAP?'var(--r)':'';$('ub').style.width=Math.min(100,u/CAP*100)+'%';$('go').disabled=!POS.every(k=>team[k])}
+function bars(p){return[['攻',p.off],['防',p.def],['三分',p.t3],['板',p.reb]].map(([l,v])=>`<span>${l}<i><b style="width:${v}%"></b></i></span>`).join('')}
+function renderTabs(){$('tabs').innerHTML=['全部',...POS].map(t=>`<button aria-pressed="${t===tab}" data-t="${t}">${t==='全部'?'全部':t+' '+POSN[t]}</button>`).join('')}
+function renderList(){const inTeam=new Set(POS.map(k=>team[k]&&team[k].id));const left=CAP-used();
+  const arr=P.filter(p=>tab==='全部'||p.pos.includes(tab)).sort((a,b)=>b.price-a.price);
+  $('list').innerHTML=arr.map(p=>{const on=inTeam.has(p.id);const slotP=team[sel];const afford=on||p.price<=left+(slotP&&p.pos.includes(sel)?slotP.price:0);
+    return`<div class="pl ${on?'on':''} ${!afford?'no':''}" data-id="${p.id}"><div class="jer" style="background:${DEC[p.d]}">${p.pos[0]}</div><div><div class="nm">${p.n}${p.n==='林書豪'?' 🔥':''}</div><div class="tg"><em>${p.d}</em> 巔峰・${p.pos.join('/')}</div><div class="st">${bars(p)}</div></div><div class="pr"><div class="ovr">${p.ovr}</div><div class="pz">$${p.price}M</div></div></div>`}).join('')}
+function render(){renderSlots();renderTabs();renderList()}
+function toast(t){const el=$('toast');el.textContent=t;el.classList.add('on');clearTimeout(toast.tm);toast.tm=setTimeout(()=>el.classList.remove('on'),1600)}
+$('slots').onclick=e=>{const s=e.target.closest('.slot');if(!s)return;initAudio();const k=s.dataset.k;
+  if(team[k]&&sel===k){team[k]=null;sfx.drop()}sel=k;tab=k;render()};
+$('tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;tab=b.dataset.t;if(POS.includes(tab))sel=tab;render()};
+$('list').onclick=e=>{const el=e.target.closest('.pl');if(!el)return;initAudio();const p=P[+el.dataset.id];
+  const cur=POS.find(k=>team[k]&&team[k].id===p.id);if(cur){team[cur]=null;sel=cur;sfx.drop();render();return}
+  let k=p.pos.includes(sel)?sel:(p.pos.find(x=>!team[x])||p.pos[0]);
+  const after=used()-(team[k]?team[k].price:0)+p.price;if(after>CAP){sfx.bad();toast(`超過薪資上限 $${after-CAP}M`);return}
+  team[k]=p;sfx.pick();const next=POS.find(x=>!team[x]);if(next){sel=next;if(tab!=='全部')tab=next}render()};
+$('rand').onclick=()=>{initAudio();for(let tries=0;tries<400;tries++){const t={};let ok=true,u=0,ids=new Set();for(const k of POS){const c=P.filter(p=>p.pos.includes(k)&&!ids.has(p.id));const p=c[Math.random()*c.length|0];t[k]=p;ids.add(p.id);u+=p.price}if(u<=CAP&&u>=CAP-25){team=t;break}}sel='PG';sfx.swish();render()};
+/* ---------- evaluate ---------- */
+const DUOS=[[['喬丹','皮朋'],4,'喬丹＋皮朋：公牛王朝連線'],[['喬丹','羅德曼'],2,'羅德曼搶籃板、喬丹得分，分工完美'],[['柯比','歐尼爾'],4,'OK 連線：三連霸組合（但要先吵一架）'],[['詹姆斯','韋德'],3,'熱火雙巨頭：空中接力看到膩'],[['柯瑞','湯普森'],4,'水花兄弟：三分球下雨'],[['柯瑞','格林'],2,'格林傳、柯瑞投，勇士化學效應'],[['史塔克頓','卡爾·馬龍'],4,'擋拆教科書：爵士雙人組'],[['鄧肯','吉諾比利'],3,'馬刺默契：沒人看得懂但就是贏'],[['姚明','麥葛瑞迪'],3,'姚麥連線：台灣人的青春'],[['魔術強森','賈霸'],4,'Showtime 湖人：天勾＋魔術傳球'],[['奈許','諾威斯基'],2,'小牛時期老友重聚'],[['雷·艾倫','賈奈特'],2,'綠衫軍三巨頭殘影'],[['杜蘭特','柯瑞'],3,'這陣容大家會說不公平'],[['約基奇','文班亞馬'],2,'雙塔都會傳球，對手絕望'],[['史塔克頓','卡爾·馬龍','霍里'],0,'']];
+const TOWNS=['台中','三重','板橋','高雄','新竹','花蓮','台南','基隆','桃園','宜蘭','屏東','永和'],MASC=['珍奶','雞排','颱風','夜市','機車','檳榔','滷肉飯','鹹酥雞','芋圓','烏魚子','肉圓','豆花'];
+let tname='';function newName(){tname=TOWNS[Math.random()*TOWNS.length|0]+MASC[Math.random()*MASC.length|0]+'隊'}
+let last=null;
+function evaluate(){const ps=POS.map(k=>team[k]),names=new Set(ps.map(p=>p.n)),notes=[];
+  const avg=ps.reduce((a,p)=>a+p.ovr,0)/5;let r=avg-4;
+  const shooters=ps.filter(p=>p.t3>=80).length;if(shooters===0){r-=6;notes.push(['bad','沒有射手，對手直接包夾禁區'])}else if(shooters===1){r-=3;notes.push(['bad','只有一個射手，空間太擠'])}else if(shooters>=3){r+=2;notes.push(['good',`${shooters} 個射手，空間拉超開`])}
+  const md=ps.reduce((a,p)=>a+p.def,0)/5;r+=(md-80)*.25;if(md>=88)notes.push(['good','防守鐵桶陣，對手投籃像在打鐵'])
+  else if(md<74)notes.push(['bad','防守像旋轉門，對手隨便進'])
+  const reb=Math.max(team.PF.reb,team.C.reb);if(reb<85){r-=4;notes.push(['bad','禁區太軟，籃板被搶光'])}
+  const egos=ps.filter(p=>p.ego>=90);if(egos.length>=3){r-=5*(egos.length-2);notes.push(['bad',`${egos.map(p=>p.n).join('、')}：一顆球不夠分`])}
+  for(const [d,b,msg] of DUOS){if(b&&d.every(n=>names.has(n))){r+=b;notes.push(['good',msg])}}
+  if(names.has('林書豪')){const lin=Math.round(Math.random()*9);r+=lin;notes.push(lin>=5?['good',`林來瘋發動！+${lin}`]:['bad','林來瘋今天沒發動'])}
+  if(names.has('喬丹')&&names.has('詹姆斯')){r-=1;notes.push(['bad','喬丹和詹姆斯在更衣室吵誰是 GOAT'])}
+  const u=used();if(u<=CAP-25){notes.push(['good',`省下 $${CAP-u}M，老闆很開心`])}
+  r=Math.max(55,Math.min(100,r));const score=Math.round(r);
+  const wins=Math.max(8,Math.min(74,Math.round(41+(r-82)*3.3)));
+  const odds=r>=93?85:r>=90?Math.round(50+(r-90)*10):r>=87?Math.round(20+(r-87)*10):r>=84?Math.round(5+(r-84)*5):r>=81?1:0;
+  const LB=[[91,'不講武德超級隊','聯盟準備修改規則了'],[88,'冠軍大熱門','分區冠軍只是暖身'],[85,'季後賽常客','打得進去，但要看籤運'],[81,'附加賽邊緣人','每年都在 7-10 名徘徊'],[0,'擺爛搶狀元','目標是選秀樂透']];
+  const [,lab,sub]=LB.find(([k])=>score>=k);
+  return{score,wins,odds,lab,sub,notes:notes.slice(0,6),ps}}
+function showResult(){initAudio();if(!tname)newName();last=evaluate();const R=last;
+  $('tname').innerHTML=`你的球隊<b>${tname} 🔄</b>`;$('lab').textContent=R.lab;$('lsub').textContent=R.sub;$('rec').textContent=`${R.wins}-${82-R.wins}`;$('odds').textContent=R.odds<1?'<1%':R.odds+'%';
+  $('lu').innerHTML=POS.map(k=>`<div><span>${k}</span>${team[k].n}<span>${team[k].ovr}</span></div>`).join('');
+  $('notes').innerHTML=R.notes.map(([c,t])=>`<div class="${c}">${c==='good'?'✅':'⚠️'} ${t}</div>`).join('');$('ctoast').textContent='';
+  $('ov').hidden=false;$('ov').scrollTop=0;
+  for(let i=0;i<3;i++)sfx.bounce(i);let n=0;const el=$('score'),iv=setInterval(()=>{n+=Math.ceil((R.score-n)/6)||1;if(n>=R.score){n=R.score;clearInterval(iv);R.score>=85?sfx.swish():sfx.buzzer()}el.textContent=n},40)}
+$('go').onclick=showResult;
+$('tname').onclick=()=>{newName();$('tname').innerHTML=`你的球隊<b>${tname} 🔄</b>`;sfx.pick()};
+$('back').onclick=()=>{$('ov').hidden=true};
+$('reset').onclick=()=>{team={PG:null,SG:null,SF:null,PF:null,C:null};sel='PG';tab='全部';tname='';$('ov').hidden=true;render();scrollTo(0,0)};
+/* ---------- share ---------- */
+function shareText(){const R=last,url=/github\.io/.test(location.host)?'\n'+location.href.split('#')[0]:'';
+  return`🏀 我用 $${CAP}M 組了「${tname}」\n${POS.map(k=>team[k].n).join('、')}\n戰力 ${R.score}・${R.wins}勝${82-R.wins}敗・奪冠 ${R.odds<1?'<1':R.odds}%「${R.lab}」\n你的陣容打得贏我嗎？${url}`}
+function card(){const R=last,c=document.createElement('canvas');c.width=1080;c.height=1350;const a=c.getContext('2d');
+  const g=a.createLinearGradient(0,0,0,1350);g.addColorStop(0,'#1a1f2d');g.addColorStop(1,'#0c0f16');a.fillStyle=g;a.fillRect(0,0,1080,1350);
+  a.strokeStyle='rgba(255,122,47,.25)';a.lineWidth=6;a.beginPath();a.arc(540,1350,330,Math.PI,0);a.stroke();a.beginPath();a.moveTo(0,1020);a.lineTo(1080,1020);a.stroke();
+  a.textAlign='center';a.fillStyle='#8e95a8';a.font='800 34px system-ui,sans-serif';a.fillText('薪水帽組隊・$'+CAP+'M',540,90);
+  a.fillStyle='#f3f1ec';a.font='900 64px system-ui,sans-serif';a.fillText(tname,540,175);
+  const sg=a.createLinearGradient(0,200,0,380);sg.addColorStop(0,'#ffd23f');sg.addColorStop(1,'#ff7a2f');a.fillStyle=sg;a.font='900 200px system-ui,sans-serif';a.fillText(R.score,540,380);
+  a.fillStyle='#ff7a2f';a.beginPath();a.roundRect(540-200,410,400,72,16);a.fill();a.fillStyle='#fff';a.font='900 42px system-ui';a.fillText(R.lab,540,460);
+  a.fillStyle='#f3f1ec';a.font='900 48px system-ui';a.fillText(`${R.wins}勝 ${82-R.wins}敗`,330,570);a.fillText(`奪冠 ${R.odds<1?'<1':R.odds}%`,750,570);
+  a.fillStyle='#8e95a8';a.font='700 26px system-ui';a.fillText('例行賽戰績',330,610);a.fillText('奪冠機率',750,610);
+  POS.forEach((k,i)=>{const p=team[k],y=670+i*68;a.fillStyle='#232a3c';a.beginPath();a.roundRect(150,y,780,56,12);a.fill();a.textAlign='left';a.fillStyle='#ff7a2f';a.font='900 30px system-ui';a.fillText(k,180,y+39);a.fillStyle='#f3f1ec';a.font='900 34px system-ui';a.fillText(p.n,290,y+40);a.textAlign='right';a.fillStyle='#8e95a8';a.font='800 28px system-ui';a.fillText(`${p.d}・${p.ovr}`,900,y+39);a.textAlign='center'});
+  a.fillStyle='#f3f1ec';a.font='900 40px system-ui';a.fillText('你的陣容打得贏我嗎？',540,1120);
+  a.fillStyle='#8e95a8';a.font='700 26px ui-monospace,monospace';a.fillText(/github\.io/.test(location.host)?location.host+location.pathname.replace(/index\.html$/,''):'薪水帽組隊',540,1180);
+  return c}
+let dlURL=null;
+$('save').onclick=()=>{const c=card();c.toBlob(async b=>{if(!b)return;const f=new File([b],'team.png',{type:'image/png'});const touch=matchMedia('(pointer:coarse)').matches;
+  if(touch&&navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]});return}catch(e){if(e&&e.name==='AbortError')return}}
+  if(dlURL)URL.revokeObjectURL(dlURL);dlURL=URL.createObjectURL(b);$('dl').href=dlURL;if(!touch){$('dl').click();$('ctoast').textContent='已下載戰績卡';return}$('img').src=dlURL;$('imgov').hidden=false},'image/png')};
+$('imgx').onclick=()=>$('imgov').hidden=true;
+$('copy').onclick=()=>{const t=shareText(),ok=()=>$('ctoast').textContent='複製好了，去貼吧 🏀';if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(ok,fb);else fb();
+  function fb(){const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,t.length);try{document.execCommand('copy');ok()}catch(e){$('ctoast').textContent='長按自己複製吧'}ta.remove()}};
+$('mute').onclick=()=>{muted=!muted;$('mute').textContent=muted?'🔇':'🔊';try{localStorage.setItem('nb_mute',muted?'1':'0')}catch(e){}if(master)master.gain.setTargetAtTime(muted?0:.8,ac.currentTime,.02)};
+render();
+</script>
+</body>
+</html>

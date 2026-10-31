@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<!--site:meta-->
+<meta name="description" content="削一顆鳳梨，看你削掉幾分">
+<link rel="canonical" href="https://nosmokeagain.github.io/pineapple/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="削鳳梨｜三分鐘遊樂場">
+<meta property="og:description" content="削一顆鳳梨，看你削掉幾分">
+<meta property="og:url" content="https://nosmokeagain.github.io/pineapple/">
+<meta property="og:image" content="https://nosmokeagain.github.io/pineapple/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>削鳳梨</title>
+<style>
+:root{--bg:#fff3c4;--ink:#2b2111;--mute:#7a6a4a;--y:#ffd23f;--g:#4f8a2b;--r:#e0503a;--card:#fffaf0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#fff3c4;--ink:#2b2111;--mute:#7a6a4a;--card:#fffaf0}}
+:root[data-theme="dark"]{--bg:#fff3c4;--ink:#2b2111;--mute:#7a6a4a;--card:#fffaf0}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+#wrap{position:fixed;inset:0;display:flex;justify-content:center}
+#stage{position:relative;width:100%;max-width:520px;height:100%}
+canvas{display:block;width:100%;height:100%;touch-action:none;cursor:none}
+#top{position:absolute;top:0;left:0;right:0;padding:max(12px,env(safe-area-inset-top)) 14px 0;display:flex;justify-content:space-between;align-items:center;pointer-events:none;z-index:2}
+#time{font-weight:900;font-size:28px;font-variant-numeric:tabular-nums}
+#peel{font-weight:900;font-size:15px;background:var(--ink);color:var(--y);padding:6px 10px;border-radius:4px;transform:rotate(-2deg)}
+#mute{pointer-events:auto;width:40px;height:40px;border:3px solid var(--ink);background:var(--card);border-radius:8px;font-size:17px}
+#done{position:absolute;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%) rotate(1deg);z-index:2;border:3px solid var(--ink);background:var(--y);font-family:inherit;font-weight:900;font-size:19px;line-height:1;padding:14px 26px;border-radius:6px;box-shadow:4px 4px 0 var(--ink);color:var(--ink)}
+#done:active{transform:translateX(-50%) translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+#done[hidden]{display:none}
+.ov{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px 20px;background:rgba(255,243,196,.97);text-align:center;overflow:auto}
+.ov[hidden]{display:none!important}
+h1{margin:0;font-size:clamp(52px,16vw,74px);font-weight:900;line-height:1;transform:rotate(-3deg)}
+h1 span{background:var(--y);padding:0 8px;border:4px solid var(--ink)}
+.sub{margin:0;color:var(--mute);font-size:16px;line-height:1.6;font-weight:700}
+.btn{border:3px solid var(--ink);background:var(--y);font-family:inherit;font-weight:900;font-size:21px;padding:15px 32px;border-radius:6px;box-shadow:5px 5px 0 var(--ink);color:var(--ink);cursor:pointer}
+.btn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink)}
+.btn.ghost{background:var(--card);font-size:16px;padding:12px 20px}
+.score{font-size:110px;font-weight:900;line-height:.9;margin:0;font-variant-numeric:tabular-nums}
+.score small{font-size:28px}
+.title{font-size:28px;font-weight:900;margin:0;background:var(--ink);color:var(--y);padding:4px 12px;transform:rotate(-2deg)}
+.bars{width:100%;max-width:320px;display:grid;gap:8px;text-align:left;font-weight:800;font-size:14px}
+.bars div{display:grid;grid-template-columns:82px 1fr 44px;align-items:center;gap:8px}
+.bars i{height:12px;border:2px solid var(--ink);background:var(--card);position:relative}
+.bars i b{position:absolute;inset:0;right:auto;background:var(--g)}
+.bars .bad b{background:var(--r)}
+#shot{width:150px;height:auto;border:3px solid var(--ink);background:#fff;transform:rotate(2deg)}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.toast{margin:0;font-size:14px;font-weight:800;color:var(--g);min-height:18px}
+.hint{margin:0;font-size:12px;color:var(--mute)}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="stage">
+  <canvas id="cv"></canvas>
+  <div id="top"><div id="time">30.0</div><div id="peel">去皮 0%</div><button id="mute" aria-label="聲音開關">🔊</button></div>
+  <button id="done" hidden>削好了！</button>
+
+  <div class="ov" id="intro">
+    <h1><span>削鳳梨</span></h1>
+    <p class="sub">30 秒，把皮削乾淨、鳳梨眼挖掉。<br>削太深＝浪費，阿嬤會罵。</p>
+    <p class="sub" style="font-size:14px">🔪 手指劃過鳳梨就是一刀<br>慢慢劃切比較深，快快劃切比較淺</p>
+    <button class="btn" id="go">拿刀</button>
+    <p class="hint" id="best"></p>
+  </div>
+
+  <div class="ov" id="end" hidden>
+    <img id="shot" alt="你削的鳳梨">
+    <p class="score"><span id="sc">0</span><small> 分</small></p>
+    <p class="title" id="tt"></p>
+    <p class="sub" id="td"></p>
+    <div class="bars">
+      <div><span>去皮</span><i><b id="b1"></b></i><span id="v1"></span></div>
+      <div><span>鳳梨眼</span><i><b id="b2"></b></i><span id="v2"></span></div>
+      <div class="bad"><span>浪費果肉</span><i><b id="b3"></b></i><span id="v3"></span></div>
+    </div>
+    <div class="row"><button class="btn" id="again">再削一顆</button><button class="btn ghost" id="copy">複製分數</button></div>
+    <p class="toast" id="toast"></p>
+  </div>
+</div></div>
+
+<script>
+'use strict';
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d'),$=id=>document.getElementById(id);
+let W=0,H=0,dpr=1;
+/* ---------- audio ---------- */
+let ac=null,master=null,nb=null,muted=false;
+try{muted=localStorage.getItem('pa_mute')==='1'}catch(e){}
+$('mute').textContent=muted?'🔇':'🔊';
+function silentWav(){const n=800,b=new ArrayBuffer(44+n),v=new DataView(b),w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,'data');v.setUint32(40,n,true);for(let i=0;i<n;i++)v.setUint8(44+i,128);return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
+function initAudio(){if(ac){if(ac.state==='suspended')ac.resume();return}
+  try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+  try{const a=new Audio(silentWav());a.loop=true;a.play().catch(()=>{})}catch(e){}
+  const C=window.AudioContext||window.webkitAudioContext;if(!C)return;ac=new C();master=ac.createGain();master.gain.value=muted?0:.9;master.connect(ac.destination);
+  nb=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}
+function env(g,t,a,p,d){g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(p,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+d)}
+function osc(type,f,t,d,p,f2){if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);env(g,t,.005,p,d);o.connect(g);g.connect(master);o.start(t);o.stop(t+d+.05)}
+function noise(t,d,p,type,f,q){if(!ac)return;const s=ac.createBufferSource();s.buffer=nb;const fl=ac.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q||1;const g=ac.createGain();env(g,t,.003,p,d);s.connect(fl);fl.connect(g);g.connect(master);s.start(t,Math.random()*.5);s.stop(t+d+.05)}
+let lastScrape=0;
+function scrape(speed){if(!ac)return;const t=ac.currentTime;if(t-lastScrape<.045)return;lastScrape=t;noise(t,.06,.18,'bandpass',900+Math.min(3000,speed*1.5),2)}
+function chop(){if(!ac)return;const t=ac.currentTime;osc('sine',170,t,.08,.4,70);noise(t,.03,.3,'highpass',2500)}
+function ding(){if(!ac)return;const t=ac.currentTime;[784,988,1319].forEach((f,i)=>osc('triangle',f,t+i*.08,.2,.2))}
+function boo(){if(!ac)return;const t=ac.currentTime;osc('sawtooth',220,t,.25,.12,150);osc('sawtooth',160,t+.25,.4,.12,100)}
+function tick(){if(!ac)return;osc('square',1400,ac.currentTime,.03,.08)}
+
+/* ---------- pineapple model: depth grid ---------- */
+const CELL=5;
+let G=null;// {cols,rows,cx,cy,rx,ry,ox,oy,d:Float32Array,inside:Uint8Array,eye:Uint8Array,tgt:Float32Array}
+function build(){
+  const rx=Math.min(W*.34,165),ry=Math.min(rx*1.42,(H-230)*.5),cx=W/2,cy=Math.max(150+ry*.98+40,H*.56);
+  const cols=Math.ceil(rx*2/CELL)+2,rows=Math.ceil(ry*2/CELL)+2,ox=cx-cols*CELL/2,oy=cy-rows*CELL/2,n=cols*rows;
+  const d=new Float32Array(n),inside=new Uint8Array(n),eye=new Uint8Array(n),tgt=new Float32Array(n),pat=new Float32Array(n);
+  // eyes on a diamond lattice
+  const eyes=[];const sx=rx*.34,sy=ry*.2;
+  for(let j=-6;j<=6;j++)for(let i=-6;i<=6;i++){const ex=cx+(i+(j%2?.5:0))*sx+(Math.random()-.5)*6,ey=cy+j*sy+(Math.random()-.5)*6;if(((ex-cx)/rx)**2+((ey-cy)/ry)**2<.8)eyes.push([ex,ey])}
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const k=r*cols+c,x=ox+(c+.5)*CELL,y=oy+(r+.5)*CELL;
+    const e=((x-cx)/rx)**2+((y-cy)/ry)**2;if(e>1)continue;inside[k]=1;
+    let isEye=0;for(const [ex,ey] of eyes){if((x-ex)**2+(y-ey)**2<(CELL*1.9)**2){isEye=1;break}}
+    eye[k]=isEye;tgt[k]=isEye?1.6:1;
+    const u=(x-cx)/sx,v=(y-cy)/sy;pat[k]=Math.abs(((u+v)%1+1)%1-.5)+Math.abs(((u-v)%1+1)%1-.5)}
+  G={cols,rows,cx,cy,rx,ry,ox,oy,d,inside,eye,tgt,pat,n,total:inside.reduce((a,b)=>a+b,0),eyeTotal:eye.reduce((a,b)=>a+b,0)};
+  off=document.createElement('canvas');off.width=cols;off.height=rows;offx=off.getContext('2d');img=offx.createImageData(cols,rows);dirty=true;
+}
+let off,offx,img,dirty=true;
+function colorOf(k){const d=G.d[k];
+  if(d<1){const p=G.pat[k];// skin
+    if(p<.18)return[96,60,24];const a=d;const base=p<.32?[150,100,40]:[196,140,56];
+    const peeled=[214,190,90];return base.map((v,i)=>v+(peeled[i]-v)*a*.6)}
+  if(G.eye[k]&&d<1.6)return[92,60,26];
+  const w=d-G.tgt[k];if(w<=.05)return[255,214,64];
+  if(w<.6)return[248,198,40];if(w<1.2)return[232,172,26];return[205,140,16]}
+function paint(){const D=img.data;for(let k=0;k<G.n;k++){const i=k*4;if(!G.inside[k]){D[i+3]=0;continue}const c=colorOf(k);D[i]=c[0];D[i+1]=c[1];D[i+2]=c[2];D[i+3]=255}offx.putImageData(img,0,0);dirty=false}
+
+/* ---------- knife ---------- */
+let S=null,ptr=null,parts=[];
+const R=13;// knife radius px
+function cutSeg(x0,y0,x1,y1,speed){
+  const amt=Math.max(.32,Math.min(.95,.95-speed/2600));// slow = deep, fast = shallow
+  const len=Math.hypot(x1-x0,y1-y0),steps=Math.max(1,Math.ceil(len/3));let hit=0,skinHit=0;
+  for(let s=0;s<=steps;s++){const x=x0+(x1-x0)*s/steps,y=y0+(y1-y0)*s/steps;
+    const c0=Math.floor((x-R-G.ox)/CELL),c1=Math.floor((x+R-G.ox)/CELL),r0=Math.floor((y-R-G.oy)/CELL),r1=Math.floor((y+R-G.oy)/CELL);
+    for(let r=Math.max(0,r0);r<=Math.min(G.rows-1,r1);r++)for(let c=Math.max(0,c0);c<=Math.min(G.cols-1,c1);c++){const k=r*G.cols+c;if(!G.inside[k]||S.stamp[k]===S.stroke)continue;
+      const cx=G.ox+(c+.5)*CELL,cy=G.oy+(r+.5)*CELL;if((cx-x)**2+(cy-y)**2>R*R)continue;
+      S.stamp[k]=S.stroke;const before=G.d[k];G.d[k]=Math.min(3,before+amt*(.85+Math.random()*.3));hit++;if(before<1)skinHit++}}
+  if(hit){dirty=true;scrape(speed);if(skinHit&&Math.random()<.5)parts.push({x:x1,y:y1,vx:(Math.random()-.5)*200,vy:-120-Math.random()*120,r:Math.random()*6,vr:(Math.random()-.5)*12,s:4+Math.random()*6,life:1.2,c:Math.random()<.5?'#8a5a24':'#b88a3a'})}
+}
+cv.addEventListener('pointerdown',e=>{if(!S||!S.on)return;initAudio();const r=cv.getBoundingClientRect();ptr={id:e.pointerId,x:e.clientX-r.left,y:e.clientY-r.top,t:performance.now()};S.stroke++;S.knife={x:ptr.x,y:ptr.y,on:1};try{cv.setPointerCapture(e.pointerId)}catch(_){}chop();e.preventDefault()});
+cv.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;if(S)S.knife={x,y,on:!!ptr};if(!ptr||e.pointerId!==ptr.id||!S||!S.on)return;
+  const t=performance.now(),dt=Math.max(1,t-ptr.t)/1000,sp=Math.hypot(x-ptr.x,y-ptr.y)/dt;cutSeg(ptr.x,ptr.y,x,y,sp);ptr.x=x;ptr.y=y;ptr.t=t;e.preventDefault()});
+const up=e=>{if(ptr&&e.pointerId===ptr.id){ptr=null;if(S&&S.knife)S.knife.on=0}};
+cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+
+/* ---------- stats ---------- */
+function stats(){let skin=0,eyes=0,waste=0;
+  for(let k=0;k<G.n;k++){if(!G.inside[k])continue;const d=G.d[k];if(d>=1)skin++;if(G.eye[k]&&d>=1.6)eyes++;waste+=Math.max(0,d-G.tgt[k]-.15)}
+  const sp=skin/G.total,ep=eyes/Math.max(1,G.eyeTotal),wp=Math.min(1,waste/(G.total*1.8));
+  let score=Math.round(100*(sp*.55+ep*.3+.15)-wp*60-(1-sp)*25);score=Math.max(0,Math.min(100,score));
+  return{sp,ep,wp,score}}
+
+/* ---------- draw ---------- */
+function resize(){const r=cv.getBoundingClientRect();dpr=Math.min(2,window.devicePixelRatio||1);W=r.width;H=r.height;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',()=>{resize();if(S&&!S.on)return});
+function wobble(n){return(Math.random()-.5)*n}
+function drawCrown(ctx){const {cx,cy,ry,rx}=G,top=cy-ry+6;ctx.lineWidth=3;ctx.strokeStyle='#1f3a10';
+  const leaves=[[-.55,-1.0,-.9],[-.3,-1.35,-.5],[0,-1.6,0],[.3,-1.35,.5],[.55,-1.0,.9],[-.15,-1.15,-.2],[.15,-1.15,.2]];
+  for(const [dx,h,tilt] of leaves){ctx.fillStyle=Math.abs(dx)>.4?'#3f7a22':'#5a9a2e';ctx.beginPath();ctx.moveTo(cx+dx*rx*.5-12,top+4);ctx.quadraticCurveTo(cx+dx*rx*.6+tilt*20,top+h*rx*.35,cx+dx*rx*.9+tilt*30,top+h*rx*.62);ctx.quadraticCurveTo(cx+dx*rx*.6+tilt*10,top+h*rx*.3,cx+dx*rx*.5+12,top+4);ctx.closePath();ctx.fill();ctx.stroke()}}
+function drawPine(){if(dirty)paint();ctx.imageSmoothingEnabled=false;
+  ctx.save();ctx.fillStyle='rgba(0,0,0,.12)';ctx.beginPath();ctx.ellipse(G.cx+10,G.cy+G.ry+6,G.rx*.85,14,0,0,7);ctx.fill();ctx.restore();
+  drawCrown(ctx);ctx.drawImage(off,G.ox,G.oy,G.cols*CELL,G.rows*CELL);ctx.imageSmoothingEnabled=true;
+  ctx.strokeStyle='#2b2111';ctx.lineWidth=3.5;ctx.beginPath();ctx.ellipse(G.cx,G.cy,G.rx,G.ry,0,0,7);ctx.stroke()}
+function drawKnife(){const k=S&&S.knife;if(!k)return;ctx.save();ctx.translate(k.x,k.y);ctx.rotate(k.on?-.5:-.2);
+  ctx.fillStyle='#d9dde2';ctx.strokeStyle='#2b2111';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-6,-4);ctx.lineTo(64,-10);ctx.lineTo(70,0);ctx.lineTo(-6,6);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.fillStyle='#6b3e1e';ctx.beginPath();ctx.rect(-50,-7,44,15);ctx.fill();ctx.stroke();ctx.restore()}
+function draw(){ctx.fillStyle='#fff3c4';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#e9c98a';ctx.fillRect(0,H*.82,W,H*.18);ctx.strokeStyle='#2b2111';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,H*.82+wobble(.5));ctx.lineTo(W,H*.82);ctx.stroke();
+  if(G)drawPine();
+  for(const p of parts){ctx.globalAlpha=Math.min(1,p.life*1.5);ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.s,-p.s/2,p.s*2,p.s);ctx.restore()}ctx.globalAlpha=1;
+  if(S&&S.on)drawKnife()}
+
+/* ---------- flow ---------- */
+const LIMIT=30;
+let best=0;try{best=+localStorage.getItem('pa_best')||0}catch(e){}
+if(best)$('best').textContent='你的最高分：'+best;
+function start(){initAudio();resize();build();S={on:true,t0:performance.now(),stroke:0,stamp:new Int32Array(G.n).fill(-1),knife:null,lastTick:LIMIT};parts=[];
+  $('intro').hidden=true;$('end').hidden=true;$('done').hidden=false}
+let last=performance.now();
+function loop(t){const dt=Math.min(.05,(t-last)/1000);last=t;
+  try{if(S&&S.on){const left=Math.max(0,LIMIT-(t-S.t0)/1000);$('time').textContent=left.toFixed(1);$('time').style.color=left<5?'#e0503a':'';
+      if(left<5&&Math.ceil(left)<S.lastTick){S.lastTick=Math.ceil(left);tick()}
+      if(Math.random()<.2)$('peel').textContent='去皮 '+Math.round(stats().sp*100)+'%';
+      if(left<=0)finish()}
+    for(const p of parts){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=600*dt;p.r+=p.vr*dt}parts=parts.filter(p=>p.life>0&&p.y<H+20);
+    draw()}catch(err){console.error(err)}
+  requestAnimationFrame(loop)}
+
+const TITLES=[[95,'果菜市場阿伯','這刀工，可以去建國市場擺攤了。'],[85,'夜市切盤高手','一盒 50 塊，客人會回購。'],[70,'阿嬤點頭','「嗯，可以吃。」'],[55,'能吃，但很醜','鳳梨眼還在看著你。'],[40,'鳳梨在哭','皮沒削完，肉倒是少了一半。'],[20,'你是在削還是在打','這顆鳳梨需要心理輔導。'],[0,'直接買切好的吧','7-11 有賣，35 元。']];
+let shareText='';
+function finish(){if(!S||!S.on)return;S.on=false;ptr=null;$('done').hidden=true;
+  const st=stats(),[,title,desc]=TITLES.find(([k])=>st.score>=k);
+  // snapshot of the pineapple
+  const pad=40,sw=G.rx*2+pad*2,sh=G.ry*2+G.rx*.75+pad*2,sc=document.createElement('canvas');sc.width=sw*2;sc.height=sh*2;const sx=sc.getContext('2d');sx.scale(2,2);sx.fillStyle='#fff';sx.fillRect(0,0,sw,sh);
+  sx.translate(pad-(G.cx-G.rx),pad+G.rx*.75-(G.cy-G.ry));drawCrown(sx);sx.imageSmoothingEnabled=false;sx.drawImage(off,G.ox,G.oy,G.cols*CELL,G.rows*CELL);sx.strokeStyle='#2b2111';sx.lineWidth=3.5;sx.beginPath();sx.ellipse(G.cx,G.cy,G.rx,G.ry,0,0,7);sx.stroke();
+  $('shot').src=sc.toDataURL('image/png');
+  $('sc').textContent=st.score;$('tt').textContent=title;$('td').textContent=desc;
+  const pct=v=>Math.round(v*100)+'%';
+  $('b1').style.width=pct(st.sp);$('v1').textContent=pct(st.sp);$('b2').style.width=pct(st.ep);$('v2').textContent=pct(st.ep);$('b3').style.width=pct(st.wp);$('v3').textContent=pct(st.wp);
+  if(st.score>best){best=st.score;try{localStorage.setItem('pa_best',best)}catch(e){}}
+  const url=/^https?:$/.test(location.protocol)&&!/claude/.test(location.host)?'\n'+location.href.split('#')[0]:'';
+  shareText=`我削的鳳梨拿到 ${st.score} 分🍍「${title}」\n去皮 ${pct(st.sp)}、鳳梨眼挖掉 ${pct(st.ep)}、浪費 ${pct(st.wp)}\n你削得比我好嗎？${url}`;
+  st.score>=70?ding():boo();chop();
+  setTimeout(()=>{$('end').hidden=false;$('toast').textContent=''},500)}
+function copy(t){const ok=()=>$('toast').textContent='複製好了，去貼吧🍍';
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(ok,()=>fb());else fb();
+  function fb(){const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,t.length);try{document.execCommand('copy');ok()}catch(e){$('toast').textContent='長按自己複製吧'}ta.remove()}}
+$('go').onclick=start;$('again').onclick=start;$('done').onclick=finish;$('copy').onclick=()=>copy(shareText);
+$('mute').onclick=()=>{muted=!muted;$('mute').textContent=muted?'🔇':'🔊';try{localStorage.setItem('pa_mute',muted?'1':'0')}catch(e){}if(master)master.gain.setTargetAtTime(muted?0:.9,ac.currentTime,.02)};
+resize();requestAnimationFrame(loop);
+</script>
+</body>
+</html>

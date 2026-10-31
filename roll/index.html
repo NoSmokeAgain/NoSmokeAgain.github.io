@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<!--site:meta-->
+<meta name="description" content="手捲一根菸，考驗你的耐心">
+<link rel="canonical" href="https://nosmokeagain.github.io/roll/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="慢慢捲｜三分鐘遊樂場">
+<meta property="og:description" content="手捲一根菸，考驗你的耐心">
+<meta property="og:url" content="https://nosmokeagain.github.io/roll/">
+<meta property="og:image" content="https://nosmokeagain.github.io/roll/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>慢慢捲｜手捲一根菸，你有這個耐心嗎？</title>
+<meta name="theme-color" content="#0b211d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#3b2a1e;--wood:#6b4a32;--card:#f6eedd;--ink:#2a1d14;--mute:#8d7a66;--accent:#e9a23b;--ok:#7fb069;--bad:#e05a47}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#3b2a1e;--card:#f6eedd;--ink:#2a1d14}}
+:root[data-theme="dark"]{--bg:#3b2a1e;--card:#f6eedd;--ink:#2a1d14}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--card);font-family:'Noto Sans TC',system-ui,-apple-system,sans-serif;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+#wrap{position:fixed;inset:0;display:flex;justify-content:center}
+#stage{position:relative;width:100%;max-width:520px;height:100%}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+#hud{position:absolute;top:0;left:0;right:0;padding:14px 16px 0;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;z-index:2}
+#hud .k{font:700 13px 'IBM Plex Mono',monospace;color:#d9c7ad;line-height:1.5}
+#hud .k b{color:#fff;font-size:15px}
+#mute{pointer-events:auto;width:38px;height:38px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.25);color:#fff;font-size:16px;cursor:pointer}
+#step{position:absolute;left:0;right:0;top:64px;text-align:center;pointer-events:none;z-index:2;padding:0 16px}
+#step .n{font:700 12px 'IBM Plex Mono',monospace;color:var(--accent);letter-spacing:.1em}
+#step h2{margin:4px 0 2px;font-size:24px;font-weight:900;color:#fff}
+#step p{margin:0;font-size:14px;color:#d9c7ad;line-height:1.5}
+.pop{position:absolute;left:50%;transform:translateX(-50%);z-index:4;border-radius:14px;padding:10px 16px;font-weight:900;cursor:pointer;white-space:nowrap;animation:in .25s ease-out}
+.pop.msg{top:150px;background:#fff;color:#111;box-shadow:0 8px 24px rgba(0,0,0,.35);font-size:15px}
+.pop.msg small{display:block;font-weight:500;color:#888;font-size:11px}
+.pop.fast{bottom:150px;background:linear-gradient(90deg,#ffd23f,#ff7ad9,#7af0ff);color:#111;font-size:17px;box-shadow:0 0 0 3px #fff,0 0 30px #ff7ad9;animation:in .25s ease-out,glow .6s ease-in-out infinite alternate}
+.pop.wind{top:150px;background:#2a4a6a;color:#fff;font-size:18px;cursor:default;pointer-events:none}
+@keyframes in{from{opacity:0;transform:translate(-50%,-10px) scale(.9)}}
+@keyframes glow{to{filter:brightness(1.25)}}
+#lick{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);width:110px;height:110px;border-radius:50%;border:3px solid #fff;background:#e46a7a;font-size:46px;z-index:3;cursor:pointer;touch-action:none}
+#lick:active{transform:translateX(-50%) scale(.94)}
+#lick[hidden]{display:none}
+.ov{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:28px 22px;text-align:center;background:rgba(30,20,14,.93);overflow:auto}
+.ov[hidden]{display:none!important}
+h1{margin:0;font-size:clamp(44px,13vw,60px);font-weight:900;line-height:1.05;color:#fff}
+h1 em{font-style:normal;color:var(--accent)}
+.sub{margin:0;color:#d9c7ad;font-size:15px;line-height:1.7}
+.btn{appearance:none;border:0;border-radius:14px;padding:15px 32px;font-family:inherit;font-weight:900;font-size:19px;background:var(--accent);color:#2a1d14;cursor:pointer}
+.btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35);font-size:15px;padding:12px 22px}
+.hint{margin:0;color:var(--mute);font-size:12px}
+.big{font:700 54px/1 'IBM Plex Mono',monospace;margin:0;color:#fff}
+.stats{display:flex;gap:10px}
+.stats div{background:rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;min-width:90px}
+.stats b{display:block;font:700 22px 'IBM Plex Mono',monospace;color:#fff}
+.stats span{font-size:12px;color:#d9c7ad}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.toast{color:var(--ok);font-size:13px;min-height:18px;margin:0}
+#win{background:rgba(20,12,30,.55)}
+#win .cig{display:flex;width:230px;height:22px;border-radius:11px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.45);animation:in .5s .6s both}
+#win .cig i{width:52px;background:repeating-linear-gradient(90deg,#fbfaf4 0 6px,#e9e3d4 6px 7px)}
+#win .cig b{flex:1;background:linear-gradient(#fffdf7,#efe8da 55%,#cfc6b4)}
+#win h1{font-size:48px;letter-spacing:.02em}
+.shades{font-size:64px;line-height:1;animation:drop 1.1s cubic-bezier(.3,1.4,.6,1) both}
+@keyframes drop{from{transform:translateY(-60vh)}}
+
+/* Slow Roll — second edition */
+:root{--bg:#102e28;--card:#f4ebd8;--accent:#e8bb70;--mute:#a6b9a6;--ok:#a7cc9c}
+html,body{font-family:Georgia,'Noto Sans TC',system-ui,sans-serif;background:#091d19}
+#stage{max-width:560px;box-shadow:0 0 120px #0008}
+#hud{padding: max(20px,env(safe-area-inset-top)) 24px 0}
+#hud .k{font-size:11px;letter-spacing:1px;color:#b5c8b7}#hud .k b{font-size:17px;color:#f4ebd8}
+#mute{border-radius:50%;background:#ffffff08;border-color:#b9ccad40}
+#step{top:100px}#step .n{font-size:10px;letter-spacing:4px;color:#e8bb70}#step h2{font-size:32px;margin:12px 0 8px;color:#f4ebd8}#step p{font-size:13px;color:#b5c8b7}
+.ov{background:radial-gradient(ellipse at 50% 25%,#285045f5,#0b211dfc);gap:22px;padding:32px}
+.ov:before{content:'S L O W   R O L L   /   VOL. 02';font:10px monospace;letter-spacing:3px;color:#c2d1bb;position:absolute;top:max(36px,env(safe-area-inset-top))}
+h1{font-family:Georgia,'Noto Serif TC',serif;font-size:88px!important;letter-spacing:-5px;line-height:1.1;color:#f4ebd8}h1 em{color:#e8bb70}
+#intro h1:after{content:'THE ART OF TAKING YOUR TIME';display:block;font:9px monospace;letter-spacing:3px;margin:22px 0;color:#d3c7ab}
+.sub{color:#b9cbb9;font-size:14px;line-height:1.9}.btn{border-radius:4px;background:#e8bb70;padding:17px 36px;font-size:16px;box-shadow:0 5px 0 #0002;transition:transform .15s}.btn:active{transform:translateY(3px)}.btn.ghost{border-radius:4px;border-color:#c1d1b944;font-size:14px}.hint{color:#95aa99;font-size:10px;letter-spacing:1px}.stats{gap:16px;width:100%;justify-content:center}.stats div{border:1px solid #d9c7ad30;border-radius:3px;background:#fff04;min-width:110px;padding:16px}.stats b{color:#e8bb70;font-size:30px}.stats span{font-size:11px}
+#win{background:radial-gradient(ellipse at top,#315748f5,#0b211dfa)}#win h1{font-size:52px!important;letter-spacing:0}#tear h1{font-size:40px!important;letter-spacing:0}.shades{font-size:42px}#lick{width:84px;height:84px;font-size:35px;background:#ba7480;border-color:#f4ebd8;bottom:max(68px,env(safe-area-inset-bottom))}
+#journey{position:absolute;bottom:max(24px,env(safe-area-inset-bottom));left:24px;right:24px;display:flex;gap:6px;pointer-events:none}#journey i{height:3px;background:#ffffff18;flex:1;transition:background .3s}#journey i.done{background:#e8bb70}#journey i.current{background:#c8d6b6}
+#guide{position:absolute;top:70%;transition:top .2s;left:28px;right:28px;text-align:center;pointer-events:none;color:#d4dec9;font:12px system-ui;line-height:1.8;letter-spacing:1px}.pop.msg{background:#f4ebd8;border-radius:5px;font-size:13px}.pop.fast{border-radius:5px;font-size:14px;bottom:100px}#save{font-size:14px}button:focus-visible{outline:3px solid #fff;outline-offset:4px}
+#cardv{position:absolute;inset:0;z-index:8;background:#0b211df5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px}#cardv[hidden]{display:none}#cardv img{max-width:100%;max-height:72vh;border-radius:6px;box-shadow:0 20px 50px #000a;-webkit-touch-callout:default;user-select:auto}#cardv p{margin:0;color:#d4dec9;font-size:14px}
+@media(max-height:680px){#step{top:76px}#step h2{font-size:26px;margin:6px}h1{font-size:68px!important}.ov{gap:14px}#lick{bottom:48px;width:68px;height:68px}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="stage">
+  <canvas id="cv" aria-label="手捲遊戲操作桌面"></canvas><div id="journey"><i></i><i></i><i></i><i></i><i></i><i></i></div><div id="guide"></div>
+  <div id="hud"><div class="k">⏱ <b id="clock">0:00</b><br>🧻 第 <b id="paper">1</b> 張紙</div><button id="mute" aria-label="聲音開關">🔊</button></div>
+  <div id="step"><div class="n" id="sn"></div><h2 id="st"></h2><p id="sd"></p></div>
+  <button id="lick" hidden aria-label="舔">👅</button>
+
+  <div class="ov" id="intro">
+    <h1>慢慢<em>捲</em></h1>
+    <p class="sub">世界已經夠快了。<br>這一根，慢慢來。</p>
+    <button class="btn" id="go">開始手作 →</button>
+    <p class="hint">吸菸有害健康・本遊戲只捲不抽</p>
+  </div>
+
+  <div class="ov" id="tear" hidden>
+    <p style="font-size:56px;margin:0">🧻💥</p>
+    <h1 id="tearT" style="font-size:36px">紙破了</h1>
+    <p class="sub" id="tearD"></p>
+    <button class="btn" id="retry">再拿一張</button>
+  </div>
+
+  <div class="ov" id="win" hidden>
+    <div class="shades">😎</div>
+    <h1>捲好了。</h1>
+    <div class="cig"><i></i><b></b></div>
+    <p class="sub" id="winD"></p>
+    <div class="stats"><div><b id="wT">0:00</b><span>花了</span></div><div><b id="wP">1</b><span>張紙</span></div></div>
+    <div class="row"><button class="btn" id="again">再捲一根</button><button class="btn ghost" id="copy">複製戰績</button><button class="btn ghost" id="save">下載戰績卡</button></div>
+    <p class="toast" id="toast"></p>
+    <p class="hint">吸菸有害健康・捲完就好，不一定要抽</p>
+  </div>
+  <div id="cardv" hidden><img id="cardimg" alt="慢慢捲戰績卡"><p>長按圖片儲存，或截圖分享</p><button class="btn ghost" id="cardx">關閉</button></div>
+</div></div>
+
+<script>
+'use strict';
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d'),$=id=>document.getElementById(id);
+let W=0,H=0,dpr=1;
+function resize(){const r=cv.getBoundingClientRect();dpr=Math.min(2,window.devicePixelRatio||1);W=r.width;H=r.height;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',()=>{resize();if(typeof placeGuide==='function')placeGuide()});
+
+/* ---------- audio ---------- */
+let ac=null,master=null,nb=null,muted=false;
+try{muted=localStorage.getItem('ru_mute')==='1'}catch(e){}
+$('mute').textContent=muted?'🔇':'🔊';
+function silentWav(){const n=800,b=new ArrayBuffer(44+n),v=new DataView(b),w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,'data');v.setUint32(40,n,true);for(let i=0;i<n;i++)v.setUint8(44+i,128);return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
+function initAudio(){if(ac){if(ac.state==='suspended')ac.resume();return}
+  try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+  try{const a=new Audio(silentWav());a.loop=true;a.play().catch(()=>{})}catch(e){}
+  const AudioCtor=window.AudioContext||window.webkitAudioContext;if(!AudioCtor)return;try{ac=new AudioCtor()}catch(e){return;}master=ac.createGain();master.gain.value=muted?0:.9;
+  const comp=ac.createDynamicsCompressor();master.connect(comp);comp.connect(ac.destination);
+  nb=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  rubSetup()}
+function env(g,t,a,p,d){g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(p,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+d)}
+function osc(type,f,t,d,p,dst,f2){if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);env(g,t,.005,p,d);o.connect(g);g.connect(dst||master);o.start(t);o.stop(t+d+.05);return o}
+function noise(t,d,p,type,f,q,dst){if(!ac)return;const s=ac.createBufferSource();s.buffer=nb;const fl=ac.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q||1;const g=ac.createGain();env(g,t,.003,p,d);s.connect(fl);fl.connect(g);g.connect(dst||master);s.start(t,Math.random());s.stop(t+d+.05)}
+const now=()=>ac?ac.currentTime:0;
+const sfx={
+  sprinkle(){if(!ac)return;noise(now(),.04,.08,'highpass',3000+Math.random()*3000,1)},
+  tear(){const t=now();for(let i=0;i<6;i++)noise(t+i*.035,.06,.5,'bandpass',1500+Math.random()*2500,2)},
+  lick(){const t=now();noise(t,.25,.25,'lowpass',700,6);osc('sine',300,t,.2,.08,null,500)},
+  knock(){const t=now();osc('sine',180,t,.08,.5,null,90);noise(t,.03,.25,'bandpass',900,2)},
+  ding(){const t=now();osc('sine',1320,t,.15,.25);osc('sine',1760,t+.12,.25,.2)},
+  ok(){const t=now();[660,880].forEach((f,i)=>osc('triangle',f,t+i*.09,.18,.2))},
+  bad(){const t=now();osc('square',200,t,.2,.12,null,110)},
+  snap(){const t=now();noise(t,.05,.4,'bandpass',2500,3);osc('sine',900,t,.06,.15)},
+  whoosh(){const t=now();noise(t,1.8,.25,'bandpass',500,.7)}
+};
+/* continuous rubbing sound, volume follows finger speed */
+let rubG=null;
+function rubSetup(){const s=ac.createBufferSource();s.buffer=nb;s.loop=true;const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=1800;f.Q.value=.8;rubG=ac.createGain();rubG.gain.value=0;s.connect(f);f.connect(rubG);rubG.connect(master);s.start()}
+function rub(v){if(rubG)rubG.gain.setTargetAtTime(Math.min(.22,v),ac.currentTime,.05)}
+
+/* ---------- original laid-back West Coast groove (plays on success) ---------- */
+let groove=null;
+function startGroove(){if(!ac)return;stopGroove();const bus=ac.createGain();bus.gain.value=.75;bus.connect(master);
+  const bpm=92,spb=60/bpm,s16=spb/4,swing=s16*.18;let t0=ac.currentTime+.15,bar=0,alive=true;
+  const lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=380;lp.connect(bus);
+  const CH=[[57,60,64,67],[50,54,57,60],[57,60,64,67],[52,55,59,62]];// Am7 D7 Am7 Em7
+  const BASS=[[45,0],[45,3],[57,6],[45,8],[48,10],[50,12],[52,14]];
+  const LEAD=[[76,0,2],[74,3,1],[72,4,4],[69,10,2],[72,12,4]];
+  const mf=m=>440*Math.pow(2,(m-69)/12);
+  function rhodes(m,t,d){[1,2].forEach((h,k)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=k?'triangle':'sine';o.frequency.value=mf(m)*h;env(g,t,.01,k?.02:.06,d);const tr=ac.createOscillator(),tg=ac.createGain();tr.frequency.value=5;tg.gain.value=.02;tr.connect(tg);tg.connect(g.gain);o.connect(g);g.connect(bus);o.start(t);tr.start(t);o.stop(t+d+.1);tr.stop(t+d+.1)})}
+  function whine(m,t,d,prev){const o=ac.createOscillator(),g=ac.createGain(),v=ac.createOscillator(),vg=ac.createGain();o.type='sine';o.frequency.setValueAtTime(mf(prev||m),t);o.frequency.exponentialRampToValueAtTime(mf(m),t+.09);v.frequency.value=5.5;vg.gain.value=mf(m)*.012;v.connect(vg);vg.connect(o.frequency);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.09,t+.05);g.gain.setValueAtTime(.09,t+d*.8);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(bus);o.start(t);v.start(t);o.stop(t+d+.05);v.stop(t+d+.05)}
+  function schedBar(t,b){const ch=CH[b%4];
+    for(let i=0;i<16;i++){const tt=t+i*s16+(i%2?swing:0);
+      noise(tt,.03,i%4===2?.09:.05,'highpass',8000,1,bus);
+      if(i===0||i===7||i===10)osc('sine',120,tt,.22,.9,bus,42);
+      if(i===4||i===12){noise(tt,.16,.45,'bandpass',1800,.8,bus);noise(tt+.008,.1,.3,'highpass',3000,1,bus)}}
+    ch.forEach(m=>rhodes(m,t,spb*3.6));
+    BASS.forEach(([m,s])=>{const tt=t+s*s16+(s%2?swing:0),o=ac.createOscillator(),g=ac.createGain();o.type='sawtooth';o.frequency.setValueAtTime(mf(m+(b%4===1?5:b%4===3?7:0)-12),tt);env(g,tt,.01,.5,s16*1.8);o.connect(g);g.connect(lp);o.start(tt);o.stop(tt+s16*2)});
+    if(b%2===1){let prev=null;LEAD.forEach(([m,s,l])=>{whine(m,t+s*s16,l*s16,prev);prev=m})}}
+  function tick(){if(!alive)return;while(t0<ac.currentTime+.6){schedBar(t0,bar);bar++;t0+=spb*4}groove.timer=setTimeout(tick,200)}
+  groove={bus,stop(){alive=false;clearTimeout(groove&&groove.timer);bus.gain.setTargetAtTime(0,ac.currentTime,.2);setTimeout(()=>{try{bus.disconnect()}catch(e){}},1500)}};tick()}
+function stopGroove(){if(groove){groove.stop();groove=null}}
+
+/* ---------- game state ---------- */
+const N=16;
+let S=null,fibers=[],parts=[];
+function genFibers(){fibers=[];for(let i=0;i<N;i++){const a=[];for(let k=0;k<26;k++)a.push({x:Math.random(),y:Math.random(),r:Math.random()*Math.PI,l:4+Math.random()*7,c:['#7a4a22','#94602e','#5e3818','#a8743a'][k%4]});fibers.push(a)}}
+function newRun(){S={t0:performance.now(),papers:1,running:true};newPaper()}
+function newPaper(){ptr=null;Object.assign(S,{step:1,dens:new Array(N).fill(0),filter:{x:0,y:0,placed:false,drag:false},prog:0,spill:0,lick:null,taps:0,lastTap:-9,ev:null,nextEv:performance.now()+5000+Math.random()*4000,down:false,vy:0,travel:0,turns:0,lastDir:0});genFibers();parts=[];setStep()}
+const STEPS={
+  1:['STEP 1 / 6','撒菸草','手指按住，沿著紙慢慢移動。把淡色區域慢慢鋪滿'],
+  2:['STEP 2 / 6','放濾嘴','把濾嘴拖到紙的左邊'],
+  3:['STEP 3 / 6','搓','在紙上來回左右搓，讓菸草均勻成形'],
+  4:['STEP 4 / 6','捲','在紙上按住，慢慢往上推；放手會鬆開'],
+  5:['STEP 5 / 6','舔膠邊','按住舌頭，在綠色區間放開'],
+  6:['STEP 6 / 6','敲實','輕輕點菸尾 8 下。急不得'],
+};
+function setStep(){document.querySelectorAll('#journey i').forEach((e,i)=>{e.className=i<S.step-1?'done':i===S.step-1?'current':''});
+$('guide').textContent=['','按住紙面，慢慢左右移動  ↔','拖曳濾嘴到左側虛線框  ↖','在紙面左右來回搓  ↔','按住紙面，往上推  ↑','按住下方按鈕，藍條進入綠區時放開','點右側圓圈；每一下間隔至少半秒'][S.step]||'';placeGuide();
+const s=STEPS[S.step];$('sn').textContent=s[0];$('st').textContent=s[1];$('sd').textContent=s[2];$('lick').hidden=S.step!==5;
+  if(S.step===2){const g=P();S.filter.x=W/2;S.filter.y=g.py+g.ph+70}
+  if(S.step===5)S.lick={m:0,holding:false,zone:.45+Math.random()*.33,w:.17,rate:.45+Math.random()*.25}
+  clearEv()}
+function placeGuide(){if(!S)return;const g=P(),off={1:80,2:125,3:132,4:132,5:108,6:138}[S.step]||130;$('guide').style.top=(g.py+g.ph+off)+'px'}
+function say(text,c){parts.push({k:'text',x:W/2,y:H*.6,vy:-30,text,c:c||'#fff',life:1.2})}
+function advance(msg){sfx.ok();if(msg)say(msg,'#9fdc7a');S.step++;S.prog=0;S.spill=0;S.travel=0;S.lastDir=0;
+  if(S.step>6)win();else setStep()}
+function tear(reason){if(!S.running)return;sfx.tear();clearEv();rub(0);S.down=false;$('tearT').textContent=reason[0];$('tearD').textContent=reason[1];$('tear').hidden=false;S.paused=true}
+$('retry').onclick=()=>{$('tear').hidden=true;S.papers++;S.paused=false;newPaper()};
+
+/* ---------- geometry ---------- */
+const P=()=>{const pw=Math.min(W-92,400),px=Math.max(22,(W-pw)/2-12),py=H*.46;return{px,pw,py,ph:84}};
+
+/* ---------- distractions ---------- */
+function clearEv(){if(S&&S.ev){S.ev.el&&S.ev.el.remove();S.ev=null}document.querySelectorAll('.pop').forEach(e=>e.remove())}
+function maybeEvent(t){if(S.paused||S.step<3||S.step>4||S.ev||t<S.nextEv)return;
+  const kinds=S.step===3?['msg','fast','wind']:['msg','fast'];const k=kinds[Math.random()*kinds.length|0];
+  const el=document.createElement('div');el.className='pop '+k;
+  if(k==='msg'){const who=[['老闆','在嗎？'],['媽媽','吃飯了沒'],['前任','睡了嗎'],['銀行','您的信用卡帳單已出爐'],['群組','@所有人 明天聚餐誰要']][Math.random()*5|0];el.innerHTML=`💬 ${who[0]}：${who[1]}<small>點開看看？</small>`;sfx.ding();
+    el.onpointerdown=e=>{e.stopPropagation();S.prog=Math.max(0,S.prog-.3);say('回完訊息，手感沒了','#ffb38a');sfx.bad();clearEv();S.nextEv=performance.now()+6000}}
+  if(k==='fast'){el.textContent='⚡ 一鍵捲好 ⚡';el.onpointerdown=e=>{e.stopPropagation();tear(['人生沒有捷徑','按下去的瞬間，紙就破了。'])}}
+  if(k==='wind'){el.textContent='🌬️ 起風了，手別動！';sfx.whoosh()}
+  document.getElementById('stage').appendChild(el);
+  S.ev={k,el,t,end:t+(k==='wind'?2600:k==='fast'?3800:3400)}}
+function evTick(t){if(!S.ev)return;if(t>=S.ev.end){if(S.ev.k==='wind'&&!S.paused)say('撐過去了','#9fdc7a');clearEv();S.nextEv=t+6000+Math.random()*6000}}
+
+/* ---------- input ---------- */
+let ptr=null;
+cv.addEventListener('pointerdown',e=>{if(!S||S.paused||!S.running)return;initAudio();ptr={id:e.pointerId,x:e.offsetX,y:e.offsetY,t:performance.now()};try{cv.setPointerCapture(e.pointerId)}catch(_){}S.down=true;
+  const x=e.offsetX,y=e.offsetY;
+  if(S.step===2){const f=S.filter;if(Math.hypot(x-f.x,y-f.y)<60)f.drag=true}
+  if(S.step===6){const g=P(),ex=g.px+g.pw,ey=g.py+g.ph/2;if(Math.abs(x-ex)<80&&Math.abs(y-ey)<90)tapPack();}
+  e.preventDefault()});
+cv.addEventListener('pointermove',e=>{if(!ptr||e.pointerId!==ptr.id||!S||S.paused)return;const t=performance.now(),dt=Math.max(1,t-ptr.t)/1000,x=e.offsetX,y=e.offsetY,dx=x-ptr.x,dy=y-ptr.y;
+  const v=Math.hypot(dx,dy)/dt;S.vy=S.vy*.6+v*.4;ptr.x=x;ptr.y=y;ptr.t=t;onMove(x,y,dx,dy,dt);e.preventDefault()});
+const up=e=>{if(!ptr||e.pointerId!==ptr.id)return;ptr=null;if(!S)return;S.down=false;S.vy=0;rub(0);
+  if(S.step===2&&S.filter.drag){S.filter.drag=false;const g=P();if(Math.abs(S.filter.x-(g.px+22))<50&&Math.abs(S.filter.y-(g.py+g.ph/2))<60){S.filter.placed=true;sfx.snap();advance('濾嘴就位')}}};
+cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+
+function speedLimit(){return S.step===3?Math.max(280,520-S.prog*200):300}
+function onMove(x,y,dx,dy,dt){
+  const g=P(),v=S.vy;
+  if(S.step===1){
+    if(x>g.px&&x<g.px+g.pw&&y>g.py-60&&y<g.py+g.ph+60){const i=Math.min(N-1,Math.floor((x-g.px)/g.pw*N));
+      if(v>1000){spillAt(x,g.py+g.ph/2,2);if(Math.random()<.3)say('太快了，灑出來了','#ffb38a')}
+      else{S.dens[i]=Math.min(1.25,S.dens[i]+dt*2.8);if(Math.random()<.35)sfx.sprinkle()}
+      if(S.dens.every(d=>d>=.8))advance('鋪得很平均')}}
+  if(S.step===2&&S.filter.drag){S.filter.x=x;S.filter.y=y}
+  if(S.step===3||S.step===4){
+    if(x<g.px-25||x>g.px+g.pw+25||y<g.py-110||y>g.py+g.ph+100){rub(0);return;}
+    const lim=speedLimit(),wind=S.ev&&S.ev.k==='wind';
+    rub(Math.min(.2,v/1500));
+    if(wind&&v>80){S.spill+=dt*1.6;spillAt(g.px+Math.random()*g.pw,g.py+g.ph/2,1)}
+    else if(v>lim){S.spill+=dt*(v/lim-1)*1.4;spillAt(g.px+Math.random()*g.pw,g.py+g.ph/2,1)}
+    else{if(S.step===3){S.prog+=Math.abs(dx)/1150;}else{S.prog+=Math.max(0,-dy)/650;}}
+    if(S.spill>=1)tear(S.step===3?['搓太大力了','菸草灑一桌，紙也搓破了。']:['推太快了','紙歪掉，整個撕開。']);
+    if(S.prog>=1)advance(S.step===3?'形狀出來了':'捲起來了')}
+}
+function spillAt(x,y,n){for(let k=0;k<n;k++)parts.push({k:'fib',x:x+(Math.random()-.5)*30,y,vx:(Math.random()-.5)*120,vy:-60-Math.random()*80,r:Math.random()*3,vr:(Math.random()-.5)*10,c:'#7a4a22',life:1.2})}
+function tapPack(){const t=performance.now();sfx.knock();
+  if(t-S.lastTap<450){say('太急了，這下不算','#ffb38a');sfx.bad()}else{S.taps++;spillAt(P().px+P().pw,P().py+P().ph/2,1);if(S.taps>=8)advance('結實')}
+  S.lastTap=t}
+/* lick */
+const lickBtn=$('lick');
+lickBtn.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();if(!S||S.paused||S.step!==5)return;initAudio();S.lick.holding=true;S.lick.m=0;sfx.lick();try{lickBtn.setPointerCapture(e.pointerId)}catch(_){}});
+const lickUp=()=>{if(!S||S.step!==5||!S.lick.holding)return;S.lick.holding=false;const L=S.lick;
+  if(L.m<L.zone){say('還不夠濕，再舔一次','#ffb38a');sfx.bad();L.m=0}
+  else if(L.m<=L.zone+L.w){advance('剛剛好，黏住了')}
+  else tear(['口水太多','紙泡爛了。'])};
+lickBtn.addEventListener('pointerup',lickUp);lickBtn.addEventListener('pointercancel',lickUp);
+
+/* ---------- drawing ---------- */
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+let felt=null;
+function table(){const g=ctx.createRadialGradient(W*.48,H*.42,10,W*.5,H*.5,H*.85);g.addColorStop(0,'#2c5145');g.addColorStop(.55,'#183d33');g.addColorStop(1,'#0b231e');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+if(!felt){const a=document.createElement('canvas');a.width=a.height=128;const c=a.getContext('2d');let seed=27;for(let i=0;i<5000;i++){seed=(seed*16807)%2147483647;const x=seed%128;seed=(seed*16807)%2147483647;const y=seed%128;c.fillStyle=i%2?'#ffffff09':'#00000010';c.fillRect(x,y,1,2)}felt=ctx.createPattern(a,'repeat')}ctx.fillStyle=felt;ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#e8bb7028';ctx.lineWidth=1;rr(14,14,W-28,H-28,16);ctx.stroke();ctx.strokeStyle='#e8bb7010';rr(19,19,W-38,H-38,12);ctx.stroke();
+ctx.save();ctx.translate(W/2,H*.31);ctx.fillStyle='#e8bb7045';ctx.textAlign='center';ctx.font='10px Georgia';ctx.fillText('S L O W   R O L L   S T U D I O',0,0);ctx.restore();}
+function drawFibers(x0,y0,w,h,densF){for(let i=0;i<N;i++){const d=densF(i),n=Math.floor(26*Math.min(1,d/1.1));const sx=x0+i*w/N;
+  for(let k=0;k<n;k++){const f=fibers[i][k];const fx=sx+f.x*w/N,fy=y0+f.y*h;ctx.strokeStyle=f.c;ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(fx,fy);ctx.lineTo(fx+Math.cos(f.r)*f.l,fy+Math.sin(f.r)*f.l*.5);ctx.stroke()}}}
+function drawPaperFlat(g,showGum){ctx.save();ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=12;ctx.shadowOffsetY=4;const paperGrad=ctx.createLinearGradient(0,g.py,0,g.py+g.ph);paperGrad.addColorStop(0,'#fff8e9');paperGrad.addColorStop(.6,'#eee3cc');paperGrad.addColorStop(1,'#d5c6a9');ctx.fillStyle=paperGrad;ctx.fillRect(g.px,g.py,g.pw,g.ph);ctx.restore();
+  if(showGum){ctx.fillStyle='rgba(200,180,140,.45)';ctx.fillRect(g.px,g.py,g.pw,7)}
+  ctx.strokeStyle='rgba(0,0,0,.06)';for(let x=g.px+8;x<g.px+g.pw;x+=8){ctx.beginPath();ctx.moveTo(x,g.py);ctx.lineTo(x,g.py+g.ph);ctx.stroke()}}
+function drawFilter(x,y,h,placed){ctx.save();ctx.shadowColor='rgba(0,0,0,.3)';ctx.shadowBlur=8;ctx.fillStyle='#fbfaf4';rr(x-20,y-h/2,40,h,8);ctx.fill();ctx.restore();
+  ctx.strokeStyle='#d8d2c4';ctx.lineWidth=1;for(let k=0;k<5;k++){ctx.beginPath();ctx.moveTo(x-14+k*7,y-h/2+4);ctx.lineTo(x-14+k*7,y+h/2-4);ctx.stroke()}}
+function drawTube(g,shape,cover){// shape 0..1: spread -> compact cylinder ; cover 0..1 paper wrapped
+  const cy=g.py+g.ph/2,th=g.ph*.6-shape*g.ph*.22,x0=g.px+(S.filter.placed?40:0),w=g.px+g.pw-x0;
+  // paper underneath / flap
+  ctx.save();ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=12;ctx.shadowOffsetY=4;ctx.fillStyle='#f4efe4';
+ctx.fillRect(g.px,cy-th/2-(g.ph-th)/2*(1-cover)-2,g.pw,th+(g.ph-th)*(1-cover)+4);ctx.restore();
+  ctx.fillStyle='rgba(200,180,140,.45)';if(cover<1)ctx.fillRect(g.px,cy-th/2-(g.ph-th)/2*(1-cover)-2,g.pw,6);
+  // tobacco body
+  const grd=ctx.createLinearGradient(0,cy-th/2,0,cy+th/2);grd.addColorStop(0,'#a06a35');grd.addColorStop(.5,'#7a4a22');grd.addColorStop(1,'#4e2d12');
+  ctx.fillStyle=grd;rr(x0,cy-th/2,w,th,th/2*shape);ctx.fill();
+  drawFibers(x0,cy-th/2,w,th,()=>1.1);
+  // wrapped paper over it
+  if(cover>0){const pg=ctx.createLinearGradient(0,cy-th/2,0,cy+th/2);pg.addColorStop(0,'#fffdf7');pg.addColorStop(.45,'#f4efe4');pg.addColorStop(1,'#cfc6b4');
+    ctx.fillStyle=pg;ctx.save();ctx.beginPath();ctx.rect(g.px,cy+th/2-th*cover,g.pw,th*cover+1);ctx.clip();rr(g.px,cy-th/2,g.pw,th,th/2);ctx.fill();ctx.restore()}
+  if(S.filter.placed)drawFilter(g.px+20,cy,th+2,true);
+  return{cy,th}}
+function drawThumbs(cy,th){if(!S.down)return;const off=ptr?(ptr.y-H*.5)*.08:0;ctx.fillStyle='rgba(240,190,150,.92)';ctx.strokeStyle='rgba(120,70,40,.5)';ctx.lineWidth=2;
+  for(const k of [.3,.7]){const x=P().px+P().pw*k;ctx.beginPath();ctx.ellipse(x,cy+th/2+26+off,34,22,0,0,7);ctx.fill();ctx.stroke();ctx.fillStyle='rgba(255,230,210,.8)';ctx.beginPath();ctx.ellipse(x,cy+th/2+14+off,16,9,0,0,7);ctx.fill();ctx.fillStyle='rgba(240,190,150,.92)'}}
+function bar(x,y,w,h,v,c,label){ctx.fillStyle='rgba(0,0,0,.35)';rr(x,y,w,h,h/2);ctx.fill();if(v>0){ctx.fillStyle=c;rr(x,y,Math.max(h,w*Math.min(1,v)),h,h/2);ctx.fill()}
+  if(label){ctx.fillStyle='#d9c7ad';ctx.font='500 12px "Noto Sans TC",sans-serif';ctx.textAlign='left';ctx.textBaseline='bottom';ctx.fillText(label,x,y-4)}}
+function speedGauge(){const lim=speedLimit(),v=S.vy,x=W-34,y=H*.3,h=H*.36;ctx.fillStyle='rgba(0,0,0,.35)';rr(x,y,14,h,7);ctx.fill();
+  const max=lim*2.2,okH=h*lim/max;ctx.fillStyle='rgba(127,176,105,.35)';rr(x,y+h-okH,14,okH,7);ctx.fill();
+  const vh=Math.min(h,h*v/max);ctx.fillStyle=v>lim?'#e05a47':'#9fdc7a';rr(x+3,y+h-vh,8,Math.max(4,vh),4);ctx.fill();
+  ctx.save();ctx.translate(x+7,y+h+16);ctx.fillStyle='#d9c7ad';ctx.font='500 11px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.fillText('手速',0,0);ctx.restore()}
+function draw(t){
+  table();if(!S){return}
+  const g=P();
+  if(S.step===1){drawPaperFlat(g,true);drawFibers(g.px+6,g.py+14,g.pw-12,g.ph-22,i=>S.dens[i]);
+    for(let i=0;i<N;i++){const d=S.dens[i];ctx.fillStyle=d>=.8?'#9fdc7a':'rgba(255,255,255,.25)';ctx.fillRect(g.px+i*g.pw/N+2,g.py+g.ph+12,g.pw/N-4,4)}
+    bar(g.px,g.py+g.ph+44,g.pw,8,S.dens.filter(d=>d>=.8).length/N,'#e9a23b','鋪滿 '+S.dens.filter(d=>d>=.8).length+' / '+N)}
+  if(S.step===2){drawPaperFlat(g,true);drawFibers(g.px+6,g.py+14,g.pw-12,g.ph-22,()=>1.1);
+    ctx.setLineDash([6,6]);ctx.strokeStyle='rgba(255,255,255,.6)';ctx.lineWidth=2;rr(g.px+2,g.py+10,40,g.ph-20,8);ctx.stroke();ctx.setLineDash([]);
+    drawFilter(S.filter.x,S.filter.y,g.ph*.55)}
+  if(S.step===3){const r=drawTube(g,S.prog,0);drawThumbs(r.cy,r.th);speedGauge();bar(g.px,g.py+g.ph+70,g.pw,8,S.prog,'#e9a23b','成形');bar(g.px,g.py+g.ph+104,g.pw,6,S.spill,'#e05a47','快破了')}
+  if(S.step===4){const r=drawTube(g,1,S.prog);drawThumbs(r.cy,r.th);speedGauge();bar(g.px,g.py+g.ph+70,g.pw,8,S.prog,'#e9a23b','捲起');bar(g.px,g.py+g.ph+104,g.pw,6,S.spill,'#e05a47','快破了');
+    if(!S.down&&S.prog>0){ctx.fillStyle='#ffb38a';ctx.font='900 15px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('放手了，慢慢鬆開⋯',W/2,g.py-30)}}
+  if(S.step===5){const r=drawTube(g,1,.92);const L=S.lick,bx=g.px,bw=g.pw,by=g.py+g.ph+70;
+    ctx.fillStyle='rgba(0,0,0,.35)';rr(bx,by,bw,14,7);ctx.fill();ctx.fillStyle='rgba(127,176,105,.7)';ctx.fillRect(bx+bw*L.zone,by,bw*L.w,14);
+    ctx.fillStyle='#7fc8ff';rr(bx,by,Math.max(14,bw*Math.min(1,L.m)),14,7);ctx.fill();
+    ctx.fillStyle='#d9c7ad';ctx.font='500 12px "Noto Sans TC",sans-serif';ctx.textAlign='left';ctx.textBaseline='bottom';ctx.fillText('濕度',bx,by-4)}
+  if(S.step===6){const r=drawTube(g,1,1);const ex=g.px+g.pw;
+    ctx.strokeStyle=`rgba(233,162,59,${.4+.4*Math.sin(t/200)})`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(ex,r.cy,34,0,7);ctx.stroke();
+    for(let k=0;k<8;k++){ctx.fillStyle=k<S.taps?'#e9a23b':'rgba(255,255,255,.25)';ctx.beginPath();ctx.arc(W/2-70+k*20,g.py+g.ph+80,6,0,7);ctx.fill()}
+    const since=performance.now()-S.lastTap,ready=since>450;ctx.fillStyle=ready?'#9fdc7a':'#ffb38a';ctx.font='900 14px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(ready?'可以敲':'等一下⋯',W/2,g.py+g.ph+110)}
+  if(S.running&&!S.paused&&!S.down&&(S.step===3||S.step===4)){ctx.save();ctx.globalAlpha=.35+.2*Math.sin(t/400);ctx.strokeStyle='#e8bb70';ctx.lineWidth=2;ctx.setLineDash([4,6]);ctx.beginPath();if(S.step===3){ctx.moveTo(W/2-55,g.py+g.ph/2);ctx.lineTo(W/2+55,g.py+g.ph/2)}else{ctx.moveTo(W/2,g.py+g.ph+25);ctx.lineTo(W/2,g.py-30)}ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#e8bb70';ctx.beginPath();ctx.arc(S.step===3?W/2+Math.sin(t/600)*55:W/2,S.step===3?g.py+g.ph/2:g.py+g.ph-((t%1800)/1800)*(g.ph+30),7,0,Math.PI*2);ctx.fill();ctx.restore();}
+for(const p of parts){ctx.globalAlpha=Math.min(1,p.life*1.5);
+    if(p.k==='fib'){ctx.strokeStyle=p.c;ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+Math.cos(p.r)*7,p.y+Math.sin(p.r)*7);ctx.stroke()}
+    else if(p.k==='note'){ctx.font='26px sans-serif';ctx.textAlign='center';ctx.fillStyle='#fff';ctx.fillText(p.text,p.x,p.y)}
+    else{ctx.font='900 20px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=5;ctx.strokeStyle='rgba(0,0,0,.6)';ctx.strokeText(p.text,p.x,p.y);ctx.fillStyle=p.c;ctx.fillText(p.text,p.x,p.y)}}
+  ctx.globalAlpha=1}
+
+/* ---------- loop ---------- */
+let last=performance.now();
+function loop(t){const dt=Math.min(.05,(t-last)/1000);last=t;
+  try{
+    if(S&&S.running&&!S.paused){
+      const sec=Math.floor((t-S.t0)/1000);$('clock').textContent=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');$('paper').textContent=S.papers;
+      if(S.step===4&&!S.down&&S.prog>0)S.prog=Math.max(0,S.prog-dt*.06);
+      if((S.step===3||S.step===4)){S.spill=Math.max(0,S.spill-dt*.2);if(ptr&&t-ptr.t>80){S.vy*=.8;rub(0)}}
+      if(S.step===5&&S.lick.holding){S.lick.m+=dt*S.lick.rate;if(S.lick.m>1.05){S.lick.holding=false;tear(['口水太多','紙泡爛了。'])}}
+      maybeEvent(t);evTick(t)}
+    for(const p of parts){p.life-=dt;p.x+=(p.vx||0)*dt;p.y+=p.vy*dt;if(p.k==='fib'){p.vy+=500*dt;p.r+=p.vr*dt}}
+    parts=parts.filter(p=>p.life>0);
+    if(S&&S.step===7&&Math.random()<.04)parts.push({k:'note',x:Math.random()*W,y:H*.9,vx:(Math.random()-.5)*20,vy:-50,text:Math.random()<.5?'♪':'♫',life:4});
+    draw(t)}catch(err){console.error(err)}
+  requestAnimationFrame(loop)}
+
+/* ---------- win ---------- */
+let shareText='';
+function fmt(ms){const s=Math.floor(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function win(){S.running=false;S.step=7;$('guide').textContent='';document.querySelectorAll('#journey i').forEach(e=>e.className='done');clearEv();rub(0);$('lick').hidden=true;['sn','st','sd'].forEach(i=>$(i).textContent='');
+  const ms=performance.now()-S.t0,sec=ms/1000;
+  const desc=S.papers===1&&sec<120?'一張紙、一次到位。手很穩，心更穩。':S.papers===1?'一張紙就捲好，慢，但沒失手。':S.papers<=3?`破了 ${S.papers-1} 張，還是捲出來了。`:S.papers<=7?`用掉 ${S.papers} 張紙。耐心是練出來的。`:`${S.papers} 張紙的代價。這根菸很貴。`;
+  S.result={ms,papers:S.papers,title:S.papers===1?'手作職人':S.papers<=3?'沉得住氣':S.papers<=7?'越挫越捲':'紙張消耗大師'};$('winD').textContent=S.result.title+'｜'+desc;$('wT').textContent=fmt(ms);$('wP').textContent=S.papers;$('toast').textContent='';
+  const url=/^https?:$/.test(location.protocol)?'\n'+location.href.split('#')[0]:'';
+  shareText=`【慢慢捲・${S.result.title}】\n我花了 ${fmt(ms)}、用掉 ${S.papers} 張紙，才捲好一根菸😎\n你有這個耐心嗎？${url}`;
+  setTimeout(()=>{$('win').hidden=false;startGroove()},500)}
+function copy(t){const ok=()=>$('toast').textContent='複製好了';
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(ok,()=>fb());else fb();
+  function fb(){const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,t.length);try{document.execCommand('copy');ok()}catch(e){$('toast').textContent='長按自己複製吧'}ta.remove()}}
+
+$('go').onclick=()=>{initAudio();$('intro').hidden=true;newRun()};
+$('again').onclick=()=>{stopGroove();$('win').hidden=true;newRun()};
+$('copy').onclick=()=>copy(shareText);
+$('mute').onclick=()=>{muted=!muted;$('mute').textContent=muted?'🔇':'🔊';try{localStorage.setItem('ru_mute',muted?'1':'0')}catch(e){}if(master)master.gain.setTargetAtTime(muted?0:.9,ac.currentTime,.02)};
+let hiddenAt=0;
+document.addEventListener('visibilitychange',()=>{if(document.hidden){hiddenAt=performance.now();ptr=null;if(S){S.down=false;S.vy=0;if(S.lick)S.lick.holding=false;}rub(0);if(ac)ac.suspend();}else{if(S&&S.running&&hiddenAt){const delta=performance.now()-hiddenAt;S.t0+=delta;S.nextEv+=delta;if(S.ev)S.ev.end+=delta;}hiddenAt=0;if(ac)ac.resume();}});
+function makeCard(){const c=document.createElement('canvas');c.width=1080;c.height=1350;const a=c.getContext('2d'),serif="'Noto Serif TC',Georgia,serif",sans="'Noto Sans TC',system-ui,sans-serif";
+  const g=a.createRadialGradient(540,420,40,540,675,980);g.addColorStop(0,'#2c5145');g.addColorStop(1,'#0b211d');a.fillStyle=g;a.fillRect(0,0,1080,1350);
+  a.strokeStyle='#e8bb70';a.lineWidth=2;a.strokeRect(45,45,990,1260);a.textAlign='center';
+  a.fillStyle='#e8bb70';a.font='24px monospace';a.fillText('S L O W   R O L L  /  VOL. 02',540,140);
+  a.fillStyle='#f4ebd8';a.font=`900 150px ${serif}`;a.fillText('慢慢捲',540,370);
+  a.fillStyle='#e8bb70';a.font=`900 52px ${sans}`;a.fillText(S.result.title,540,480);
+  a.save();a.translate(540,610);a.rotate(-.04);a.shadowColor='#0008';a.shadowBlur=30;a.shadowOffsetY=12;
+  const cg=a.createLinearGradient(0,-26,0,26);cg.addColorStop(0,'#fffdf7');cg.addColorStop(.55,'#efe8da');cg.addColorStop(1,'#c9bfaa');a.fillStyle=cg;a.beginPath();a.roundRect(-330,-26,660,52,26);a.fill();a.shadowColor='transparent';
+  a.fillStyle='#fbfaf4';a.beginPath();a.roundRect(-330,-26,130,52,[26,0,0,26]);a.fill();a.strokeStyle='#ddd5c4';a.lineWidth=2;for(let x=-312;x<-205;x+=14){a.beginPath();a.moveTo(x,-20);a.lineTo(x,20);a.stroke()}a.restore();
+  a.fillStyle='#f4ebd8';a.font='700 120px monospace';a.fillText(fmt(S.result.ms),540,850);
+  a.font=`500 38px ${sans}`;a.fillStyle='#d4dec9';a.fillText(`用掉 ${S.result.papers} 張紙，終於捲好了。`,540,930);
+  a.fillStyle='#e8bb70';a.font=`900 44px ${sans}`;a.fillText('你有這個耐心嗎？',540,1080);
+  a.fillStyle='#b4c7b3';a.font='26px monospace';a.fillText(location.host?location.host+location.pathname.replace(/index\.html$/,''):'nosmokeagain.github.io/2026roll',540,1150);
+  a.font=`22px ${sans}`;a.fillText('吸菸有害健康・本遊戲只捲不抽',540,1245);return c}
+$('save').onclick=async()=>{if(!S||!S.result)return;try{await document.fonts.ready}catch(e){}const c=makeCard();
+  c.toBlob(async b=>{if(!b)return;const file=new File([b],'slow-roll.png',{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],text:shareText});$('toast').textContent='已分享';return}catch(e){if(e&&e.name==='AbortError')return}}
+    $('cardimg').src=c.toDataURL('image/png');$('cardv').hidden=false},'image/png')};
+$('cardx').onclick=()=>$('cardv').hidden=true;
+resize();requestAnimationFrame(loop);
+</script>
+</body>
+</html>

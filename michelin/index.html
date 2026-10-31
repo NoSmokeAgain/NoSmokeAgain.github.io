@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:meta-->
+<meta name="description" content="七年米其林名單，分區看價錢，一鍵導航">
+<link rel="canonical" href="https://nosmokeagain.github.io/michelin/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="台中米其林寶典｜三分鐘遊樂場">
+<meta property="og:description" content="七年米其林名單，分區看價錢，一鍵導航">
+<meta property="og:url" content="https://nosmokeagain.github.io/michelin/">
+<meta property="og:image" content="https://nosmokeagain.github.io/michelin/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>台中米其林寶典</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Boku&family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: an old kung-fu manual. Red lacquer cover band with gold brush title; four scrolls (天 地 人 失) as tabs; restaurant entries are paper slips with a red seal for their rank. Single committed look (paper + cinnabar + gold). */
+:root{
+  --paper:#f2e6cc; --paper2:#e8d8b4; --slip:#fbf4e2; --ink:#2a1a12; --mute:#7a6650; --line:#c9b48a;
+  --cinnabar:#a8231c; --lacquer:#5c0f0c; --gold:#d9a93c; --gold2:#f3d27a; --jade:#2f6b4a; --bib:#b4541a;
+  --brush:"Yuji Boku","Noto Serif TC","Songti TC",serif; --serif:"Noto Serif TC","Songti TC",serif; --sans:"Noto Sans TC","PingFang TC",system-ui,sans-serif;
+  color-scheme:light;
+}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.6;
+  background-image:radial-gradient(circle at 20% 10%,#f7eed8 0,transparent 40%),radial-gradient(circle at 90% 60%,#e9d9b6 0,transparent 45%),repeating-linear-gradient(0deg,rgba(120,90,40,.035) 0 2px,transparent 2px 5px)}
+.cover{background:linear-gradient(180deg,#6e1410,var(--lacquer));color:var(--gold2);border-bottom:6px double var(--gold);position:relative;overflow:hidden}
+.cover::before{content:"";position:absolute;inset:0;background:repeating-radial-gradient(circle at 0 100%,transparent 0 22px,rgba(217,169,60,.08) 22px 24px);pointer-events:none}
+.cover .in{position:relative;max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:30px 26px;display:flex;gap:16px;align-items:center}
+.cover .seal{flex:none;width:74px;height:74px;border:3px solid var(--gold);border-radius:10px;display:grid;place-items:center;font-family:var(--brush);font-size:30px;line-height:1;text-align:center;color:var(--gold2);background:#7d1712;box-shadow:inset 0 0 0 4px #5c0f0c,inset 0 0 0 6px var(--gold)}
+.cover h1{margin:0;font-family:var(--brush);font-weight:400;font-size:clamp(30px,8.4vw,52px);letter-spacing:.08em;line-height:1.1;text-shadow:0 2px 0 #3a0806,0 0 18px rgba(243,210,122,.35)}
+.cover p{margin:6px 0 0;color:#f3e1b0;font-size:14px;opacity:.9}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px}
+.scrolls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.scroll{border:0;cursor:pointer;font-family:inherit;color:var(--ink);background:var(--slip);border-radius:6px;padding:10px 4px 9px;display:grid;justify-items:center;gap:3px;box-shadow:0 0 0 1px var(--line),0 6px 0 -3px var(--paper2);position:relative}
+.scroll::before,.scroll::after{content:"";position:absolute;left:-3px;right:-3px;height:7px;background:linear-gradient(180deg,#7a4a22,#4a2a12);border-radius:4px}
+.scroll::before{top:-4px}.scroll::after{bottom:-4px}
+.scroll i{font-style:normal;font-family:var(--brush);font-size:30px;line-height:1.1;color:var(--cinnabar)}
+.scroll b{font-size:12.5px}
+.scroll small{font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums}
+.scroll[aria-pressed=true]{background:var(--cinnabar);color:#fff4dc;box-shadow:0 0 0 2px var(--gold),0 8px 18px -8px #5c0f0c}
+.scroll[aria-pressed=true] i{color:var(--gold2)}.scroll[aria-pressed=true] small{color:#f3d9a8}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);padding-block:14px 10px;margin-top:10px;display:grid;gap:8px;border-bottom:2px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--lacquer)}
+.row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.row::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--slip);color:var(--ink);border-radius:4px;padding:6px 11px;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--slip);border-color:var(--ink)}
+.chip small{opacity:.6;margin-left:3px}
+.chip.p[aria-pressed=true]{background:var(--gold);color:var(--ink);border-color:#a37a22}
+input[type=search]{width:100%;box-sizing:border-box;border:1px solid var(--line);background:var(--slip);color:var(--ink);border-radius:6px;padding:10px 12px;font:inherit}
+.scroll:focus-visible,.chip:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--cinnabar);outline-offset:2px}
+.hint{font-size:14px;color:var(--mute);margin:12px 0 0}
+.hint b{color:var(--cinnabar)}
+h2.d{font-family:var(--brush);font-weight:400;font-size:27px;margin:30px 0 12px;display:flex;align-items:center;gap:10px;color:var(--lacquer)}
+h2.d::after{content:"";flex:1;height:2px;background:linear-gradient(90deg,var(--cinnabar),transparent)}
+h2.d small{font-family:var(--sans);font-size:13px;color:var(--mute)}
+.list{display:grid;gap:12px}
+.r{background:var(--slip);border:1px solid var(--line);border-radius:4px;padding:14px 14px 13px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;position:relative;box-shadow:inset 0 0 0 4px var(--slip),inset 0 0 0 5px rgba(168,35,28,.25),0 3px 0 -1px var(--paper2)}
+.r .nm{font-family:var(--serif);font-weight:900;font-size:19px;letter-spacing:.02em;min-width:0}
+.r .tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tag{font-size:12.5px;font-weight:900;padding:2px 8px;border-radius:3px;white-space:nowrap;border:1.5px solid currentColor}
+.t-star{color:var(--cinnabar);background:#f7dcd2}.t-bib{color:var(--bib);background:#f6e3cc}.t-sel{color:#4a3a2a;background:#ece0c6}.t-green{color:var(--jade);background:#dcebd9}.t-off{color:var(--mute);background:transparent;border-style:dashed}
+.price{font-size:13.5px;font-weight:700;color:var(--ink)}
+.price span{color:var(--gold);letter-spacing:-1px;margin-right:4px;text-shadow:0 0 0 #8a6416}
+.r .tags,.r .price,.r .meta,.r .hist{grid-column:1}
+.r .meta{font-size:13.5px;color:var(--mute);min-width:0}
+.r .hist{font-size:13.5px;min-width:0}
+.r .hist em{font-style:normal;font-weight:900;color:var(--cinnabar)}
+.stamp{position:absolute;right:12px;top:-10px;width:40px;height:40px;border:2.5px solid var(--cinnabar);color:var(--cinnabar);border-radius:6px;display:grid;place-items:center;font-family:var(--brush);font-size:22px;transform:rotate(8deg);background:rgba(251,244,226,.85);opacity:.92}
+.stamp.off{border-color:var(--mute);color:var(--mute)}
+.go{grid-column:2;grid-row:2 / span 4;text-decoration:none;font-weight:900;color:#fff4dc;background:var(--cinnabar);border-radius:6px;padding:10px 12px;white-space:nowrap;text-align:center;line-height:1.3;font-size:15px;box-shadow:0 3px 0 #5c0f0c}
+.go small{display:block;font-size:11px;font-weight:500;color:#f3d9a8}
+.empty{color:var(--mute);padding:40px 0;text-align:center}
+.foot{margin-top:36px;font-size:12px;color:var(--mute);line-height:1.7}
+.foot a{color:inherit}
+@media (max-width:400px){.scroll i{font-size:26px}.scroll b{font-size:11.5px}}
+</style>
+</head>
+<body>
+
+
+<div class="cover"><div class="in">
+  <div class="seal">台中<br>秘傳</div>
+  <div><h1>台中米其林寶典</h1><p>七年米其林名單，一本收齊。分區、看價錢、按一下就導航。</p></div>
+</div></div>
+
+<div class="wrap">
+  <div class="scrolls" id="tabs"></div>
+  <div class="bar">
+    <div class="row" id="dists"></div>
+    <div class="row" id="prices"></div>
+    <input id="q" type="search" placeholder="搜尋店名或想吃的，例如：鵝肉、牛肉麵、燒肉" autocomplete="off">
+  </div>
+  <p class="hint" id="hint"></p>
+  <div id="out"></div>
+    <div class="foot">
+    <p>每人消費是依菜系、餐期與公開菜單價位推估的區間，不是官方資料，實際以店家為準。</p>
+    <p>名單資料整理自各年度媒體報導的官方名單：星級 2020–2026、必比登推介 2020–2026 完整；「入選」名單目前收錄 2022、2025、2026 三年，其他年份的入選紀錄不列入歷年說明。標示「待確認」的店家，來源沒有寫地址，部分可能已歇業，出發前請先查營業狀態。地圖連結是用店名搜尋，同名分店請以地址為準。</p>
+    <p>來源：
+      <a href="https://www.cna.com.tw/news/firstnews/202008245004.aspx" target="_blank" rel="noopener">中央社 2020 星級</a>、
+      <a href="https://www.foodnext.net/news/newsnow/paper/5739494750" target="_blank" rel="noopener">食力 2020 必比登</a>、
+      <a href="https://www.gvm.com.tw/article/81589" target="_blank" rel="noopener">遠見 2021 必比登</a>、
+      <a href="https://www.walkerland.com.tw/subject/view/334536" target="_blank" rel="noopener">窩客島 2022 必比登</a>、
+      <a href="https://www.taichung.gov.tw/8868/8872/9962/2149609" target="_blank" rel="noopener">台中市政府 2022 入選</a>、
+      <a href="https://niniandblue.com/blog/post/michelin-taichung2022" target="_blank" rel="noopener">妞新聞 2022 星級</a>、
+      <a href="https://www.travelrich.com.tw/news/foodnews/foodnews9863.html" target="_blank" rel="noopener">2023 星級</a>、
+      <a href="https://www.nownews.com/news/6236996" target="_blank" rel="noopener">NOWnews 2023 必比登</a>、
+      <a href="https://www.epochtimes.com/b5/24/8/27/n14318658.htm" target="_blank" rel="noopener">2024 星級</a>、
+      <a href="https://www.cna.com.tw/news/ahel/202408200108.aspx" target="_blank" rel="noopener">中央社 2024 必比登</a>、
+      <a href="https://fooddailytw.com/food-notes/2025-taichung-michelin/" target="_blank" rel="noopener">2025 星級</a>、
+      <a href="https://supertaste.tvbs.com.tw/hot/355935" target="_blank" rel="noopener">食尚玩家 2025 必比登</a>、
+      <a href="https://fooddailytw.com/food-notes/2025-taichung-michelin-selected/" target="_blank" rel="noopener">2025 入選</a>、
+      <a href="https://niniandblue.com/blog/post/2026michelintc" target="_blank" rel="noopener">2026 星級與入選</a>、
+      <a href="https://supertaste.tvbs.com.tw/esg/360517" target="_blank" rel="noopener">食尚玩家 2026 必比登</a>。</p>
+  </div>
+
+</div>
+
+<script>
+const YEARS=[2020,2021,2022,2023,2024,2025,2026];
+const STARS={
+ 2020:{"JL STUDIO":2,"鹽之華":1,"Forchetta":1,"俺達的肉屋":1},
+ 2021:{"JL STUDIO":2,"鹽之華":1,"Forchetta":1,"俺達的肉屋":1,"澀 Sur":1},
+ 2022:{"JL STUDIO":2,"鹽之華":1,"Forchetta":1,"俺達的肉屋":1,"澀 Sur":1},
+ 2023:{"JL STUDIO":3,"鹽之華":1,"Forchetta":1,"俺達的肉屋":1,"澀 Sur":1,"文公館":1},
+ 2024:{"JL STUDIO":3,"鹽之華":1,"Forchetta":1,"俺達的肉屋":1,"澀 Sur":1,"文公館":1,"元紀":1,"L'Atelier par Yao":1,"MINIMAL":1},
+ 2025:{"JL STUDIO":3,"鹽之華":1,"俺達的肉屋":1,"澀 Sur":1,"元紀":1,"L'Atelier par Yao":1},
+ 2026:{"JL STUDIO":3,"山与":1,"俺達的肉屋":1,"澀 Sur":1,"元紀":1,"L'Atelier par Yao":1}};
+const GREEN={2025:["地坊"],2026:["澀 Sur","地坊"]};
+const BIB={
+ 2020:["范記金之園","富狀元豬腳","馨苑","Gubami","陸園","新月梧桐","京華煙雲","淇里思","尚牛二館","富鼎旺","阿坤麵","沁園春","富貴亭","上海未名麵點","東山棧","溫叨","東方龍","三喜食堂","台客燒肉粥","滬舍餘味","彭城堂"],
+ 2021:["阿坤麵","Gubami","可口牛肉麵","木公麥面","上海未名麵點","饕之鄉","陳明統爌肉飯","鮮魚鱻","台中肉員","淇里思","范記金之園","東山棧","富鼎旺","富狀元豬腳","富貴亭","咕嚕咕嚕原住民音樂餐廳","羅家古早味","菇神","醉月樓","東方龍","彭城堂","三喜食堂","馨苑","溫叨","曙光居","好菜","陸園","新月梧桐","沁園春","京華煙雲","牛稼莊","滬舍餘味","台客燒肉粥"],
+ 2022:["新月梧桐","阿坤麵","竹之鄉","陳明統爌肉飯","淇里思","范記金之園","東山棧","鳳記鵝肉老店","鮮魚鱻","富鼎旺","富狀元豬腳","富貴亭","咕嚕咕嚕原住民音樂餐廳","越南你好","曙光居","可口牛肉麵","好菜","陸園","羅家古早味","菇神","京華煙雲","醉月樓","好先生","木公麥面","牛稼莊","上海未名麵點","東方龍","彭城堂","沁園春","三喜食堂","滬舍餘味","馨苑","台客燒肉粥","台中肉員","饕之鄉","溫叨","小初店"],
+ 2023:["阿坤麵","竹之鄉","范記金之園","鳳記鵝肉老店","鮮魚鱻","富鼎旺","富狀元豬腳","富貴亭","咕嚕咕嚕原住民音樂餐廳","越南你好","曙光居","可口牛肉麵","好菜","老士官擀麵","羅家古早味","MINIMAL","京華煙雲","醉月樓","好先生","木公麥面","夜間部爌肉飯","牛稼莊","上海未名麵點","彭城堂","沁園春","沙卡","滬舍餘味","馨苑","台客燒肉粥","台中肉員","小初店"],
+ 2024:["阿坤麵","繡球","范記金之園","鳳記鵝肉老店","鮮魚鱻","富鼎旺","富狀元豬腳","富貴亭","咕嚕咕嚕原住民音樂餐廳","曙光居","可口牛肉麵","好菜","老士官擀麵","裡小樓","羅家古早味","醉月樓","木公麥面","夜間部爌肉飯","牛稼莊","上海未名麵點","彭城堂","沁園春","沙卡","滬舍餘味","馨苑","台中肉員","小初店"],
+ 2025:["阿坤麵","范記金之園","富鼎旺","富貴亭","醉月樓","上海未名麵點","繡球","富狀元豬腳","夜間部爌肉飯","馨苑","好菜","功夫上海手工魚丸","曙光居","可口牛肉麵","裡小樓","羅家古早味","滬舍餘味","木公麥面","牛稼莊","台中肉員","彭城堂","鳳記鵝肉老店","老士官擀麵"],
+ 2026:["東沐。食在","阿坤麵","范記金之園","富鼎旺","富貴亭","醉月樓","上海未名麵點","繡球","富狀元豬腳","夜間部爌肉飯","馨苑","好菜","功夫上海手工魚丸","曙光居","可口牛肉麵","裡小樓","羅家古早味","滬舍餘味","牛稼莊","台中肉員","彭城堂","鳳記鵝肉老店","老士官擀麵"]};
+const SEL={
+ 2022:["茂川肉丸","膳馨","潔","中山招待所","脂‧板前炭火燒肉","英才大麵焿","游日本料理","名人坊","富彩軒","響海鮮","KR Prime Steak","銘心","橡木炙烤牛排館","千味海鮮","森鐵板燒","与玥樓","麵廊","湄南河","品法","元","又見一炊煙","鳥苑","飛花落院","L'Atelier par Yao","梅子","PI"],
+ 2025:["山与","明娟樓","東引釣客","魚麗共同廚房","KR Prime Steak","響海鮮","Forchetta","FIRNS","元","滿堂","在來","鳥苑","膳馨","潔","京華煙雲","卉寓","小樂沐","咕嚕咕嚕原住民音樂餐廳","PI","千味海鮮","与玥樓","東方龍","UNA-VERSE","meatGQ","阿禧師懷舊餐館","溫叨","瀞","地坊","豬肉榮小料理","越南你好","菇神","飛花落院","沙卡","梅子"],
+ 2026:["阿禧師懷舊餐館","千味海鮮","瀞","FIRNS","鹽之華","Forchetta","響海鮮","惠中蔬食","卉寓","飛花落院","潔","自在天","KR Prime Steak","滿堂","菇神","meatGQ","梅子","明娟樓","京華煙雲","Munchi","肉料理・福","東方龍","豬肉榮小料理","沙卡","魚麗共同廚房","鮨承","鳥苑","地坊","UNA-VERSE","溫叨","元","蘊","zài","東引釣客"]};
+const SEL_YEARS=[2022,2025,2026];
+// name: [district, cuisine]
+const INFO={
+ "JL STUDIO":["南屯區","新加坡菜"],"鹽之華":["西屯區","法式"],"Forchetta":["西屯區","義式"],"俺達的肉屋":["西區","和牛燒肉"],"澀 Sur":["中區","台灣創新料理"],"文公館":["",""],"元紀":["西屯區","台菜"],"L'Atelier par Yao":["太平區","法式"],"MINIMAL":["","冰淇淋甜點"],"山与":["西屯區","粵菜"],"地坊":["東區","在地食材料理"],
+ "范記金之園":["中區","台菜・草包飯"],"富狀元豬腳":["西區","豬腳"],"馨苑":["西區","台菜"],"Gubami":["西區","牛肉麵"],"陸園":["西區","江浙菜"],"新月梧桐":["西區","江浙菜"],"京華煙雲":["西區","北京菜"],"淇里思":["西屯區","印度菜"],"尚牛二館":["北區","牛肉火鍋"],"富鼎旺":["中區","豬腳"],"阿坤麵":["中區","麵食"],"沁園春":["中區","江浙菜"],"富貴亭":["中區","鵝肉"],"上海未名麵點":["中區","上海麵點"],"東山棧":["北屯區","甕仔雞"],"溫叨":["北屯區","台菜"],"東方龍":["南屯區","台菜・川菜"],"三喜食堂":["南屯區","台菜海鮮"],"台客燒肉粥":["南屯區","燒肉粥"],"滬舍餘味":["南屯區","上海點心"],"彭城堂":["太平區","台菜"],
+ "可口牛肉麵":["西屯區","牛肉麵"],"木公麥面":["東區","麵食"],"饕之鄉":["西區",""],"陳明統爌肉飯":["","爌肉飯"],"鮮魚鱻":["北屯區","海鮮"],"台中肉員":["南區","小吃"],"咕嚕咕嚕原住民音樂餐廳":["西區","原住民料理"],"羅家古早味":["南屯區","台菜"],"菇神":["新社區","菇類料理"],"醉月樓":["中區","台菜"],"曙光居":["西屯區","素食"],"好菜":["西區","台菜・南洋"],"牛稼莊":["東勢區","客家菜"],
+ "竹之鄉":["北屯區","竹筒飯"],"鳳記鵝肉老店":["沙鹿區","鵝肉"],"越南你好":["中區","越南菜"],"好先生":["西區","台菜・江浙"],"小初店":["南屯區","小吃"],"夜間部爌肉飯":["西區","爌肉飯"],"沙卡":["大雅區","燒酒雞"],"老士官擀麵":["清水區","麵食"],"繡球":["西區","麵食"],"裡小樓":["西屯區","台菜"],"功夫上海手工魚丸":["西區","小吃"],"東沐。食在":["北區","鴨肉飯"],
+ "茂川肉丸":["中區","肉圓"],"膳馨":["西區",""],"潔":["西區","日本料理"],"中山招待所":["",""],"脂‧板前炭火燒肉":["","燒肉"],"英才大麵焿":["","小吃"],"游日本料理":["","日本料理"],"名人坊":["",""],"富彩軒":["",""],"響海鮮":["西屯區","海鮮"],"KR Prime Steak":["西屯區","牛排"],"銘心":["",""],"橡木炙烤牛排館":["","牛排"],"千味海鮮":["南屯區","海鮮"],"森鐵板燒":["","鐵板燒"],"与玥樓":["南屯區","粵菜"],"麵廊":["","麵食"],"湄南河":["","泰式"],"品法":["",""],"元":["西區","台菜"],"又見一炊煙":["",""],"鳥苑":["西區","燒鳥"],"飛花落院":["新社區","日式懷石"],"梅子":["沙鹿區","台菜海鮮"],"PI":["南屯區",""],
+ "明娟樓":["西區","粵菜"],"東引釣客":["西區","海鮮熱炒"],"魚麗共同廚房":["北區","台菜家常"],"FIRNS":["西屯區","法式"],"滿堂":["西區","創意台菜"],"在來":["西區",""],"卉寓":["西區","台菜"],"小樂沐":["西區","法式"],"UNA-VERSE":["南屯區","法式甜點"],"meatGQ":["南屯區","牛排"],"阿禧師懷舊餐館":["北屯區","鵝肉台菜"],"瀞":["北區","創新料理"],"豬肉榮小料理":["東區","台日融合"],
+ "肉料理・福":["西區","肉料理"],"鮨承":["南屯區","壽司"],"蘊":["北屯區","台菜"],"自在天":["南區","蔬食拉麵"],"惠中蔬食":["西屯區","素食"],"Munchi":["西區","亞洲創新"],"zài":["西區","在地食材料理"]};
+
+const dname=d=>d||"地址待確認";
+const R={};const get=n=>R[n]||(R[n]={name:n,district:(INFO[n]||[""])[0],cuisine:(INFO[n]||["",""])[1],y:{}});
+for(const y of YEARS){for(const [n,s] of Object.entries(STARS[y]))get(n).y[y]={k:"star",s};
+  for(const n of BIB[y]){const r=get(n);if(!r.y[y])r.y[y]={k:"bib"}}
+  for(const n of (SEL[y]||[])){const r=get(n);if(!r.y[y])r.y[y]={k:"sel"}}
+  for(const n of (GREEN[y]||[])){const r=get(n);(r.y[y]||(r.y[y]={k:"sel"})).g=true}}
+const LIST=Object.values(R);
+const NOW=2026;
+const SN=["","一星","二星","三星"];
+const lab=v=>!v?"未上榜":v.k==="star"?SN[v.s]:v.k==="bib"?"必比登推介":"入選";
+function cat(r){const v=r.y[NOW];if(!v)return"off";return v.k}
+function lastYear(r){let l=0;for(const y of YEARS)if(r.y[y])l=y;return l}
+function yrs(list){const out=[];let a=list[0],b=a;for(let i=1;i<=list.length;i++){const y=list[i];if(y===b+1){b=y;continue}out.push(a===b?`${a}`:`${a}–${b}`);a=b=y}return out.join("、")}
+function history(r){ // plain language
+  const seq=YEARS.map(y=>({y,v:r.y[y],known:!!r.y[y]||SEL_YEARS.includes(y)})).filter(x=>x.known);
+  const groups=[];for(const x of seq){const l=lab(x.v);const g=groups[groups.length-1];if(g&&g.l===l)g.ys.push(x.y);else groups.push({l,ys:[x.y]})}
+  const parts=groups.filter(g=>g.l!=="未上榜").map(g=>`${yrs(g.ys)} ${g.l}`);
+  const bibYears=YEARS.filter(y=>r.y[y]&&r.y[y].k==="bib").length,starYears=YEARS.filter(y=>r.y[y]&&r.y[y].k==="star").length;
+  let tag="";if(bibYears===7)tag="<em>7 年全都上榜</em>　";else if(starYears>=5)tag=`<em>摘星 ${starYears} 年</em>　`;
+  return tag+parts.join("　→　")}
+const ORDER={star:0,bib:1,sel:2,off:3};
+const DORDER=["中區","東區","南區","西區","北區","西屯區","南屯區","北屯區","太平區","大雅區","沙鹿區","清水區","東勢區","新社區",""];
+const TABS=[["star","星級","2026・含綠星"],["bib","必比登推介","2026"],["sel","入選","2026"],["off","已退榜","曾經上榜"]];
+const st={tab:"star",dist:"all",q:""};
+function inTab(r){if(st.tab==="star")return cat(r)==="star"||(r.y[NOW]&&r.y[NOW].g);return cat(r)===st.tab}
+function qmatch(r){if(!st.q)return true;const q=st.q.toLowerCase();return r.name.toLowerCase().includes(q)||r.cuisine.includes(st.q)||dname(r.district).includes(st.q)}
+function badge(r){const v=r.y[NOW];if(!v)return`<span class="badge b-off">${lastYear(r)} 年後未上榜</span>`;
+  let b=v.k==="star"?`<span class="badge b-star">${"★".repeat(v.s)} ${SN[v.s]}</span>`:v.k==="bib"?`<span class="badge b-bib">必比登推介</span>`:(v.g?"":`<span class="badge b-sel">入選</span>`);
+  if(v.g)b+=`<span class="badge b-green">🍃 綠星</span>`;return b}
+const maps=r=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name.replace(" Sur","")+" 台中"+(r.district?" "+r.district:""))}`;
+
+// 每人預估消費 [低, 高]（新台幣）
+const PRICE={
+ "JL STUDIO":[7000,8500],"鹽之華":[3500,5000],"Forchetta":[2500,4000],"俺達的肉屋":[3500,5000],"澀 Sur":[5000,6500],"文公館":[3000,5000],"元紀":[4000,5500],"L'Atelier par Yao":[3000,4500],"MINIMAL":[150,300],"山与":[2500,4000],"地坊":[2500,3500],
+ "范記金之園":[150,300],"富狀元豬腳":[150,300],"馨苑":[400,700],"Gubami":[200,300],"陸園":[500,900],"新月梧桐":[500,900],"京華煙雲":[600,1000],"淇里思":[400,700],"尚牛二館":[600,1000],"富鼎旺":[150,300],"阿坤麵":[80,200],"沁園春":[500,900],"富貴亭":[200,400],"上海未名麵點":[150,300],"東山棧":[400,700],"溫叨":[500,900],"東方龍":[400,800],"三喜食堂":[500,900],"台客燒肉粥":[100,200],"滬舍餘味":[200,400],"彭城堂":[400,800],
+ "可口牛肉麵":[200,300],"木公麥面":[150,300],"饕之鄉":[300,600],"陳明統爌肉飯":[80,150],"鮮魚鱻":[400,800],"台中肉員":[60,120],"咕嚕咕嚕原住民音樂餐廳":[500,900],"羅家古早味":[100,200],"菇神":[500,900],"醉月樓":[500,900],"曙光居":[200,400],"好菜":[400,800],"牛稼莊":[400,700],
+ "竹之鄉":[300,600],"鳳記鵝肉老店":[200,400],"越南你好":[150,300],"好先生":[500,900],"小初店":[100,200],"夜間部爌肉飯":[80,180],"沙卡":[400,700],"老士官擀麵":[100,200],"繡球":[100,200],"裡小樓":[400,800],"功夫上海手工魚丸":[80,150],"東沐。食在":[80,200],
+ "茂川肉丸":[50,100],"膳馨":[1500,3000],"潔":[3000,5000],"中山招待所":[800,1500],"脂‧板前炭火燒肉":[1500,2500],"英才大麵焿":[50,100],"游日本料理":[2000,4000],"名人坊":[600,1200],"富彩軒":[800,1500],"響海鮮":[1500,3000],"KR Prime Steak":[3000,5000],"銘心":[1500,3000],"橡木炙烤牛排館":[2500,4000],"千味海鮮":[800,1500],"森鐵板燒":[1500,3000],"与玥樓":[1000,2000],"麵廊":[150,300],"湄南河":[400,800],"品法":[1000,2000],"元":[1500,3000],"又見一炊煙":[400,800],"鳥苑":[1200,2000],"飛花落院":[2000,3500],"梅子":[600,1200],"PI":[2500,4000],
+ "明娟樓":[1000,2000],"東引釣客":[600,1200],"魚麗共同廚房":[600,1200],"FIRNS":[3000,4500],"滿堂":[1500,2500],"在來":[2000,3500],"卉寓":[1500,2500],"小樂沐":[2000,3500],"UNA-VERSE":[300,600],"meatGQ":[2500,4000],"阿禧師懷舊餐館":[400,800],"瀞":[2500,4000],"豬肉榮小料理":[800,1500],
+ "肉料理・福":[2000,3500],"鮨承":[3500,6000],"蘊":[2500,4000],"自在天":[250,400],"惠中蔬食":[600,1200],"Munchi":[1500,2500],"zài":[2500,4000]};
+const priceOf=r=>PRICE[r.name]||[500,1000];
+const mid=r=>{const p=priceOf(r);return (p[0]+p[1])/2};
+const PB=[["all","不限預算"],["p1","銅板 300 內"],["p2","300–1,000"],["p3","1,000–3,000"],["p4","3,000 以上"]];
+const inPB=(r,k)=>{const m=mid(r);return k==="all"||(k==="p1"&&m<=300)||(k==="p2"&&m>300&&m<=1000)||(k==="p3"&&m>1000&&m<=3000)||(k==="p4"&&m>3000)};
+const coins=r=>{const m=mid(r);return m<=300?"$":m<=1000?"$$":m<=3000?"$$$":"$$$$"};
+const fmt=n=>n.toLocaleString("en-US");
+const SCROLLS=[["star","天","天卷・星級","2026 含綠星"],["bib","地","地卷・必比登推介","2026"],["sel","人","人卷・入選","2026"],["off","失","失傳・已退榜","曾經上榜"]];
+const HINT={star:"<b>天卷</b>：2026 年拿到米其林星星的餐廳，含綠星。",bib:"<b>地卷</b>：必比登推介，價格親民、值得專程去吃，多半是小吃和台菜。",sel:"<b>人卷</b>：米其林入選，評審推薦但沒有摘星或必比登推介。",off:"<b>失傳</b>：以前上過榜、2026 年沒出現在名單的店，有些已經歇業。"};
+const SEAL=r=>{const v=r.y[NOW];if(!v)return["失","off"];if(v.k==="star")return[["","壹","貳","參"][v.s]+"星",""];if(v.k==="bib")return["必",""];return[v.g?"綠":"選",""]};
+st.price="all";
+function tagHTML(r){const v=r.y[NOW];if(!v)return`<span class="tag t-off">${lastYear(r)} 年後未上榜</span>`;
+  let b=v.k==="star"?`<span class="tag t-star">${"★".repeat(v.s)} 米其林${SN[v.s]}</span>`:v.k==="bib"?`<span class="tag t-bib">必比登推介</span>`:(v.g?"":`<span class="tag t-sel">米其林入選</span>`);
+  if(v.g)b+=`<span class="tag t-green">🍃 綠星</span>`;return b}
+function render(){
+  const T=document.getElementById("tabs");T.innerHTML="";
+  SCROLLS.forEach(([k,ch,t,s])=>{const n=LIST.filter(r=>k==="star"?(cat(r)==="star"||(r.y[NOW]&&r.y[NOW].g)):cat(r)===k).length;
+    const b=document.createElement("button");b.type="button";b.className="scroll";b.setAttribute("aria-pressed",st.tab===k);b.innerHTML=`<i>${ch}</i><b>${t.split("・")[1]}</b><small>${n} 家・${s}</small>`;
+    b.onclick=()=>{st.tab=k;st.dist="all";render()};T.appendChild(b)});
+  const pool=LIST.filter(r=>inTab(r)&&qmatch(r));
+  const base=pool.filter(r=>inPB(r,st.price));
+  const cnt={};base.forEach(r=>cnt[r.district]=(cnt[r.district]||0)+1);
+  if(st.dist!=="all"&&!cnt[st.dist])st.dist="all";
+  const D=document.getElementById("dists");D.innerHTML="";
+  [["all","全部地區",base.length],...DORDER.filter(d=>cnt[d]).map(d=>[d,dname(d),cnt[d]])].forEach(([v,t,c])=>{const b=document.createElement("button");b.type="button";b.className="chip";b.setAttribute("aria-pressed",st.dist===v);b.innerHTML=`${t}<small>${c}</small>`;b.onclick=()=>{st.dist=v;render()};D.appendChild(b)});
+  const P=document.getElementById("prices");P.innerHTML="";
+  PB.forEach(([k,t])=>{const c=pool.filter(r=>inPB(r,k)&&(st.dist==="all"||r.district===st.dist)).length;if(k!=="all"&&!c)return;const b=document.createElement("button");b.type="button";b.className="chip p";b.setAttribute("aria-pressed",st.price===k);b.innerHTML=`${t}${k==="all"?"":`<small>${c}</small>`}`;b.onclick=()=>{st.price=k;render()};P.appendChild(b)});
+  const rows=base.filter(r=>st.dist==="all"||r.district===st.dist);
+  document.getElementById("hint").innerHTML=HINT[st.tab]+` 價格為每人預估消費，僅供參考。`;
+  const out=document.getElementById("out");out.innerHTML="";
+  if(!rows.length){out.innerHTML=`<div class="empty">此卷查無此店，換個條件看看。</div>`;return}
+  for(const d of DORDER){const g=rows.filter(r=>r.district===d);if(!g.length)continue;
+    g.sort((a,b)=>{const va=a.y[NOW],vb=b.y[NOW];const sa=va&&va.k==="star"?va.s:0,sb=vb&&vb.k==="star"?vb.s:0;return sb-sa||lastYear(b)-lastYear(a)||mid(a)-mid(b)});
+    const h=document.createElement("h2");h.className="d";h.innerHTML=`${dname(d)}<small>${g.length} 家</small>`;out.appendChild(h);
+    const L=document.createElement("div");L.className="list";
+    for(const r of g){const [sc,cls]=SEAL(r);const p=priceOf(r);const el=document.createElement("div");el.className="r";
+      el.innerHTML=`<span class="stamp ${cls}" aria-hidden="true">${sc.length>1?`<span style="font-size:15px;line-height:1">${sc}</span>`:sc}</span>
+        <div class="nm" style="padding-right:44px">${r.name}</div>
+        <a class="go" href="${maps(r)}" target="_blank" rel="noopener">導航<small>Google 地圖</small></a>
+        <div class="tags">${tagHTML(r)}</div>
+        <div class="price"><span>${coins(r)}</span>每人約 NT$${fmt(p[0])}–${fmt(p[1])}</div>
+        <div class="meta">${[r.cuisine,dname(r.district)].filter(Boolean).join("・")}</div>
+        <div class="hist">${history(r)}</div>`;L.appendChild(el)}
+    out.appendChild(L)}}
+document.getElementById("q").addEventListener("input",e=>{st.q=e.target.value.trim();render()});
+render();
+</script>
+
+</body>
+</html>

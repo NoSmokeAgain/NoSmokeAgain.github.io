@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:meta-->
+<meta name="description" content="不知道做什麼顏色？抽一組">
+<link rel="canonical" href="https://nosmokeagain.github.io/nails/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="美甲配色機｜三分鐘遊樂場">
+<meta property="og:description" content="不知道做什麼顏色？抽一組">
+<meta property="og:url" content="https://nosmokeagain.github.io/nails/">
+<meta property="og:image" content="https://nosmokeagain.github.io/nails/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>美甲配色機</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Layout: a nail-salon colour card — the hand on a velvet tray up top, the colour chart (swatch + code for the nail artist) below */
+:root{
+  --bg:#f7f0ee;--tray:#efe3df;--surface:#fffaf8;--ink:#2d2124;--mute:#8c7a7d;--line:#e8d9d5;--accent:#b5475f;--accent-ink:#ffffff;--lock:#2d2124;
+  --f-display:"Noto Serif TC",serif;--f-body:"Noto Sans TC",system-ui,-apple-system,"PingFang TC",sans-serif;--f-mono:"DM Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1517;--tray:#251d20;--surface:#221b1d;--ink:#f4eaea;--mute:#b09da0;--line:#3a2e31;--accent:#e07890;--accent-ink:#1b1517;--lock:#f4eaea;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1b1517;--tray:#251d20;--surface:#221b1d;--ink:#f4eaea;--mute:#b09da0;--line:#3a2e31;--accent:#e07890;--accent-ink:#1b1517;--lock:#f4eaea;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:520px;margin:0 auto;padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:14px}
+header h1{margin:0;font-family:var(--f-display);font-weight:900;font-size:32px;letter-spacing:.02em}
+header p{margin:2px 0 0;color:var(--mute);font-size:14px}
+.tray{background:radial-gradient(circle at 50% 30%,var(--surface),var(--tray) 75%);border-radius:24px;position:relative}
+canvas{display:block;width:100%;aspect-ratio:1/1;max-width:100%;border-radius:24px;touch-action:manipulation;cursor:pointer}
+.hint{position:absolute;left:0;right:0;bottom:10px;text-align:center;font-size:12px;color:var(--mute);pointer-events:none}
+.name{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.name b{font-family:var(--f-display);font-size:24px;font-weight:900;text-wrap:balance}
+.name span{font-size:12px;color:var(--mute);white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font:inherit;font-size:13px;font-weight:700;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:5px 12px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.lbl{font-size:12px;color:var(--mute);font-weight:700;letter-spacing:.08em;margin-bottom:6px}
+.go{font:inherit;font-weight:900;font-size:18px;border:0;border-radius:16px;background:var(--accent);color:var(--accent-ink);padding:15px;cursor:pointer;width:100%}
+.go:active{transform:translateY(1px)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;display:grid;gap:12px}
+.sw{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}
+.sw div{display:grid;gap:4px;font-size:12px;min-width:0}
+.sw i{display:block;height:44px;border-radius:12px;border:1px solid var(--line)}
+.sw b{font-size:13px}.sw code{font-family:var(--f-mono);color:var(--mute);font-size:11px}
+.fingers{display:grid;gap:4px;font-size:14px}
+.fingers div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding-bottom:4px}
+.fingers span{color:var(--mute)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sec{font:inherit;font-weight:700;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:12px;cursor:pointer}
+.ok{text-align:center;color:var(--accent);font-weight:700;font-size:13px;min-height:20px;margin:0}
+.ov{position:fixed;inset:0;z-index:20;background:rgba(20,12,14,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px))}
+.ov[hidden]{display:none}
+.ov img{max-width:100%;max-height:74vh;border-radius:14px}
+.ov p{margin:0;color:#fff;font-weight:700;font-size:14px}
+.ov button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:10px 24px;background:#fff;color:#2d2124;cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header><h1>美甲配色機</h1><p>不知道做什麼顏色？按一下，配一組給你。喜歡的指甲點一下就能鎖住。</p></header>
+  <div class="tray"><canvas id="cv" width="720" height="720" aria-label="手部美甲預覽，點指甲可鎖定"></canvas><div class="hint">點指甲 🔒 鎖住，按下面重配其他隻</div></div>
+  <div class="name"><b id="title"></b><span id="locks"></span></div>
+  <button class="go" id="go" type="button">💅 隨機配一組</button>
+  <div><div class="lbl">風格</div><div class="chips" id="themes"></div></div>
+  <div><div class="lbl">甲型</div><div class="chips" id="shapes"></div></div>
+  <div><div class="lbl">膚色</div><div class="chips" id="skins"></div></div>
+  <section class="chart">
+    <div class="lbl" style="margin:0">給美甲師看的色卡</div>
+    <div class="sw" id="sw"></div>
+    <div class="fingers" id="fingers"></div>
+  </section>
+  <div class="row"><button class="sec" id="save" type="button">🖼️ 產生色卡圖</button><button class="sec" id="copy" type="button">📋 複製配方</button></div>
+  <p class="ok" id="ok" role="status"></p>
+</div>
+<div class="ov" id="ov" hidden><img id="img" alt="美甲色卡"><p>長按圖片儲存，或直接截圖給美甲師</p><button type="button" id="ovx">關閉</button></div>
+
+<script>
+const $=id=>document.getElementById(id);
+/* ---------- palettes: [name, hex] ---------- */
+const PAL={
+ '奶茶焦糖':{t:'秋冬',c:[['奶茶','#c9a58a'],['焦糖','#a8693d'],['燕麥','#e6d5c3'],['可可','#5e3b2c']],m:'#d8b07a'},
+ '楓葉酒紅':{t:'秋冬',c:[['酒紅','#7b1e2f'],['楓葉','#b4442f'],['玫瑰灰','#c49a98'],['裸膚','#e8c9bc']],m:'#c9a14a'},
+ '冬日莓果':{t:'秋冬',c:[['莓果','#8d2f5a'],['葡萄','#5b2a4e'],['霧粉','#e3b5c3'],['奶白','#f3e9e4']],m:'#d9c3d0'},
+ '抹茶拿鐵':{t:'秋冬',c:[['抹茶','#8a9a5b'],['鼠尾草','#b5c0a0'],['拿鐵','#d9c3a6'],['墨綠','#3d4a34']],m:'#cdb27a'},
+ '冰透藍':{t:'韓系',c:[['冰藍','#bcd6ea'],['霧藍','#8fa9c4'],['透明白','#eef2f4'],['銀灰','#a7adb4']],m:'#dfe6ee'},
+ '水光裸粉':{t:'韓系',c:[['裸粉','#efc9c3'],['蜜桃','#f2b5a3'],['透膚','#f6e2da'],['豆沙','#c08a85']],m:'#f3d9d2'},
+ '薰衣草':{t:'韓系',c:[['薰衣草','#c3b2df'],['芋泥','#a993c9'],['奶霜','#f1ebf5'],['灰紫','#8a7f9c']],m:'#e1d7ee'},
+ '草莓牛奶':{t:'日系',c:[['草莓','#f07c97'],['牛奶','#fbf3f0'],['櫻花','#f6c4d0'],['莓紅','#c94966']],m:'#f8d7df'},
+ '檸檬蘇打':{t:'日系',c:[['檸檬','#f5dc6b'],['蘇打','#a9dbe6'],['奶白','#fbf6ea'],['薄荷','#9fd8c0']],m:'#f0e6b5'},
+ '聖誕紅綠':{t:'聖誕',c:[['聖誕紅','#b3202f'],['冬青綠','#1f5d40'],['雪白','#f7f5f2'],['酒紅','#6e1a24']],m:'#d4af37'},
+ '雪夜香檳':{t:'聖誕',c:[['香檳','#e7d3ad'],['雪白','#f7f5f2'],['夜藍','#25324f'],['銀霧','#c9cbd1']],m:'#e9dcc0'},
+ '經典法式':{t:'法式',c:[['裸粉','#f0d6cf'],['奶白','#fbf7f2'],['透膚','#f3e1d8'],['豆沙','#cfa79f']],m:'#f2efe9'},
+ '黑金法式':{t:'法式',c:[['黑','#1d1b1d'],['裸膚','#ecd2c4'],['奶白','#f7f2ec'],['深咖','#4a352d']],m:'#c9a14a'}
+};
+const THEMES=['隨機','秋冬','韓系','日系','聖誕','法式'];
+const SHAPES=['短圓','方圓','杏仁','芭蕾','長橢圓'];
+const SKINS=[['白皙','#f6dccb'],['自然','#e9c2a4'],['小麥','#cf9c76'],['深膚','#8e5c3e']];
+const FN=['拇指','食指','中指','無名指','小指'];
+// design types: base and accent
+const BASE=['solid','solid','solid','french','ombre','cateye','chrome'];
+const ACC=['glitter','dots','flower','marble','heart','pearl','line','cateye','chrome','french2','star'];
+const DN={solid:'純色',french:'法式',ombre:'漸層',cateye:'貓眼',chrome:'鏡面',glitter:'亮片',dots:'點點',flower:'小花',marble:'大理石',heart:'愛心',pearl:'珍珠',line:'金線',french2:'雙色法式',star:'星星'};
+/* ---------- state ---------- */
+let theme='隨機',shape='方圓',skin=1;let palName='',nails=[],locked=[false,false,false,false,false];
+try{const s=JSON.parse(localStorage.getItem('nail_pref')||'{}');if(SHAPES.includes(s.shape))shape=s.shape;if(s.skin>=0&&s.skin<4)skin=s.skin;if(THEMES.includes(s.theme))theme=s.theme}catch(e){}
+const savePref=()=>{try{localStorage.setItem('nail_pref',JSON.stringify({shape,skin,theme}))}catch(e){}};
+const pick=a=>a[Math.random()*a.length|0];
+function roll(){const names=Object.keys(PAL).filter(n=>theme==='隨機'||PAL[n].t===theme);
+  if(!locked.some(Boolean)||!palName)palName=pick(names);const P=PAL[palName];
+  const baseDesign=palName.includes('法式')?'french':pick(['solid','solid','french','ombre','cateye']);const baseCol=Math.random()*P.c.length|0;
+  const accIdx=Math.random()<.5?[3]:Math.random()<.5?[1,3]:[2,3];
+  for(let i=0;i<5;i++){if(locked[i])continue;const acc=accIdx.includes(i);
+    const d=acc?pick(ACC):(Math.random()<.18?pick(BASE):baseDesign);
+    let c1=acc?(Math.random()*P.c.length|0):(Math.random()<.75?baseCol:(Math.random()*P.c.length|0)),c2=(c1+1+(Math.random()*(P.c.length-1)|0))%P.c.length;
+    nails[i]={d,c1,c2,seed:Math.random()*1e9|0}}
+  render()}
+/* ---------- drawing ---------- */
+const cv=$('cv'),ctx=cv.getContext('2d');
+const ZM=1.3,CX=176,CY=180;
+const F=[{x:92,y:288,a:-1.0,L:92,w:46},{x:142,y:238,a:-.2,L:118,w:40},{x:184,y:230,a:-.03,L:130,w:41},{x:226,y:238,a:.15,L:120,w:39},{x:262,y:258,a:.36,L:96,w:34}];
+function rng(s){return()=>{s^=s<<13;s^=s>>>17;s^=s<<5;return((s>>>0)%10000)/10000}}
+function shade(h,k){const c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)).map(v=>k<0?v*(1+k):v+(255-v)*k);return`rgb(${c.map(v=>Math.round(v)).join(',')})`}
+function nailPath(x,w,top,bot,sh){const r=w/2;x.beginPath();x.moveTo(-r,bot-w*.25);x.quadraticCurveTo(-r,bot,0,bot);x.quadraticCurveTo(r,bot,r,bot-w*.25);
+  if(sh==='短圓'||sh==='長橢圓'){x.lineTo(r,top+r);x.arc(0,top+r,r,0,Math.PI,true)}
+  else if(sh==='方圓'){x.lineTo(r,top+r*.45);x.quadraticCurveTo(r,top,r-r*.45,top);x.lineTo(-r+r*.45,top);x.quadraticCurveTo(-r,top,-r,top+r*.45)}
+  else if(sh==='杏仁'){x.lineTo(r,top+w*.9);x.bezierCurveTo(r*.95,top+w*.25,r*.3,top,0,top);x.bezierCurveTo(-r*.3,top,-r*.95,top+w*.25,-r,top+w*.9)}
+  else{x.lineTo(r,top+w*.7);x.lineTo(r*.55,top);x.lineTo(-r*.55,top);x.lineTo(-r,top+w*.7)}
+  x.closePath()}
+function design(x,n,P,w,top,bot){const R=rng(n.seed),c1=P.c[n.c1][1],c2=P.c[n.c2][1],m=P.m,h=bot-top;
+  const fill=c=>{x.fillStyle=c;x.fillRect(-w,top-5,w*2,h+10)};
+  switch(n.d){
+  case'solid':{const g=x.createLinearGradient(-w/2,0,w/2,0);g.addColorStop(0,shade(c1,-.08));g.addColorStop(.5,c1);g.addColorStop(1,shade(c1,-.12));x.fillStyle=g;x.fillRect(-w,top-5,w*2,h+10);break}
+  case'french':case'french2':{fill(n.d==='french'?'#f1d8cf':c2);x.fillStyle=n.d==='french'?c1:c1;x.beginPath();x.moveTo(-w,top-5);x.lineTo(w,top-5);x.lineTo(w,top+h*.3);x.quadraticCurveTo(0,top+h*.42,-w,top+h*.3);x.fill();if(n.d==='french2'){x.strokeStyle=m;x.lineWidth=1.6;x.beginPath();x.moveTo(-w,top+h*.34);x.quadraticCurveTo(0,top+h*.48,w,top+h*.34);x.stroke()}break}
+  case'ombre':{const g=x.createLinearGradient(0,top,0,bot);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(-w,top-5,w*2,h+10);break}
+  case'cateye':{fill(shade(c1,-.45));const a=R()*.8-.4;x.save();x.rotate(a);const g=x.createLinearGradient(-w/2,0,w/2,0);g.addColorStop(.3,'rgba(255,255,255,0)');g.addColorStop(.5,shade(c1,.55));g.addColorStop(.7,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(-w,top-20,w*2,h+40);x.restore();for(let i=0;i<40;i++){x.fillStyle=`rgba(255,255,255,${R()*.35})`;x.fillRect(-w/2+R()*w,top+R()*h,1,1)}break}
+  case'chrome':{const g=x.createLinearGradient(-w/2,top,w/2,bot);g.addColorStop(0,shade(m,.5));g.addColorStop(.35,m);g.addColorStop(.55,shade(m,-.35));g.addColorStop(.8,shade(m,.4));g.addColorStop(1,m);x.fillStyle=g;x.fillRect(-w,top-5,w*2,h+10);break}
+  case'glitter':{fill(c1);const g=x.createLinearGradient(0,top,0,bot);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(1,'rgba(255,255,255,0)');for(let i=0;i<90;i++){const yy=top+Math.pow(R(),.7)*h,s=.8+R()*2;x.fillStyle=R()<.5?m:'#fff';x.globalAlpha=.5+R()*.5;x.beginPath();x.arc(-w/2+R()*w,yy,s,0,7);x.fill()}x.globalAlpha=1;break}
+  case'dots':{fill(c1);x.fillStyle=c2==c1?'#fff':c2;for(let r=0;r<6;r++)for(let c=0;c<3;c++){x.beginPath();x.arc(-w/3+c*w/3+(r%2?w/6:0),top+6+r*h/6,1.8,0,7);x.fill()}break}
+  case'flower':{fill(c1);const fl=(cx,cy,s)=>{x.fillStyle='#fff';for(let k=0;k<5;k++){const a=k*Math.PI*2/5;x.beginPath();x.ellipse(cx+Math.cos(a)*s,cy+Math.sin(a)*s,s*.75,s*.5,a,0,7);x.fill()}x.fillStyle=m;x.beginPath();x.arc(cx,cy,s*.5,0,7);x.fill()};fl(-w*.12,top+h*.42,4.2);fl(w*.18,top+h*.68,2.8);break}
+  case'marble':{fill('#f6f2ee');x.strokeStyle=c1;x.globalAlpha=.75;for(let k=0;k<3;k++){x.lineWidth=.6+R()*1.4;x.beginPath();let px=-w/2+R()*w,py=top;x.moveTo(px,py);for(let s=0;s<6;s++){px+= (R()-.5)*w*.5;py+=h/6;x.lineTo(px,py)}x.stroke()}x.globalAlpha=1;x.strokeStyle=m;x.lineWidth=.8;x.beginPath();x.moveTo(-w/2,top+h*.3);x.bezierCurveTo(-w*.1,top+h*.5,w*.1,top+h*.2,w/2,top+h*.6);x.stroke();break}
+  case'heart':{fill(c1);x.fillStyle=c2==c1?'#fff':c2;const cx=0,cy=top+h*.48,s=w*.17;x.beginPath();x.moveTo(cx,cy+s*.9);x.bezierCurveTo(cx-s*1.6,cy-s*.2,cx-s*.6,cy-s*1.2,cx,cy-s*.35);x.bezierCurveTo(cx+s*.6,cy-s*1.2,cx+s*1.6,cy-s*.2,cx,cy+s*.9);x.fill();break}
+  case'pearl':{fill(c1);for(let k=0;k<3;k++){const cx=-w*.18+k*w*.18,cy=top+h*.72-Math.abs(k-1)*3,g=x.createRadialGradient(cx-1,cy-1,.5,cx,cy,3.2);g.addColorStop(0,'#fff');g.addColorStop(1,'#d9cfc7');x.fillStyle=g;x.beginPath();x.arc(cx,cy,3,0,7);x.fill()}break}
+  case'line':{fill(c1);x.strokeStyle=m;x.lineWidth=1.5;x.beginPath();x.moveTo(-w/2,top+h*.25);x.lineTo(w/2,top+h*.62);x.stroke();x.lineWidth=.8;x.beginPath();x.moveTo(-w/2,top+h*.35);x.lineTo(w/2,top+h*.72);x.stroke();break}
+  case'star':{fill(shade(c1,-.2));x.fillStyle=m;const st=(cx,cy,r)=>{x.beginPath();for(let k=0;k<8;k++){const a=k*Math.PI/4,rr=k%2?r*.35:r;x.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr)}x.closePath();x.fill()};st(-w*.1,top+h*.38,5);st(w*.15,top+h*.62,3);st(-w*.2,top+h*.75,2);break}
+  }}
+function drawHand(x,S){const u=S/360,P=PAL[palName],sk=SKINS[skin][1];x.save();x.scale(u,u);x.translate(180,180);x.scale(ZM,ZM);x.translate(-CX,-CY);
+  // palm / back of hand
+  const pg=x.createLinearGradient(0,220,0,360);pg.addColorStop(0,sk);pg.addColorStop(1,shade(sk,-.08));x.fillStyle=pg;
+  x.beginPath();x.moveTo(108,300);x.quadraticCurveTo(112,236,150,226);x.lineTo(250,234);x.quadraticCurveTo(282,250,286,290);x.lineTo(296,380);x.lineTo(98,380);x.closePath();x.fill();
+  // sleeve
+  x.fillStyle='rgba(255,255,255,.55)';x.beginPath();x.roundRect(88,334,222,60,18);x.fill();
+  F.forEach((f,i)=>{x.save();x.translate(f.x,f.y);x.rotate(f.a);
+    const fg=x.createLinearGradient(-f.w/2,0,f.w/2,0);fg.addColorStop(0,shade(sk,-.1));fg.addColorStop(.45,sk);fg.addColorStop(1,shade(sk,-.12));x.fillStyle=fg;
+    x.beginPath();x.roundRect(-f.w/2,-f.L,f.w,f.L+30,f.w/2);x.fill();
+    x.strokeStyle=shade(sk,-.18);x.lineWidth=1.2;x.globalAlpha=.5;for(const k of [.42,.68]){x.beginPath();x.moveTo(-f.w*.22,-f.L*k);x.quadraticCurveTo(0,-f.L*k+2,f.w*.22,-f.L*k);x.stroke()}x.globalAlpha=1;
+    // nail
+    const ext={'短圓':2,'方圓':5,'杏仁':16,'芭蕾':16,'長橢圓':13}[shape],nw=f.w*.74,nl=f.L*.36+ext,top=-f.L-ext+4,bot=top+nl;
+    x.save();nailPath(x,nw,top,bot,shape);x.clip();design(x,nails[i],P,nw,top,bot);
+    const gl=x.createLinearGradient(-nw/2,0,nw/2,0);gl.addColorStop(0,'rgba(255,255,255,0)');gl.addColorStop(.25,'rgba(255,255,255,.45)');gl.addColorStop(.38,'rgba(255,255,255,0)');x.fillStyle=gl;x.fillRect(-nw,top,nw*2,nl);x.restore();
+    nailPath(x,nw,top,bot,shape);x.strokeStyle='rgba(60,30,30,.25)';x.lineWidth=1;x.stroke();
+    if(locked[i]){x.fillStyle='rgba(30,20,22,.75)';x.beginPath();x.arc(0,bot+14,9,0,7);x.fill();x.font='11px system-ui';x.textAlign='center';x.textBaseline='middle';x.fillText('🔒',0,bot+14.5)}
+    f.hit={top,bot};x.restore()});
+  x.restore()}
+function render(){ctx.clearRect(0,0,720,720);drawHand(ctx,720);
+  const P=PAL[palName],ds=[...new Set(nails.map(n=>DN[n.d]))].filter(d=>d!=='純色');
+  $('title').textContent=palName+(ds.length?'・'+ds.slice(0,2).join('＋'):'');
+  $('locks').textContent=locked.some(Boolean)?`已鎖 ${locked.filter(Boolean).length} 隻`:'';
+  $('sw').innerHTML=P.c.map(([n,h])=>`<div><i style="background:${h}"></i><b>${n}</b><code>${h}</code></div>`).join('')+`<div><i style="background:linear-gradient(135deg,${shade(P.m,.5)},${P.m},${shade(P.m,-.3)})"></i><b>點綴金屬</b><code>${P.m}</code></div>`;
+  $('fingers').innerHTML=nails.map((n,i)=>`<div><span>${FN[i]}${locked[i]?' 🔒':''}</span><b>${P.c[n.c1][0]}${['ombre','french2'].includes(n.d)?' → '+P.c[n.c2][0]:''}・${DN[n.d]}</b></div>`).join('')+`<div><span>甲型</span><b>${shape}</b></div>`;
+  seg('themes',THEMES,theme,v=>{theme=v;savePref();locked=[false,false,false,false,false];roll()});
+  seg('shapes',SHAPES,shape,v=>{shape=v;savePref();render()});
+  seg('skins',SKINS.map(s=>s[0]),SKINS[skin][0],v=>{skin=SKINS.findIndex(s=>s[0]===v);savePref();render()})}
+function seg(id,items,cur,cb){const el=$(id);el.innerHTML=items.map(v=>`<button type="button" aria-pressed="${v===cur}">${v}</button>`).join('');el.onclick=e=>{const b=e.target.closest('button');if(b)cb(b.textContent)}}
+cv.addEventListener('click',e=>{const r=cv.getBoundingClientRect(),px=((e.clientX-r.left)/r.width*360-180)/ZM+CX,py=((e.clientY-r.top)/r.height*360-180)/ZM+CY;
+  let best=-1,bd=1e9;F.forEach((f,i)=>{const lx=px-f.x,ly=py-f.y,c=Math.cos(-f.a),s=Math.sin(-f.a),fx=lx*c-ly*s,fy=lx*s+ly*c;if(Math.abs(fx)<f.w*.7&&fy<0&&fy>-f.L-25){const d=Math.abs(fy+f.L*.8);if(d<bd){bd=d;best=i}}});
+  if(best>=0){locked[best]=!locked[best];render()}});
+$('go').onclick=roll;
+/* ---------- card + copy ---------- */
+function card(){const c=document.createElement('canvas');c.width=1080;c.height=1350;const a=c.getContext('2d');const P=PAL[palName];
+  a.fillStyle='#f7f0ee';a.fillRect(0,0,1080,1350);const g=a.createRadialGradient(540,420,40,540,480,520);g.addColorStop(0,'#fffaf8');g.addColorStop(1,'#efe3df');a.fillStyle=g;a.beginPath();a.roundRect(60,60,960,860,48);a.fill();
+  a.save();a.beginPath();a.roundRect(60,60,960,860,48);a.clip();a.translate(100,60);const keep=locked;locked=[false,false,false,false,false];drawHandTo(a,880);locked=keep;a.restore();
+  a.fillStyle='#2d2124';a.font='900 58px "Noto Serif TC",serif';a.textAlign='center';a.fillText($('title').textContent,540,1000);
+  const all=[...P.c,['點綴金屬',P.m]];const bw=150,gap=24,x0=540-(all.length*bw+(all.length-1)*gap)/2;
+  all.forEach(([n,h],i)=>{const x=x0+i*(bw+gap);a.fillStyle=h;a.beginPath();a.roundRect(x,1040,bw,110,22);a.fill();a.strokeStyle='#e8d9d5';a.lineWidth=2;a.stroke();a.fillStyle='#2d2124';a.font='700 28px "Noto Sans TC",sans-serif';a.fillText(n,x+bw/2,1194);a.fillStyle='#8c7a7d';a.font='500 22px "DM Mono",monospace';a.fillText(h,x+bw/2,1226)});
+  a.fillStyle='#8c7a7d';a.font='500 26px "Noto Sans TC",sans-serif';a.fillText(`甲型：${shape}　｜　${nails.map((n,i)=>FN[i][0]+DN[n.d]).join('・')}`,540,1290);return c}
+function drawHandTo(a,S){drawHand(a,S)}
+$('save').onclick=()=>{$('img').src=card().toDataURL('image/png');$('ov').hidden=false};
+$('ovx').onclick=()=>$('ov').hidden=true;
+$('copy').onclick=()=>{const P=PAL[palName];const t=`💅 ${$('title').textContent}\n甲型：${shape}\n`+nails.map((n,i)=>`${FN[i]}：${P.c[n.c1][0]}${['ombre','french2'].includes(n.d)?'→'+P.c[n.c2][0]:''}・${DN[n.d]}`).join('\n')+`\n色號：${P.c.map(c=>c[0]+' '+c[1]).join('、')}、點綴 ${P.m}`;
+  const ok=()=>$('ok').textContent='已複製，可以直接傳給美甲師';const fb=()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok()}catch(e){$('ok').textContent='複製失敗，請截圖'}ta.remove()};
+  try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}};
+roll();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<!--site:meta-->
+<meta name="description" content="生一隻專屬你的吉娃娃頭貼">
+<link rel="canonical" href="https://nosmokeagain.github.io/chihuahua/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="吉娃娃配種所｜三分鐘遊樂場">
+<meta property="og:description" content="生一隻專屬你的吉娃娃頭貼">
+<meta property="og:url" content="https://nosmokeagain.github.io/chihuahua/">
+<meta property="og:image" content="https://nosmokeagain.github.io/chihuahua/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>吉娃娃配種所</title>
+<style>
+:root{--bg:#fff4e8;--ink:#2a1f1a;--mute:#8a7566;--card:#fffdf9;--pink:#ff6fa5;--blue:#4b8cf5;--y:#ffcb3d;--line:#2a1f1a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#fff4e8;--ink:#2a1f1a;--mute:#8a7566;--card:#fffdf9}}
+:root[data-theme="dark"]{--bg:#fff4e8;--ink:#2a1f1a;--mute:#8a7566;--card:#fffdf9}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;background-image:radial-gradient(#f3dcc6 1.2px,transparent 1.2px);background-size:18px 18px}
+main{max-width:480px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 14px 40px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px}
+h1{margin:6px 0 2px;font-size:30px;font-weight:900;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--pink)}
+.lead{margin:0 0 12px;color:var(--mute);font-size:14px;font-weight:700}
+#mute{width:38px;height:38px;border:3px solid var(--line);border-radius:12px;background:var(--card);font-size:16px;flex:none}
+.parents{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:var(--card);border:3px solid var(--line);border-radius:18px;padding:8px 8px 10px;box-shadow:0 5px 0 var(--line);position:relative;min-width:0}
+.card .who{position:absolute;top:-12px;left:10px;font-weight:900;font-size:13px;padding:3px 10px;border-radius:99px;border:2px solid var(--line);color:#fff;z-index:2}
+.dad .who{background:var(--blue)}.mom .who{background:var(--pink)}
+.card canvas{display:block;width:100%;aspect-ratio:1/1;border-radius:12px;background:#e4e0db}
+.nm{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:6px 2px 4px;font-weight:900;font-size:15px}
+.nm span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rar{font-size:11px;font-weight:900;padding:2px 7px;border-radius:6px;border:2px solid var(--line);flex:none}
+.r-N{background:#e9e4dc}.r-R{background:#9be3ff}.r-SR{background:#d6a6ff}.r-SSR{background:var(--y)}.r-UR{background:linear-gradient(90deg,#ff7ab6,#ffd24a,#7af0b3,#7ab8ff);}
+.chips{display:flex;flex-wrap:wrap;gap:4px;min-height:44px;align-content:flex-start}
+.chip{font-size:11px;font-weight:800;background:#f6eadc;border-radius:6px;padding:2px 6px}
+.chip.rare{background:#ffe27a}.chip.mut{background:#ffd1e6}
+.btn{appearance:none;border:3px solid var(--line);border-radius:14px;background:var(--y);color:var(--ink);font-family:inherit;font-weight:900;font-size:16px;padding:10px 12px;box-shadow:0 4px 0 var(--line);cursor:pointer;width:100%;margin-top:8px}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.btn:disabled{opacity:.45;pointer-events:none}
+.btn.big{font-size:22px;padding:15px;margin-top:16px;background:var(--pink);color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.2)}
+.btn.ghost{background:var(--card)}
+#babyWrap{margin-top:22px}
+#babyWrap[hidden]{display:none}
+.baby{padding:12px}
+.baby .who{background:linear-gradient(90deg,#ff7ab6,#ffb24a);left:50%;transform:translateX(-50%);font-size:14px}
+.baby canvas{border-radius:14px}
+.bname{text-align:center;margin:10px 0 0;font-size:28px;font-weight:900}
+.bsub{text-align:center;margin:2px 0 8px;font-size:14px;color:var(--mute);font-weight:800}
+.brow{display:flex;justify-content:center;gap:8px;align-items:center;margin-bottom:8px}
+.brow .rar{font-size:15px;padding:3px 12px}
+.genes{display:grid;gap:5px;margin:8px 0}
+.gene{display:grid;grid-template-columns:54px 1fr auto;gap:8px;align-items:center;font-size:14px;font-weight:800;background:#fbf2e7;border-radius:10px;padding:6px 10px}
+.gene small{color:var(--mute);font-weight:700}
+.src{font-size:11px;font-weight:900;padding:2px 7px;border-radius:99px;color:#fff}
+.s-d{background:var(--blue)}.s-m{background:var(--pink)}.s-x{background:linear-gradient(90deg,#9b5cff,#ff5ca8)}
+.comment{text-align:center;font-weight:900;font-size:16px;margin:10px 0 2px}
+.like{display:flex;height:12px;border-radius:99px;overflow:hidden;border:2px solid var(--line);margin:8px 0 2px}
+.like i{background:var(--blue)}.like b{background:var(--pink)}.like s{background:#b58cff}
+.likel{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:var(--mute)}
+.avatar{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center;background:#fbf2e7;border-radius:14px;padding:10px;margin:6px 0 10px}
+.avatar canvas{width:120px;height:120px;border-radius:50%;border:3px solid var(--line);display:block}
+.avr b{font-size:14px}.avr .btn{margin-top:8px;background:var(--pink);color:#fff}
+.sw{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.sw button{width:26px;height:26px;border-radius:50%;border:2px solid rgba(0,0,0,.15);padding:0;cursor:pointer}.sw button[aria-pressed=true]{border:3px solid var(--line);transform:scale(1.1)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.toast{text-align:center;font-weight:800;color:#2e9b5a;min-height:20px;margin:8px 0 0;font-size:14px}
+#dex{text-align:center;color:var(--mute);font-size:12px;font-weight:700;margin-top:14px}
+.ov{position:fixed;inset:0;z-index:20;background:rgba(42,31,26,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px}
+.ov[hidden]{display:none}
+.ov img{max-width:100%;max-height:74vh;border-radius:12px}
+.ov p{color:#fff;margin:0;font-weight:800}
+.flash{position:fixed;inset:0;pointer-events:none;z-index:15;opacity:0}
+.flash.go{animation:fl 1s ease-out}
+@keyframes fl{0%{opacity:.95}100%{opacity:0}}
+.shake{animation:sh .12s linear infinite}
+@keyframes sh{0%{transform:translate(1px,0) rotate(.5deg)}50%{transform:translate(-1px,1px) rotate(-.5deg)}100%{transform:translate(1px,-1px) rotate(.3deg)}}
+.pop{animation:pp .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pp{from{transform:scale(.6)}}
+.heart{position:fixed;z-index:16;pointer-events:none;font-size:28px;animation:hu 1.4s ease-out forwards}
+@keyframes hu{to{transform:translateY(-140px) scale(1.4);opacity:0}}
+</style>
+</head>
+<body>
+<main>
+  <header><div><h1>吉娃娃<em>配種所</em></h1><p class="lead">抽一公一母，生一隻你專屬的吉娃娃頭貼。</p></div><button id="mute" aria-label="聲音開關">🔊</button></header>
+  <section class="parents">
+    <div class="card dad"><span class="who">♂ 爸爸</span><canvas id="cD" width="360" height="360"></canvas><div class="nm"><span id="nD">？？？</span><span class="rar r-N" id="rD">?</span></div><div class="chips" id="gD"></div><button class="btn" id="bD">抽爸爸</button></div>
+    <div class="card mom"><span class="who">♀ 媽媽</span><canvas id="cM" width="360" height="360"></canvas><div class="nm"><span id="nM">？？？</span><span class="rar r-N" id="rM">?</span></div><div class="chips" id="gM"></div><button class="btn" id="bM">抽媽媽</button></div>
+  </section>
+  <button class="btn big" id="breed" disabled>💕 配種</button>
+  <section id="babyWrap" hidden>
+    <div class="card baby"><span class="who">👶 寶寶誕生</span><canvas id="cB" width="720" height="720"></canvas>
+      <p class="bname" id="bn"></p><p class="bsub" id="bs"></p>
+      <div class="brow"><span class="rar" id="br"></span><span id="bp" style="font-weight:800;font-size:13px;color:var(--mute)"></span></div>
+      <div class="avatar"><canvas id="cA" width="512" height="512"></canvas><div class="avr"><b>換成頭貼長這樣</b><div class="sw" id="sw"></div><button class="btn" id="saveA">📸 存成頭貼</button></div></div>
+      <div class="like" id="like"></div><div class="likel"><span id="lD"></span><span id="lX"></span><span id="lM"></span></div>
+      <p class="comment" id="cm"></p>
+      <div class="genes" id="genes"></div>
+      <button class="btn" id="again">🍼 同一對再生一胎</button>
+      <div class="row2"><button class="btn ghost" id="save">🪪 出生證明</button><button class="btn ghost" id="copy">複製戰績</button></div>
+      <p class="toast" id="toast"></p>
+    </div>
+  </section>
+  <p id="dex"></p>
+</main>
+<div class="flash" id="flash"></div>
+<div class="ov" id="ov" hidden><img id="ovimg" alt="吉娃娃寶寶證"><p>長按圖片可直接存到相簿</p><div style="display:flex;gap:10px"><a class="btn" id="ovdl" download="chihuahua.png" style="width:auto;padding:10px 22px;text-decoration:none;text-align:center">⬇️ 下載圖片</a><button class="btn ghost" id="ovx" style="width:auto;padding:10px 26px">關閉</button></div></div>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+/* ---------- audio ---------- */
+let ac=null,master=null,muted=false;
+try{muted=localStorage.getItem('ch_mute')==='1'}catch(e){}
+$('mute').textContent=muted?'🔇':'🔊';
+function silentWav(){const n=800,b=new ArrayBuffer(44+n),v=new DataView(b),w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,'data');v.setUint32(40,n,true);for(let i=0;i<n;i++)v.setUint8(44+i,128);return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
+function initAudio(){if(ac){if(ac.state==='suspended')ac.resume();return}
+  try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+  try{const a=new Audio(silentWav());a.loop=true;a.play().catch(()=>{})}catch(e){}
+  const C=window.AudioContext||window.webkitAudioContext;if(!C)return;ac=new C();master=ac.createGain();master.gain.value=muted?0:.9;master.connect(ac.destination)}
+function osc(type,f,t,d,p,f2){if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(p,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(master);o.start(t);o.stop(t+d+.05)}
+const T=()=>ac?ac.currentTime:0;
+const sfx={tick(){osc('square',900+Math.random()*500,T(),.03,.06)},
+  yip(p=1){const t=T();osc('sawtooth',900*p,t,.09,.14,1500*p);osc('sine',1400*p,t+.02,.07,.1,700*p)},
+  ding(){const t=T();[880,1175].forEach((f,i)=>osc('triangle',f,t+i*.07,.2,.18))},
+  fan(r){const t=T(),n=[[523,659],[523,659,784],[523,659,784,1046],[523,659,784,1046,1318],[523,659,784,1046,1318,1568]][r];n.forEach((f,i)=>osc('triangle',f,t+i*.08,.35,.2))},
+  heart(){const t=T();osc('sine',660,t,.15,.15,990)},
+  squeak(){const t=T();osc('sine',1800,t,.12,.18,2600);osc('sine',2200,t+.14,.1,.14,1600)}};
+
+/* ---------- genes ---------- */
+// [label, weight, rarity points]
+const G={
+  coat:[['奶油色',10,0],['黑棕色',8,0],['巧克力',8,0],['雪白',7,0],['虎斑',5,1],['灰藍',4,1],['乳牛斑',4,1],['粉紅',1,3],['彩虹',.35,6]],
+  head:[['蘋果頭',14,0],['鹿頭',4,0],['方頭',2,1],['倒三角頭',2,1],['巨頭',3,2],['迷你頭',2,2]],
+  ears:[['雷達大耳',12,0],['小耳朵',3,0],['一隻垂耳',5,1],['蝙蝠耳',3,1],['兔子耳',2,2],['天線',.7,4]],
+  eyes:[['水汪汪凸眼',10,0],['超級凸眼',3,2],['豆豆眼',6,0],['鬥雞眼',4,1],['大小眼',4,1],['三白眼',3,1],['星星眼',1,3],['獨眼',.5,5]],
+  mouth:[['吐舌',9,0],['嘟嘴',7,0],['貓咪嘴',6,0],['地包天暴牙',3,1],['咬牙切齒',1.5,1],['大叫中',1.5,1],['八字鬍',1,3]],
+  body:[['標準',8,0],['歪頭',6,0],['雙下巴',3,1],['鼓鼓臉',3,1]],
+  expr:[['茫然',10,0],['瞇眼笑',6,0],['睥睨',4,1],['厭世',3,1],['驚嚇',3,1],['想睡',3,1],['翻白眼',.8,2]],
+  extra:[['無',18,0],['腮紅',8,0],['蝴蝶結',5,1],['小花',4,1],['呆毛',4,1],['生日帽',2,2],['墨鏡',1.5,3],['超粗眉',1.5,1],['空錢包',1.2,3],['皇冠胎記',.6,4],['第三隻眼',.4,5]]
+};
+const KEYS=['coat','head','ears','eyes','expr','mouth','body','extra'];
+const KNAME={coat:'毛色',head:'頭型',ears:'耳朵',eyes:'眼睛',expr:'表情',mouth:'嘴巴',body:'姿勢',extra:'特徵'};
+const COAT={'奶油色':['#efc78f','#fff1d9'],'黑棕色':['#2e2420','#d2934f'],'巧克力':['#7a4a2a','#c99a72'],'雪白':['#f7f3ec','#ffffff'],'虎斑':['#a9733f','#f0d2a8'],'灰藍':['#8996a6','#d3dae2'],'乳牛斑':['#fbfaf6','#ffffff'],'粉紅':['#ff9ec7','#ffe1ee'],'彩虹':['#ff9ec7','#fff']};
+function pick(list,boost=1){const tot=list.reduce((a,x,i)=>a+(i?x[1]*1:x[1])*(x[2]>=3?boost:1),0);let r=Math.random()*tot;for(const x of list){r-=x[1]*(x[2]>=3?boost:1);if(r<=0)return x[0]}return list[0][0]}
+const ptsOf=(k,v)=>G[k].find(x=>x[0]===v)[2];
+function randDog(){const g={};for(const k of KEYS)g[k]=pick(G[k]);
+  g.hs=.9+Math.random()*.2;g.es=.85+Math.random()*.3;g.ear=.85+Math.random()*.3;g.leg=.85+Math.random()*.3;g.hue=Math.random()*360;g.turn=(Math.random()-.5)*.6;g.seed=Math.random()*1e9|0;return g}
+function rarity(g){let p=0;for(const k of KEYS)p+=ptsOf(k,g[k]);return p>=10?'UR':p>=7?'SSR':p>=4?'SR':p>=2?'R':'N'}
+const RIDX={N:0,R:1,SR:2,SSR:3,UR:4};
+const DADN=['阿福','老大','Lucky','黑皮','大雄','Money','阿宅','皮皮','肉鬆','可樂','麥克','旺來'];
+const MOMN=['公主','小花','Coco','咪咪','露露','妞妞','Bella','珍珠','奶茶','香香','Lily','甜甜'];
+const BABY=['麻糬','皮蛋','滷蛋','豆花','黑輪','珍奶','肉圓','芋圓','鹹酥雞','臭豆腐','雞排','車輪餅','米糕','貢丸','蚵仔煎','鳳梨酥','地瓜球','肉粽','布丁','蔥抓餅'];
+const NICK={'彩虹':'彩虹','粉紅':'粉紅','獨眼':'獨眼','星星眼':'星星','天線':'外星','第三隻眼':'開天眼','皇冠胎記':'皇室','八字鬍':'紳士','鬥雞眼':'鬥雞','地包天暴牙':'暴牙','蝙蝠耳':'蝙蝠','巨頭':'大頭','迷你頭':'小頭','兔子耳':'兔兔','三白眼':'兇','超級凸眼':'金魚','蝴蝶結':'公主','小花':'花花','生日帽':'壽星','墨鏡':'墨鏡','貓咪嘴':'貓貓','睥睨':'不屑','厭世':'厭世','驚嚇':'吉碎','想睡':'愛睏','瞇眼笑':'奸笑','翻白眼':'白眼','大叫中':'吵鬧','雙下巴':'肥肥','鼓鼓臉':'河豚','歪頭':'疑惑','大小眼':'大小眼','咬牙切齒':'森七七','空錢包':'窮'};
+
+/* ---------- drawing ---------- */
+function rng(seed){let s=seed>>>0||1;return()=>{s^=s<<13;s^=s>>>17;s^=s<<5;return((s>>>0)%10000)/10000}}
+function hex2rgb(h){h=h.replace('#','');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]}
+function shade(h,k){const c=hex2rgb(h).map(v=>k<0?v*(1+k):v+(255-v)*k);return`rgb(${c.map(v=>Math.round(Math.max(0,Math.min(255,v)))).join(',')})`}
+
+const SCENES={beach:'🏖️',cafe:'☕',garden:'🌷',night:'🌃'};
+function bokeh(x,S,R,cols,n,rmin,rmax,ymin,ymax){for(let i=0;i<n;i++){const r=S*(rmin+R()*(rmax-rmin)),cx=R()*S,cy=S*(ymin+R()*(ymax-ymin)),c=cols[i%cols.length],g=x.createRadialGradient(cx,cy,0,cx,cy,r);g.addColorStop(0,c);g.addColorStop(.7,c.replace(/[\d.]+\)$/,m=>(parseFloat(m)*.6)+')'));g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.beginPath();x.arc(cx,cy,r,0,7);x.fill()}}
+function drawScene(x,S,k){const R=rng(k.length*977+13);
+  if(k==='beach'){let g=x.createLinearGradient(0,0,0,S*.5);g.addColorStop(0,'#4fa9e8');g.addColorStop(1,'#bfe6ff');x.fillStyle=g;x.fillRect(0,0,S,S*.5);
+    g=x.createLinearGradient(0,S*.46,0,S*.6);g.addColorStop(0,'#2fc6d1');g.addColorStop(1,'#7fe3e0');x.fillStyle=g;x.fillRect(0,S*.46,S,S*.14);
+    g=x.createLinearGradient(0,S*.58,0,S);g.addColorStop(0,'#f6e7cc');g.addColorStop(1,'#e2c9a0');x.fillStyle=g;x.fillRect(0,S*.58,S,S*.42);
+    x.fillStyle='rgba(255,255,255,.75)';for(let i=0;i<3;i++){const cx=S*(.08+i*.34+(i===1?.5:0))%S;x.globalAlpha=.55;x.beginPath();x.roundRect(cx-S*.09,S*.3,S*.18,S*.26,S*.02);x.fill();x.fillStyle='rgba(255,250,240,.9)';x.beginPath();x.moveTo(cx-S*.13,S*.31);x.lineTo(cx,S*.24);x.lineTo(cx+S*.13,S*.31);x.closePath();x.fill();x.fillStyle='rgba(255,255,255,.75)'}x.globalAlpha=1;
+    x.fillStyle='rgba(180,120,60,.35)';for(let i=0;i<4;i++){x.beginPath();x.roundRect(S*(.02+i*.27),S*.66+i%2*S*.05,S*.2,S*.04,S*.01);x.fill()}
+    bokeh(x,S,R,['rgba(255,255,255,.35)'],8,.02,.05,.05,.5);}
+  else if(k==='cafe'){const g=x.createLinearGradient(0,0,0,S);g.addColorStop(0,'#6b4a35');g.addColorStop(1,'#c9a27d');x.fillStyle=g;x.fillRect(0,0,S,S);bokeh(x,S,R,['rgba(255,214,140,.55)','rgba(255,240,200,.45)','rgba(255,170,90,.4)'],22,.03,.09,0,.75)}
+  else if(k==='garden'){const g=x.createLinearGradient(0,0,0,S);g.addColorStop(0,'#bfe8b0');g.addColorStop(1,'#5aa860');x.fillStyle=g;x.fillRect(0,0,S,S);bokeh(x,S,R,['rgba(255,182,214,.6)','rgba(255,255,255,.55)','rgba(255,236,140,.5)'],26,.02,.07,0,1)}
+  else if(k==='night'){const g=x.createLinearGradient(0,0,0,S);g.addColorStop(0,'#141a3a');g.addColorStop(1,'#3a2a5a');x.fillStyle=g;x.fillRect(0,0,S,S);bokeh(x,S,R,['rgba(255,120,200,.5)','rgba(120,200,255,.5)','rgba(255,220,120,.5)'],24,.03,.08,0,1)}}
+function furCoat(x,R,head,H,hy,hiC,darkC,baseC){
+  // edge fringe: short strands poking out of the silhouette
+  const rx=head==='方頭'?H*.98:head==='鹿頭'?H*.86:H*1.0,ry=head==='鹿頭'?H*.95:H*.86,cy=hy-H*.12;
+  x.lineCap='round';
+  for(let i=0;i<380;i++){const a=R()*Math.PI*2,px=Math.cos(a)*rx,py=cy+Math.sin(a)*ry*(Math.sin(a)>0?1.0:1.0);
+    const nx=Math.cos(a),ny=Math.sin(a),l=H*(.03+R()*.045),j=(R()-.5)*.5;
+    x.strokeStyle=R()<.6?baseC:hiC;x.globalAlpha=.32;x.lineWidth=H*.012+R()*H*.008;
+    x.beginPath();x.moveTo(px-nx*l*.6,py-ny*l*.6);x.quadraticCurveTo(px+nx*l*.2+j*l,py+ny*l*.2,px+nx*l*.7+j*l*.6,py+ny*l*.7);x.stroke()}
+  // inner strands flowing from the crown
+  x.save();headPath(x,head,H,hy);x.clip();
+  for(let i=0;i<420;i++){const a=R()*Math.PI*2,r=Math.sqrt(R())*H*.95,px=Math.cos(a)*r,py=hy-H*.3+Math.sin(a)*r*.95,dx=px,dy=py-(hy-H*.6),d=Math.hypot(dx,dy)||1,l=H*(.04+R()*.06);
+    x.strokeStyle=R()<.8?hiC:darkC;x.globalAlpha=.08+R()*.1;x.lineWidth=H*.012+R()*H*.01;x.beginPath();x.moveTo(px,py);x.lineTo(px+dx/d*l,py+dy/d*l);x.stroke()}
+  // soft rim light on the upper-left edge
+  const rl=x.createRadialGradient(-H*.7,hy-H*.7,H*.1,-H*.7,hy-H*.7,H*.9);rl.addColorStop(0,'rgba(255,250,235,.35)');rl.addColorStop(1,'rgba(255,250,235,0)');x.globalAlpha=1;x.fillStyle=rl;x.fillRect(-H*1.3,hy-H*1.3,H*2.6,H*2.6);
+  x.restore();x.globalAlpha=1}
+function earFur(x,R,g,H,hy,baseC,hiC){if(g.ears==='天線')return;x.lineCap='round';for(const s of [-1,1]){for(let i=0;i<40;i++){const t=R(),px=s*H*(.62+t*.55),py=hy-H*(.5+t*.55)+ (R()-.5)*H*.1,l=H*(.04+R()*.05);x.strokeStyle=R()<.5?baseC:hiC;x.globalAlpha=.25;x.lineWidth=H*.01;x.beginPath();x.moveTo(px,py);x.lineTo(px+s*l,py-l*.2);x.stroke()}}x.globalAlpha=1}
+let stillDraw=false;
+function drawDog(c,g,t,opts={}){stillDraw=!!opts.still;
+  const x=c.getContext('2d'),S=c.width,u=S/360;x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,S,S);
+  const bgc=opts.bg||'#e9e5e0';if(SCENES[bgc])drawScene(x,S,bgc);else{const bg=x.createRadialGradient(S*.5,S*.42,S*.05,S*.5,S*.5,S*.75);bg.addColorStop(0,shade(bgc,.35));bg.addColorStop(1,bgc);x.fillStyle=bg;x.fillRect(0,0,S,S);}
+  if(!g){x.fillStyle='#b9b3ab';x.font=`900 ${150*u}px system-ui`;x.textAlign='center';x.textBaseline='middle';x.fillText('?',S/2,S/2);return}
+  const R=rng(g.seed),[base,light]=COAT[g.coat],rainbow=g.coat==='彩虹',dark=rainbow?'#9a6fd0':shade(base,-.3),hi=rainbow?'#fff':shade(base,.3);
+  const shiver=(opts.still?0:1)*Math.sin(t*38+g.seed)*1.2*u;
+  const H=92*g.hs*(g.head==='巨頭'?1.25:g.head==='迷你頭'?.72:1);
+  const b=g.body,chestW=b==='胖嘟嘟'?1.6:b==='竹竿脖'?.95:b==='肌肉'?1.55:1.25,neckW=b==='竹竿脖'?.3:b==='胖嘟嘟'?.95:.6;
+  const outline='rgba(45,28,20,.45)';
+  x.save();if(opts.fit){x.translate(S*.5,S*.5);x.scale(opts.fit,opts.fit);x.translate(-S*.5,-S*.5+S*.04)}x.scale(u,u);x.translate(180+shiver/u,0);x.lineJoin='round';x.lineCap='round';
+  const hy=185;
+  // ears
+  x.save();if(b==='歪頭'){x.translate(0,hy);x.rotate(-.22);x.translate(0,-hy)}
+  drawEars(x,g,H,hy,base,dark,rainbow);earFur(x,R,g,H,hy,rainbow?'#ffd36e':base,rainbow?'#fff':hi);
+  // head
+  headPath(x,g.head,H,hy);const hg=x.createRadialGradient(-H*.15,hy-H*.55,H*.1,0,hy,H*1.15);hg.addColorStop(0,rainbow?'#fff':hi);hg.addColorStop(.55,rainbow?'#ffd36e':base);hg.addColorStop(1,rainbow?'#7ab8ff':dark);x.fillStyle=hg;x.fill();
+  x.save();headPath(x,g.head,H,hy);x.clip();
+  if(rainbow){const rg=x.createLinearGradient(-H,hy-H,H,hy+H);['#ff7ab6','#ffb24a','#ffe45a','#7af0b3','#7ab8ff','#b58cff'].forEach((c2,i)=>rg.addColorStop(i/5,c2));x.globalAlpha=.55;x.fillStyle=rg;x.fillRect(-H*1.3,hy-H*1.3,H*2.6,H*2.6);x.globalAlpha=1}
+  pattern(x,g,R,0,hy,H,H,'head');
+  // tan points / brows
+  x.fillStyle=g.coat==='黑棕色'?light:'rgba(255,255,255,.25)';for(const s of [-1,1]){x.beginPath();x.ellipse(s*H*.36,hy-H*.36,H*.12,H*.08,s*.3,0,7);x.fill()}
+  // eye socket shading
+  for(const s of [-1,1]){const ex=s*H*.48,ey=hy+H*.02,sg=x.createRadialGradient(ex,ey,H*.2,ex,ey,H*.48);sg.addColorStop(0,'rgba(40,25,20,.35)');sg.addColorStop(1,'rgba(40,25,20,0)');x.fillStyle=sg;x.fillRect(ex-H*.5,ey-H*.5,H,H)}
+  // forehead wrinkle shading
+  x.strokeStyle='rgba(60,40,30,.25)';x.lineWidth=2;for(let i=0;i<2;i++){x.beginPath();x.moveTo(-H*.16,hy-H*.42-i*H*.08);x.quadraticCurveTo(0,hy-H*.5-i*H*.08,H*.16,hy-H*.42-i*H*.08);x.stroke()}
+  x.restore();
+  furCoat(x,R,g.head,H,hy,rainbow?'#fff2c4':hi,rainbow?'#c9a2ff':dark,rainbow?'#ffd36e':base);
+  if(b==='鼓鼓臉'){x.fillStyle=rainbow?'#ffd9ec':base;for(const s of [-1,1]){x.beginPath();x.ellipse(s*H*.62,hy+H*.42,H*.36,H*.3,0,0,7);x.fill();x.strokeStyle=outline;x.lineWidth=2;x.stroke()}}
+  if(b==='雙下巴'){x.fillStyle=rainbow?'#ffd9ec':base;x.beginPath();x.ellipse(0,hy+H*.72,H*.55,H*.2,0,0,7);x.fill();x.strokeStyle=outline;x.beginPath();x.arc(0,hy+H*.62,H*.45,Math.PI*.15,Math.PI*.85);x.stroke()}
+  const fx=(g.turn||0)*H*.35;x.save();x.translate(fx,0);
+  // muzzle
+  const long=g.head==='鹿頭',my=hy+H*(long?.5:.42),mrx=H*(long?.32:.36),mry=H*(long?.3:.27);
+  const mg=x.createRadialGradient(0,my-mry*.3,2,0,my,mrx*1.2);mg.addColorStop(0,rainbow?'#fff':light);mg.addColorStop(1,rainbow?'#ffe0ef':shade(light==='#ffffff'?'#f3efe9':light,-.08));x.fillStyle=mg;x.beginPath();x.ellipse(0,my,mrx,mry,0,0,7);x.fill();
+  x.fillStyle='rgba(70,50,50,.28)';x.beginPath();x.ellipse(0,my+mry*.15,mrx*.75,mry*.75,0,0,7);x.fill();
+  x.fillStyle='rgba(40,25,20,.18)';x.beginPath();x.ellipse(0,my+mry*1.05,mrx*.8,mry*.35,0,0,7);x.fill();
+  if(g.extra==='腮紅'){x.fillStyle='rgba(255,90,140,.4)';for(const s of [-1,1]){x.beginPath();x.ellipse(s*H*.62,hy+H*.32,H*.15,H*.09,0,0,7);x.fill()}}
+  x.save();x.translate(-fx*.2,0);drawEyes(x,g,H,hy,t,rainbow?'#ffd36e':shade(rainbow?'#ffd36e':base,.05));x.restore();
+  // nose
+  const ny=my-mry*.45;x.save();x.translate(0,ny);x.scale(1.3,1.3);x.translate(0,-ny);const ng=x.createRadialGradient(-H*.04,ny-H*.04,1,0,ny,H*.16);ng.addColorStop(0,'#6a5a5c');ng.addColorStop(1,'#241c1d');x.fillStyle=ng;
+  x.beginPath();x.moveTo(-H*.14,ny-H*.03);x.bezierCurveTo(-H*.13,ny-H*.12,H*.13,ny-H*.12,H*.14,ny-H*.03);x.bezierCurveTo(H*.13,ny+H*.07,H*.04,ny+H*.1,0,ny+H*.1);x.bezierCurveTo(-H*.04,ny+H*.1,-H*.13,ny+H*.07,-H*.14,ny-H*.03);x.fill();
+  x.fillStyle='#120c0c';for(const s of [-1,1]){x.beginPath();x.ellipse(s*H*.055,ny+H*.01,H*.03,H*.018,s*.5,0,7);x.fill()}
+  x.fillStyle='rgba(255,255,255,.45)';x.beginPath();x.ellipse(-H*.03,ny-H*.06,H*.04,H*.015,0,0,7);x.fill();x.restore();
+  drawMouth(x,g,H,ny,mry,t);
+  x.restore();x.save();x.translate(fx,0);
+  // whiskers
+  x.strokeStyle='rgba(60,45,40,.35)';x.lineWidth=1.1;for(const s of [-1,1])for(let i=0;i<3;i++){x.beginPath();x.moveTo(s*H*.18,my+i*H*.04-H*.02);x.quadraticCurveTo(s*H*.5,my-H*.04+i*H*.05,s*H*(.75+i*.06),my-H*.1+i*H*.09);x.stroke()}
+  x.restore();
+  // extras
+  const ink='#2a1f1a';
+  if(g.extra==='呆毛'){x.strokeStyle=dark;x.lineWidth=3.5;x.beginPath();x.moveTo(0,hy-H*.85);x.bezierCurveTo(-H*.1,hy-H*1.3,H*.35,hy-H*1.35,H*.15,hy-H*1.05);x.stroke()}
+  if(g.extra==='超粗眉'){x.fillStyle='#1d1513';for(const s of [-1,1]){x.save();x.translate(s*H*.46,hy-H*.36);x.rotate(s*.28);x.beginPath();x.roundRect(-H*.2,-H*.055,H*.4,H*.11,H*.05);x.fill();x.restore()}}
+  if(g.extra==='第三隻眼'){x.fillStyle='#fff';x.beginPath();x.ellipse(0,hy-H*.6,H*.12,H*.16,0,0,7);x.fill();x.strokeStyle=outline;x.stroke();x.fillStyle='#6b2fd6';x.beginPath();x.arc(0,hy-H*.58,H*.075,0,7);x.fill();x.fillStyle='#fff';x.beginPath();x.arc(-H*.025,hy-H*.61,H*.02,0,7);x.fill()}
+  if(g.extra==='蝴蝶結'){x.save();x.translate(H*.5,hy-H*.78);x.rotate(.35);const bc='#ff6fa5';x.fillStyle=bc;x.strokeStyle='rgba(120,20,60,.5)';x.lineWidth=2;for(const s of [-1,1]){x.beginPath();x.moveTo(0,0);x.quadraticCurveTo(s*H*.32,-H*.26,s*H*.36,0);x.quadraticCurveTo(s*H*.32,H*.26,0,0);x.fill();x.stroke()}x.fillStyle='#ff4f8f';x.beginPath();x.arc(0,0,H*.08,0,7);x.fill();x.stroke();x.fillStyle='rgba(255,255,255,.5)';x.beginPath();x.ellipse(-H*.18,-H*.06,H*.06,H*.03,-.4,0,7);x.fill();x.restore()}
+  if(g.extra==='小花'){x.save();x.translate(-H*.58,hy-H*.72);for(let i=0;i<5;i++){const a=i*Math.PI*2/5;x.fillStyle='#fff';x.strokeStyle='rgba(0,0,0,.15)';x.lineWidth=1.5;x.beginPath();x.ellipse(Math.cos(a)*H*.12,Math.sin(a)*H*.12,H*.1,H*.07,a,0,7);x.fill();x.stroke()}x.fillStyle='#ffcb3d';x.beginPath();x.arc(0,0,H*.08,0,7);x.fill();x.restore()}
+  if(g.extra==='生日帽'){x.save();x.translate(H*.05,hy-H*.85);x.rotate(.18);x.fillStyle='#7ab8ff';x.beginPath();x.moveTo(-H*.3,0);x.lineTo(0,-H*.7);x.lineTo(H*.3,0);x.closePath();x.fill();x.save();x.clip();x.strokeStyle='#ffe45a';x.lineWidth=H*.08;for(let i=0;i<4;i++){x.beginPath();x.moveTo(-H*.4,-i*H*.2+H*.05);x.lineTo(H*.4,-i*H*.2-H*.15);x.stroke()}x.restore();x.fillStyle='#ff6fa5';x.beginPath();x.arc(0,-H*.72,H*.09,0,7);x.fill();x.fillStyle='#fff';x.beginPath();x.ellipse(0,0,H*.32,H*.06,0,0,7);x.fill();x.restore()}
+  if(g.extra==='墨鏡'){const fx2=(g.turn||0)*H*.35*.8,ey2=hy+H*.03;x.save();x.translate(fx2,0);x.fillStyle='#141012';for(const s of [-1,1]){x.beginPath();x.roundRect(s*H*.5-H*.3,ey2-H*.2,H*.6,H*.38,H*.14);x.fill()}x.fillRect(-H*.22,ey2-H*.12,H*.44,H*.06);x.fillStyle='rgba(255,255,255,.35)';for(const s of [-1,1]){x.beginPath();x.roundRect(s*H*.5-H*.22,ey2-H*.14,H*.18,H*.06,H*.03);x.fill()}x.restore()}
+  if(g.extra==='皇冠胎記'){x.fillStyle='#e8b021';x.beginPath();const cy=hy-H*.66,w=H*.2;x.moveTo(-w,cy+H*.07);x.lineTo(-w,cy-H*.06);x.lineTo(-w*.5,cy+H*.02);x.lineTo(0,cy-H*.1);x.lineTo(w*.5,cy+H*.02);x.lineTo(w,cy-H*.06);x.lineTo(w,cy+H*.07);x.closePath();x.fill()}
+  x.restore();
+  if(g.extra==='空錢包'){x.save();x.translate(-78,292);x.rotate(-.35);const wg=x.createLinearGradient(-30,-30,30,30);wg.addColorStop(0,'#5a3524');wg.addColorStop(1,'#2a160e');x.fillStyle=wg;x.beginPath();x.moveTo(-30,-20);x.lineTo(26,-30);x.lineTo(32,24);x.lineTo(-24,30);x.closePath();x.fill();x.fillStyle='#7a4a33';x.beginPath();x.moveTo(-30,-20);x.lineTo(-8,-46);x.lineTo(40,-48);x.lineTo(26,-30);x.closePath();x.fill();x.fillStyle='#ffd23a';x.beginPath();x.ellipse(-22,26,14,18,.3,0,7);x.fill();x.restore();
+    x.save();x.translate(80,288);x.rotate(-.2);x.fillStyle='#ffd23a';x.strokeStyle='#d39a12';x.lineWidth=2;x.beginPath();x.ellipse(0,0,26,16,0,0,7);x.fill();x.stroke();for(let i=0;i<4;i++){x.beginPath();x.ellipse(20+i*2,-12+i*8,14,6,.15,0,7);x.fill();x.stroke()}x.beginPath();x.ellipse(-8,-16,7,13,-.5,0,7);x.fill();x.stroke();x.restore()}
+  x.restore()}
+function furStrokes(x,R,x0,y0,w,h,lc,dc,n){x.lineWidth=1.4;for(let i=0;i<n;i++){const px=x0+R()*w,py=y0+R()*h,a=Math.PI/2+(R()-.5)*.8,l=5+R()*8;x.strokeStyle=R()<.5?lc:dc;x.globalAlpha=.35;x.beginPath();x.moveTo(px,py);x.lineTo(px+Math.cos(a)*l,py+Math.sin(a)*l);x.stroke()}x.globalAlpha=1}
+function cheekFur(x,R,H,hy,col){x.fillStyle=col;x.globalAlpha=.7;for(const s of [-1,1])for(let i=0;i<6;i++){const a=(s<0?Math.PI:0)+s*(.15+i*.12),r=H*(.98-i*.03),px=Math.cos(a)*r,py=hy+Math.sin(a)*r*.9+H*.1;x.beginPath();x.moveTo(px-s*2,py-5);x.lineTo(px+s*(4+R()*3),py+2+R()*2);x.lineTo(px-s*2,py+6);x.closePath();x.fill()}x.globalAlpha=1}
+function headPath(x,h,H,hy){x.beginPath();
+  if(h==='鹿頭'){x.moveTo(-H*.85,hy-H*.2);x.bezierCurveTo(-H*.9,hy-H*1.0,H*.9,hy-H*1.0,H*.85,hy-H*.2);x.bezierCurveTo(H*.8,hy+H*.5,H*.4,hy+H*.95,0,hy+H*.95);x.bezierCurveTo(-H*.4,hy+H*.95,-H*.8,hy+H*.5,-H*.85,hy-H*.2);x.closePath()}
+  else if(h==='方頭')x.roundRect(-H*.98,hy-H*.88,H*1.96,H*1.62,H*.36);
+  else if(h==='倒三角頭'){x.moveTo(-H*1.1,hy-H*.7);x.quadraticCurveTo(0,hy-H*1.12,H*1.1,hy-H*.7);x.quadraticCurveTo(H*.75,hy+H*.5,0,hy+H*.85);x.quadraticCurveTo(-H*.75,hy+H*.5,-H*1.1,hy-H*.7);x.closePath()}
+  else{x.moveTo(-H*1.0,hy-H*.05);x.bezierCurveTo(-H*1.08,hy-H*1.12,H*1.08,hy-H*1.12,H*1.0,hy-H*.05);x.bezierCurveTo(H*.96,hy+H*.45,H*.5,hy+H*.72,0,hy+H*.74);x.bezierCurveTo(-H*.5,hy+H*.72,-H*.96,hy+H*.45,-H*1.0,hy-H*.05);x.closePath()}}
+function drawEars(x,g,H,hy,base,dark,rainbow){const e=g.ears,es=g.ear,outline='rgba(45,28,20,.45)';
+  const ear=(s,ang,len,wid,droop)=>{x.save();x.translate(s*H*.62,hy-H*.5);x.rotate(s*ang+(droop?s*1.9:0));
+    const og=x.createLinearGradient(0,0,0,-len);og.addColorStop(0,rainbow?'#ffb24a':base);og.addColorStop(1,rainbow?'#b58cff':dark);x.fillStyle=og;
+    x.beginPath();x.moveTo(-wid,0);x.bezierCurveTo(-wid*.95,-len*.55,-wid*.3,-len*.97,0,-len);x.bezierCurveTo(wid*.35,-len*.97,wid*.95,-len*.5,wid,0);x.closePath();x.fill();x.strokeStyle=outline;x.lineWidth=2;x.stroke();
+    const ig=x.createLinearGradient(0,0,0,-len);ig.addColorStop(0,'#b9898a');ig.addColorStop(.5,'#eab9b3');ig.addColorStop(1,'#f6d2cc');x.fillStyle=ig;
+    x.beginPath();x.moveTo(-wid*.62,-6);x.bezierCurveTo(-wid*.6,-len*.5,-wid*.18,-len*.82,0,-len*.85);x.bezierCurveTo(wid*.22,-len*.82,wid*.6,-len*.45,wid*.62,-6);x.closePath();x.fill();
+    x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;for(let i=0;i<7;i++){const f=i/6;x.beginPath();x.moveTo(-wid*.55+f*wid*1.1,-len*.04);x.lineTo(-wid*.45+f*wid*.9,-len*(.22+.1*Math.sin(i)));x.stroke()}x.restore()};
+  if(e==='雷達大耳'){ear(-1,.68,H*1.25*es,H*.52,0);ear(1,.68,H*1.25*es,H*.52,0)}
+  else if(e==='小耳朵'){ear(-1,.6,H*.62*es,H*.32,0);ear(1,.6,H*.62*es,H*.32,0)}
+  else if(e==='一隻垂耳'){ear(-1,.68,H*1.2*es,H*.5,0);ear(1,.3,H*1.0*es,H*.44,1)}
+  else if(e==='蝙蝠耳'){ear(-1,1.1,H*1.32*es,H*.62,0);ear(1,1.1,H*1.32*es,H*.62,0)}
+  else if(e==='兔子耳'){ear(-1,.15,H*1.55*es,H*.24,0);ear(1,.15,H*1.55*es,H*.24,0)}
+  else if(e==='天線'){for(const s of [-1,1]){x.strokeStyle='#3a2c26';x.lineWidth=3;x.beginPath();x.moveTo(s*H*.3,hy-H*.78);x.quadraticCurveTo(s*H*.6,hy-H*1.4,s*H*.45,hy-H*1.62);x.stroke();const bg=x.createRadialGradient(s*H*.45-3,hy-H*1.7-3,1,s*H*.45,hy-H*1.68,H*.13);bg.addColorStop(0,'#fff');bg.addColorStop(1,s<0?'#3fd18f':'#ff4f97');x.fillStyle=bg;x.beginPath();x.arc(s*H*.45,hy-H*1.68,H*.12,0,7);x.fill()}ear(-1,.68,H*.66*es,H*.34,0);ear(1,.68,H*.66*es,H*.34,0)}}
+const EXPR={'茫然':{top:.06,bot:0},'睥睨':{top:.5,bot:.14,side:1},'厭世':{top:.56,bot:.06,droop:1},'想睡':{top:.72,bot:.12},'驚嚇':{top:0,bot:0,wide:1},'翻白眼':{top:.3,bot:0,up:1},'瞇眼笑':{smile:1}};
+function drawEyes(x,g,H,hy,t,lidCol){const e=g.eyes,ey=hy+H*.03,ex=H*.48,base=H*.25*g.es,ex2=EXPR[g.expr]||EXPR['茫然'],turn=g.turn||0;
+  const blink=(!stillDraw&&Math.sin(t*.9+g.seed)>.985)?.12:1;const look=Math.sin(t*.6+g.seed%7)*base*.06+(ex2.side?base*.38*(g.seed%2?1:-1):0)+turn*base*.6;
+  const lookY=ex2.up?-base*.62:0;
+  const rim=(cx,r)=>{x.strokeStyle='rgba(25,15,12,.85)';x.lineWidth=2.4;x.beginPath();x.ellipse(cx,ey,r,r*blink,0,0,7);x.stroke()};
+  const lid=(cx,r,s)=>{const top=ex2.top,bot=ex2.bot;if(!top&&!bot)return;x.save();x.beginPath();x.ellipse(cx,ey,r+1,r+1,0,0,7);x.clip();x.fillStyle=lidCol;
+    if(top){const ly=ey-r+2*r*top,tilt=ex2.droop?s*r*.35:0;x.beginPath();x.moveTo(cx-r*1.2,ey-r*1.3);x.lineTo(cx+r*1.2,ey-r*1.3);x.lineTo(cx+r*1.2,ly+tilt);x.quadraticCurveTo(cx,ly+r*.12,cx-r*1.2,ly-tilt);x.closePath();x.fill();
+      x.strokeStyle='rgba(25,15,12,.9)';x.lineWidth=3;x.beginPath();x.moveTo(cx-r*1.2,ly-tilt);x.quadraticCurveTo(cx,ly+r*.12,cx+r*1.2,ly+tilt);x.stroke()}
+    if(bot){const ly=ey+r-2*r*bot;x.fillStyle=lidCol;x.beginPath();x.moveTo(cx-r*1.2,ey+r*1.3);x.lineTo(cx+r*1.2,ey+r*1.3);x.lineTo(cx+r*1.2,ly);x.quadraticCurveTo(cx,ly-r*.1,cx-r*1.2,ly);x.closePath();x.fill();x.strokeStyle='rgba(25,15,12,.5)';x.lineWidth=2;x.beginPath();x.moveTo(cx-r*1.2,ly);x.quadraticCurveTo(cx,ly-r*.1,cx+r*1.2,ly);x.stroke()}
+    x.restore()};
+  const dark=(cx,r,s,px=0,bulge=0)=>{if(ex2.smile){x.strokeStyle='rgba(25,15,12,.9)';x.lineWidth=3.5;x.beginPath();x.arc(cx,ey+r*.35,r*.75,Math.PI*1.15,Math.PI*1.85);x.stroke();return}
+    if(bulge){// socket bulge: shadow under the ball + skin ring
+      x.save();x.shadowColor='rgba(30,18,12,.45)';x.shadowBlur=r*.35;x.shadowOffsetY=r*.12;x.fillStyle=lidCol;x.beginPath();x.ellipse(cx,ey,r*1.1,r*1.1,0,0,7);x.fill();x.restore();
+      const rg=x.createRadialGradient(cx,ey,r*.9,cx,ey,r*1.14);rg.addColorStop(0,'rgba(40,25,20,0)');rg.addColorStop(.35,'rgba(40,25,20,.5)');rg.addColorStop(1,'rgba(40,25,20,0)');x.fillStyle=rg;x.beginPath();x.ellipse(cx,ey,r*1.12,r*1.12,0,0,7);x.fill()}
+    x.save();x.beginPath();x.ellipse(cx,ey,r,r*blink,0,0,7);x.clip();
+    const sg=x.createRadialGradient(cx-r*.35,ey-r*.35,r*.1,cx,ey,r*1.05);sg.addColorStop(0,'#fffdf8');sg.addColorStop(.7,'#ece4da');sg.addColorStop(1,'#b9ab9e');x.fillStyle=sg;x.fillRect(cx-r,ey-r,r*2,r*2);
+    const ir=ex2.wide?r*.62:bulge?r*.8:r*.95,dv=bulge?s*r*(bulge>1?.2:.1):s*r*.1;
+    const ix=cx+px+(ex2.wide?s*r*.08:dv),iy=ey+lookY+r*.04;
+    const gr=x.createRadialGradient(ix-ir*.25,iy-ir*.25,ir*.05,ix,iy,ir);gr.addColorStop(0,'#4b3a33');gr.addColorStop(.6,'#1a110e');gr.addColorStop(1,'#0a0605');x.fillStyle=gr;x.beginPath();x.arc(ix,iy,ir,0,7);x.fill();
+    // sphere shading over the whole ball
+    const bs=x.createRadialGradient(cx-r*.3,ey-r*.35,r*.2,cx,ey,r);bs.addColorStop(0,'rgba(255,255,255,0)');bs.addColorStop(.75,'rgba(0,0,0,0)');bs.addColorStop(1,'rgba(0,0,0,.35)');x.fillStyle=bs;x.fillRect(cx-r,ey-r,r*2,r*2);
+    x.fillStyle='rgba(255,255,255,.95)';x.beginPath();x.roundRect(cx-r*.55,ey-r*.62,r*.4,r*.3,r*.1);x.fill();x.beginPath();x.arc(cx+r*.4,ey+r*.4,r*.07,0,7);x.fill();
+    if(bulge){x.strokeStyle='rgba(255,255,255,.55)';x.lineWidth=r*.07;x.beginPath();x.arc(cx,ey,r*.8,Math.PI*1.05,Math.PI*1.45);x.stroke()}
+    x.restore();lid(cx,r,s);rim(cx,r)};
+  const eye=(cx,r,px,py,pr,kind,s)=>{x.fillStyle='#f6f2ec';x.beginPath();x.ellipse(cx,ey,r,r*blink,0,0,7);x.fill();if(blink===1){
+    if(kind==='star'){x.fillStyle='#f2b81f';star(x,cx+px,ey+py,pr*1.3);x.fill()}else{const gr=x.createRadialGradient(cx+px-pr*.3,ey+py-pr*.3,1,cx+px,ey+py,pr);gr.addColorStop(0,'#4b3a33');gr.addColorStop(1,'#0a0605');x.fillStyle=gr;x.beginPath();x.arc(cx+px,ey+py,pr,0,7);x.fill();x.fillStyle='#fff';x.beginPath();x.arc(cx+px-pr*.35,ey+py-pr*.35,pr*.28,0,7);x.fill()}}lid(cx,r,s);rim(cx,r)};
+  const sz=s=>(1-s*turn*.55)*(ex2.wide?1.15:1);
+  if(e==='水汪汪凸眼'){for(const s of [-1,1])dark(s*H*.54,base*1.38*sz(s),s,look,1)}
+  else if(e==='超級凸眼'){for(const s of [-1,1])dark(s*H*.62,base*1.65*sz(s),s,look*.5,2)}
+  else if(e==='豆豆眼'){for(const s of [-1,1])dark(s*ex,base*.6*sz(s),s,look*.5)}
+  else if(e==='鬥雞眼'){for(const s of [-1,1])eye(s*ex,base*1.1*sz(s),-s*base*.5,lookY*.5,base*.55,'',s)}
+  else if(e==='大小眼'){dark(-ex,base*1.45*sz(-1),-1,look);dark(ex,base*.72*sz(1),1,look*.5)}
+  else if(e==='三白眼'){for(const s of [-1,1])eye(s*ex,base*1.05*sz(s),look*.5,-base*.45,base*.32,'',s)}
+  else if(e==='星星眼'){for(const s of [-1,1])eye(s*ex,base*1.15*sz(s),0,0,base*.62,'star',s)}
+  else if(e==='獨眼'){dark(0,base*1.8,0,look)}}
+function star(x,cx,cy,r){x.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;x.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr)}x.closePath()}
+function drawMouth(x,g,H,ny,mry,t){const m=g.mouth,lip='#3a2a2a';x.lineCap='round';const y=ny+H*.13;
+  x.strokeStyle=lip;x.lineWidth=2.2;x.beginPath();x.moveTo(0,ny+H*.09);x.lineTo(0,y);x.stroke();
+  if(m==='貓咪嘴'){x.lineWidth=2.6;x.beginPath();x.moveTo(-H*.17,y+H*.02);x.quadraticCurveTo(-H*.08,y+H*.1,0,y);x.quadraticCurveTo(H*.08,y+H*.1,H*.17,y+H*.02);x.stroke()}
+  else if(m==='嘟嘴'){x.lineWidth=2.6;x.beginPath();x.moveTo(-H*.2,y+H*.06);x.quadraticCurveTo(-H*.1,y-H*.01,0,y);x.quadraticCurveTo(H*.1,y-H*.01,H*.2,y+H*.06);x.stroke();x.fillStyle='rgba(58,42,42,.75)';x.beginPath();x.ellipse(0,y+H*.07,H*.11,H*.045,0,0,7);x.fill()}
+  else if(m==='吐舌'){const tl=H*.24+Math.sin(t*5)*H*.02,tg=x.createLinearGradient(0,y,0,y+tl);tg.addColorStop(0,'#e0566f');tg.addColorStop(1,'#ff8aa0');x.fillStyle=tg;x.beginPath();x.roundRect(-H*.09,y,H*.18,tl,H*.09);x.fill();x.strokeStyle='rgba(150,30,50,.5)';x.lineWidth=1.5;x.beginPath();x.moveTo(0,y+3);x.lineTo(0,y+tl*.6);x.stroke();x.strokeStyle=lip;x.lineWidth=2.4;x.beginPath();x.moveTo(-H*.18,y+H*.01);x.quadraticCurveTo(0,y+H*.05,H*.18,y+H*.01);x.stroke()}
+  else if(m==='地包天暴牙'){x.fillStyle='rgba(58,42,42,.85)';x.beginPath();x.ellipse(0,y+H*.07,H*.17,H*.06,0,0,7);x.fill();x.fillStyle='#fffaf0';for(const s of [-1,1]){x.beginPath();x.moveTo(s*H*.1-H*.035,y+H*.07);x.lineTo(s*H*.1,y-H*.04);x.lineTo(s*H*.1+H*.035,y+H*.07);x.closePath();x.fill()}}
+  else if(m==='咬牙切齒'){x.fillStyle='#3a2a2a';x.beginPath();x.roundRect(-H*.2,y-H*.01,H*.4,H*.13,H*.05);x.fill();x.fillStyle='#fffaf0';x.beginPath();x.roundRect(-H*.18,y+H*.005,H*.36,H*.1,H*.03);x.fill();x.strokeStyle='rgba(60,40,40,.6)';x.lineWidth=1.4;x.beginPath();for(let i=1;i<5;i++){x.moveTo(-H*.18+i*H*.072,y);x.lineTo(-H*.18+i*H*.072,y+H*.1)}x.moveTo(-H*.18,y+H*.055);x.lineTo(H*.18,y+H*.055);x.stroke()}
+  else if(m==='大叫中'){const o=.8+Math.abs(Math.sin(t*9))*.3;x.fillStyle='#3d1418';x.beginPath();x.ellipse(0,y+H*.08,H*.14,H*.13*o,0,0,7);x.fill();x.fillStyle='#ff7a90';x.beginPath();x.ellipse(0,y+H*.14*o,H*.08,H*.04,0,0,7);x.fill();x.fillStyle='#fffaf0';for(const s of [-1,1]){x.beginPath();x.moveTo(s*H*.09,y-H*.01);x.lineTo(s*H*.07,y+H*.04);x.lineTo(s*H*.05,y);x.fill()}}
+  else if(m==='八字鬍'){x.strokeStyle='#1d1513';x.lineWidth=5;for(const s of [-1,1]){x.beginPath();x.moveTo(0,y-H*.02);x.bezierCurveTo(s*H*.15,y+H*.08,s*H*.35,y+H*.04,s*H*.38,y-H*.1);x.stroke()}x.strokeStyle=lip;x.lineWidth=2.4;x.beginPath();x.moveTo(-H*.1,y+H*.07);x.quadraticCurveTo(0,y+H*.05,H*.1,y+H*.07);x.stroke()}}
+function pattern(x,g,R,cx,cy,rx,ry,part){
+  if(g.coat==='虎斑'){x.save();x.strokeStyle='rgba(60,30,10,.32)';x.lineWidth=5;for(let i=-5;i<=5;i++){x.beginPath();x.moveTo(cx+i*rx*.22,cy-ry);x.quadraticCurveTo(cx+i*rx*.22+8,cy,cx+i*rx*.22-5,cy+ry);x.stroke()}x.restore()}
+  if(g.coat==='乳牛斑'){x.save();x.fillStyle='rgba(30,22,20,.92)';for(let i=0;i<(part==='head'?2:3);i++){const px=cx+(R()-.5)*rx*1.3,py=cy+(R()-.5)*ry*1.1,r=rx*(part==='chest'?.1+R()*.1:.16+R()*.2);x.beginPath();x.ellipse(px,py,r,r*(.7+R()*.4),R()*3,0,7);x.fill()}x.restore()}}
+
+/* ---------- state & UI ---------- */
+let dad=null,mom=null,baby=null,rolling={D:false,M:false},bornAt=0;
+const dex=new Set();try{JSON.parse(localStorage.getItem('ch_dex')||'[]').forEach(v=>dex.add(v))}catch(e){}
+function showDex(){$('dex').textContent=dex.size?`你已經生過 ${dex.size} 種組合的寶寶（共 ${KEYS.reduce((a,k)=>a*G[k].length,1).toLocaleString()} 種）`:''}
+showDex();
+function chips(el,g){el.innerHTML=KEYS.filter(k=>!(k==='extra'&&g[k]==='無')).map(k=>`<span class="chip ${ptsOf(k,g[k])>=3?'rare':''}">${g[k]}</span>`).join('')}
+function setParent(which,g){const D=which==='D';if(D)dad=g;else mom=g;
+  $(D?'nD':'nM').textContent=g.name;const r=rarity(g);const el=$(D?'rD':'rM');el.textContent=r;el.className='rar r-'+r;chips($(D?'gD':'gM'),g);
+  $(D?'bD':'bM').textContent=D?'換一隻公的':'換一隻母的';$('breed').disabled=!(dad&&mom)}
+function roll(which){initAudio();if(rolling[which])return;rolling[which]=true;const D=which==='D',btn=$(D?'bD':'bM');btn.disabled=true;
+  let n=0;const tmp={};const iv=setInterval(()=>{Object.assign(tmp,randDog());(D?(dad=tmp):(mom=tmp));sfx.tick();n++;
+    if(n>=14){clearInterval(iv);const g=randDog();g.name=(D?DADN:MOMN)[Math.random()*12|0];setParent(which,g);rolling[which]=false;btn.disabled=false;sfx.yip(D?.8:1.15);
+      $(D?'cD':'cM').classList.remove('pop');void $(D?'cD':'cM').offsetWidth;$(D?'cD':'cM').classList.add('pop');const r=rarity(g);if(RIDX[r]>=3)flash(r)}},70)}
+function flash(r){const f=$('flash');f.style.background=r==='UR'?'radial-gradient(circle,#fff,#ff7ab6 40%,#7ab8ff)':r==='SSR'?'radial-gradient(circle,#fff,#ffcb3d)':'radial-gradient(circle,#fff,#d6a6ff)';f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}
+function inherit(){const g={},src={};let mut=0;
+  for(const k of KEYS){const r=Math.random();if(r<.1){g[k]=pick(G[k],4);src[k]='x';mut++}else if(r<.55){g[k]=dad[k];src[k]='d'}else{g[k]=mom[k];src[k]='m'}
+    if(src[k]!=='x'&&dad[k]===mom[k])src[k]='b'}
+  const mix=(a,b)=>(a+b)/2+(Math.random()-.5)*.18;
+  g.hs=mix(dad.hs,mom.hs);g.es=mix(dad.es,mom.es);g.ear=mix(dad.ear,mom.ear);g.leg=mix(dad.leg,mom.leg);g.turn=(Math.random()-.5)*.6;g.seed=Math.random()*1e9|0;
+  const nick=KEYS.map(k=>NICK[g[k]]).filter(Boolean);g.name=(nick.length?nick[Math.random()*nick.length|0]:'')+BABY[Math.random()*BABY.length|0];
+  return{g,src,mut}}
+function comment(mut,likeD,likeM){if(mut>=4)return'爸爸開始懷疑人生了 🤔';if(mut===3)return'親戚看到都愣住了';if(mut===2)return'有自己的想法';if(likeD>=70)return'根本是爸爸縮小版';if(likeM>=70)return'跟媽媽一個模子刻出來';return mut?'有一點點突變':'爸媽的完美混合'}
+let last={};
+function breed(){if(!dad||!mom)return;initAudio();$('breed').disabled=true;
+  const r=$('breed').getBoundingClientRect();for(let i=0;i<10;i++)setTimeout(()=>{const h=document.createElement('div');h.className='heart';h.textContent=['💕','💗','💞','❤️'][i%4];h.style.left=(r.left+Math.random()*r.width)+'px';h.style.top=(r.top-10)+'px';document.body.appendChild(h);sfx.heart();setTimeout(()=>h.remove(),1500)},i*90);
+  $('babyWrap').hidden=false;baby=null;const cB=$('cB');cB.classList.add('shake');['bn','bs','cm','lD','lX','lM'].forEach(i=>$(i).textContent='');$('bn').textContent='生產中⋯';$('br').textContent='';$('br').className='rar';$('genes').innerHTML='';$('like').innerHTML='';$('toast').textContent='';
+  setTimeout(()=>$('babyWrap').scrollIntoView({behavior:'smooth',block:'start'}),150);
+  setTimeout(()=>{cB.classList.remove('shake');const res=inherit();baby=res.g;bornAt=performance.now();last=res;
+    const rr=rarity(baby);sfx.squeak();sfx.fan(RIDX[rr]);if(RIDX[rr]>=2)flash(rr);cB.classList.remove('pop');void cB.offsetWidth;cB.classList.add('pop');
+    let d=0,m=0,x=0;for(const k of KEYS){const s=res.src[k];if(s==='d')d++;else if(s==='m')m++;else if(s==='b'){d+=.5;m+=.5}else x++}
+    const pd=Math.round(d/KEYS.length*100),pm=Math.round(m/KEYS.length*100),px=100-pd-pm;
+    $('bn').textContent=baby.name;
+    const look=['ears','eyes','mouth','head'].map(k=>baby[k]).filter((v,i)=>ptsOf(['ears','eyes','mouth','head'][i],v)>=1).slice(0,2);
+    $('bs').textContent=[...look,baby.coat].join('・')+' 吉娃娃';
+    $('br').textContent=rr;$('br').className='rar r-'+rr;$('bp').textContent=`${dad.name} × ${mom.name}`;
+    $('like').innerHTML=`<i style="width:${pd}%"></i><s style="width:${px}%"></s><b style="width:${pm}%"></b>`;$('lD').textContent=`像爸爸 ${pd}%`;$('lX').textContent=px?`突變 ${px}%`:'';$('lM').textContent=`像媽媽 ${pm}%`;
+    $('cm').textContent=comment(res.mut,pd,pm);
+    $('genes').innerHTML=KEYS.map(k=>{const s=res.src[k],lab=s==='d'?'爸爸':s==='m'?'媽媽':s==='b'?'爸媽都有':'✨突變',cls=s==='d'?'s-d':s==='m'?'s-m':s==='b'?'s-d':'s-x';
+      return`<div class="gene"><small>${KNAME[k]}</small><span>${baby[k]}</span><span class="src ${cls}" ${s==='b'?'style="background:linear-gradient(90deg,#4b8cf5,#ff6fa5)"':''}>${lab}</span></div>`}).join('');
+    const key=KEYS.map(k=>baby[k]).join('|');dex.add(key);try{localStorage.setItem('ch_dex',JSON.stringify([...dex].slice(-500)))}catch(e){}showDex();
+    $('breed').disabled=false;$('breed').textContent='💕 再配一次';
+  },1300)}
+$('bD').onclick=()=>roll('D');$('bM').onclick=()=>roll('M');$('breed').onclick=breed;$('again').onclick=breed;
+
+/* ---------- share ---------- */
+function shareText(){if(!baby)return'';const url=/github\.io/.test(location.host)?'\n'+location.href.split('#')[0]:'';
+  return`我生了一隻【${rarity(baby)}】吉娃娃「${baby.name}」當頭貼🐶\n${KEYS.filter(k=>baby[k]!=='無'&&baby[k]!=='標準').map(k=>baby[k]).join('・')}\n你的吉娃娃長怎樣？換上來看看${url}`}
+function card(){const c=document.createElement('canvas');c.width=1080;c.height=1350;const a=c.getContext('2d');
+  a.fillStyle='#fff4e8';a.fillRect(0,0,1080,1350);a.fillStyle='#f3dcc6';for(let y=20;y<1350;y+=40)for(let x=20;x<1080;x+=40){a.beginPath();a.arc(x,y,3,0,7);a.fill()}
+  a.fillStyle='#fffdf9';a.strokeStyle='#2a1f1a';a.lineWidth=8;a.beginPath();a.roundRect(60,60,960,1230,40);a.fill();a.stroke();
+  a.fillStyle='#2a1f1a';a.font='900 44px system-ui,sans-serif';a.textAlign='center';a.fillText('🐶 吉娃娃出生證明',540,140);
+  const big=document.createElement('canvas');big.width=big.height=720;drawDog(big,baby,1,{still:true,bg:avBg});a.drawImage(big,180,150,720,720);
+  const r=rarity(baby),col={N:'#e9e4dc',R:'#9be3ff',SR:'#d6a6ff',SSR:'#ffcb3d',UR:'#ff9ec7'}[r];
+  a.fillStyle=col;a.beginPath();a.roundRect(440,860,200,64,14);a.fill();a.lineWidth=5;a.stroke();a.fillStyle='#2a1f1a';a.font='900 44px system-ui';a.fillText(r,540,908);
+  a.font='900 76px system-ui';a.fillText(baby.name,540,1010);
+  a.font='800 34px system-ui';a.fillStyle='#8a7566';a.fillText($('bs').textContent,540,1062);
+  a.fillStyle='#2a1f1a';a.font='900 38px system-ui';a.fillText($('cm').textContent,540,1130);
+  a.font='700 30px system-ui';a.fillStyle='#8a7566';a.fillText(`爸爸 ${dad.name} × 媽媽 ${mom.name}`,540,1185);
+  a.font='700 26px ui-monospace,monospace';a.fillText(/github\.io/.test(location.host)?location.host+location.pathname.replace(/index\.html$/,''):'吉娃娃配種所',540,1250);
+  return c}
+$('save').onclick=()=>{if(baby)shareCanvas(card(),'chihuahua.png')};
+/* ---------- avatar ---------- */
+const BGS=['beach','cafe','garden','night','#ffd6e0','#cfe8ff','#fff1b8','#e6dcff'];
+let avBg=BGS[0];try{const v=localStorage.getItem('ch_bg');if(BGS.includes(v))avBg=v}catch(e){}
+$('sw').innerHTML=BGS.map(c=>SCENES[c]?`<button style="background:#fff;font-size:14px" data-c="${c}" aria-label="背景" aria-pressed="${c===avBg}">${SCENES[c]}</button>`:`<button style="background:${c}" data-c="${c}" aria-label="背景色" aria-pressed="${c===avBg}"></button>`).join('');
+$('sw').onclick=e=>{const b=e.target.closest('button');if(!b)return;avBg=b.dataset.c;try{localStorage.setItem('ch_bg',avBg)}catch(_){}$('sw').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));sfx.tick()};
+function avatarCanvas(){const c=document.createElement('canvas');c.width=c.height=1080;drawDog(c,baby,1,{still:true,bg:avBg,fit:1});return c}
+let dlURL=null;
+async function shareCanvas(c,name){c.toBlob(async b=>{if(!b)return;const f=new File([b],name,{type:'image/png'});
+  const touch=matchMedia('(pointer:coarse)').matches;
+  if(touch&&navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]});$('toast').textContent='已開啟分享，選「儲存影像」就存到相簿';return}catch(e){if(e&&e.name==='AbortError')return}}
+  if(dlURL)URL.revokeObjectURL(dlURL);dlURL=URL.createObjectURL(b);const a=$('ovdl');a.href=dlURL;a.download=name;
+  if(!touch){a.click();$('toast').textContent='圖片已下載';return}
+  $('ovimg').src=dlURL;$('ov').hidden=false},'image/png')}
+$('saveA').onclick=()=>{if(baby)shareCanvas(avatarCanvas(),'chihuahua-avatar.png')};
+$('ovx').onclick=()=>$('ov').hidden=true;
+$('copy').onclick=()=>{const t=shareText(),ok=()=>$('toast').textContent='複製好了，去炫耀吧';
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(ok,fb);else fb();
+  function fb(){const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,t.length);try{document.execCommand('copy');ok()}catch(e){$('toast').textContent='長按自己複製吧'}ta.remove()}};
+$('mute').onclick=()=>{muted=!muted;$('mute').textContent=muted?'🔇':'🔊';try{localStorage.setItem('ch_mute',muted?'1':'0')}catch(e){}if(master)master.gain.setTargetAtTime(muted?0:.9,ac.currentTime,.02)};
+
+/* ---------- loop ---------- */
+const CACHE=new Map();
+function cached(g,S,opts){const key=g?[g.seed,g.coat,g.head,g.ears,g.eyes,g.expr,g.mouth,g.body,g.extra,S,opts.bg,opts.fit||0].join('|'):'none|'+S+opts.bg;let c=CACHE.get(key);
+  if(!c){c=document.createElement('canvas');c.width=c.height=S;drawDog(c,g,0,Object.assign({},opts,{still:true}));CACHE.set(key,c);if(CACHE.size>40)CACHE.delete(CACHE.keys().next().value)}return c}
+function paint(cv,g,t,opts){const S=cv.width,img=cached(g,S,opts),x=cv.getContext('2d'),sh=g?Math.sin(t*38+(g.seed||0))*S*.004:0;x.setTransform(1,0,0,1,0,0);x.drawImage(img,-S*.01+sh,-S*.01,S*1.02,S*1.02)}
+function loop(ts){const t=ts/1000;paint($('cD'),dad,t,{bg:'#d6e6ff'});paint($('cM'),mom,t+1.3,{bg:'#ffdbe8'});paint($('cB'),baby,t+2.1,{bg:avBg});if(baby)paint($('cA'),baby,t+2.1,{bg:avBg,fit:1});requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:meta-->
+<meta name="description" content="第一次買美股？選你的券商，告訴你最省的開始方式。">
+<link rel="canonical" href="https://nosmokeagain.github.io/us-stock/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="美股怎麼買最省｜三分鐘遊樂場">
+<meta property="og:description" content="第一次買美股？選你的券商，告訴你最省的開始方式。">
+<meta property="og:url" content="https://nosmokeagain.github.io/us-stock/">
+<meta property="og:image" content="https://nosmokeagain.github.io/us-stock/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>美股怎麼買最省</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: questions card on the left, answer beside it (stacked on phones). Soft sage ground, money-green accent, white cards. */
+:root{
+  --bg:#eef3f0;--paper:#ffffff;--soft:#f5f8f6;--ink:#1e2a2f;--mute:#62717a;--line:#dbe4df;
+  --accent:#13795b;--accentSoft:#e2f1ea;--accentInk:#ffffff;--warn:#a2551a;--warnSoft:#fbefe4;
+  --shadow:0 1px 2px rgba(20,40,32,.05),0 6px 20px rgba(20,40,32,.06);
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111916;--paper:#18221e;--soft:#1d2924;--ink:#e6eeea;--mute:#98a8a0;--line:#2a3833;--accent:#5cc79b;--accentSoft:#1f3a2f;--accentInk:#0c1712;--warn:#eaa26a;--warnSoft:#3a2a1d;--shadow:none;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111916;--paper:#18221e;--soft:#1d2924;--ink:#e6eeea;--mute:#98a8a0;--line:#2a3833;--accent:#5cc79b;--accentSoft:#1f3a2f;--accentInk:#0c1712;--warn:#eaa26a;--warnSoft:#3a2a1d;--shadow:none;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65}
+.wrap{max-width:1000px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 72px}
+header{display:grid;gap:8px;margin-bottom:24px}
+.eyebrow{justify-self:start;font-size:13px;font-weight:700;color:var(--accent);background:var(--accentSoft);border-radius:999px;padding:2px 12px}
+h1{margin:0;font-size:clamp(30px,7vw,44px);font-weight:900;line-height:1.2;text-wrap:balance;letter-spacing:.01em}
+.lead{margin:0;color:var(--mute);max-width:34em}
+.grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:820px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--paper);border-radius:20px;padding:20px;display:grid;gap:22px;box-shadow:var(--shadow)}
+@media (min-width:821px){.panel{position:sticky;top:calc(16px + env(safe-area-inset-top,0px))}}
+.step{display:grid;gap:10px}
+.step h2{margin:0;font-size:15.5px;font-weight:700;display:flex;gap:10px;align-items:center}
+.step h2 i{font-style:normal;width:22px;height:22px;border-radius:50%;background:var(--accentSoft);color:var(--accent);display:grid;place-items:center;font:600 12px var(--mono)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:var(--soft);color:var(--ink);border-radius:12px;padding:9px 14px;font:500 15px var(--sans);cursor:pointer;min-height:44px;transition:background .15s,border-color .15s}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accentSoft);border-color:var(--accent);color:var(--accent);font-weight:700}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--soft);border:1.5px solid var(--line);border-radius:14px;padding:4px}
+.seg .chip{border:0;background:none;border-radius:10px;text-align:center;line-height:1.3}
+.seg .chip small{display:block;font-size:12px;font-weight:500;color:var(--mute)}
+.seg .chip[aria-pressed="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.chip:focus-visible,a:focus-visible,summary:focus-visible,.peek:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.res{display:grid;gap:14px}
+.res > h2{margin:0;font-size:19px;font-weight:900}
+.card{background:var(--paper);border-radius:18px;padding:18px;display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:4px 14px;align-items:start;box-shadow:var(--shadow);border:1.5px solid transparent}
+.card.first{border-color:var(--accent)}
+.rk{grid-row:1/3;width:36px;height:36px;border-radius:50%;background:var(--soft);color:var(--mute);display:grid;place-items:center;font:600 16px var(--mono)}
+.first .rk{background:var(--accent);color:var(--accentInk)}
+.nm{font-size:18px;font-weight:900;line-height:1.35;min-width:0}
+.nm em{display:block;font-style:normal;font-weight:500;color:var(--mute);font-size:13px}
+.cost{text-align:right;line-height:1.3}
+.cost b{display:block;font:600 21px var(--mono)}
+.cost span{font-size:12px;color:var(--mute)}
+.tags{grid-column:2/4;display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font-size:12.5px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--soft);color:var(--mute)}
+.tag.ok{background:var(--accentSoft);color:var(--accent)}.tag.new{background:var(--warnSoft);color:var(--warn)}
+.why{grid-column:2/4;margin:6px 0 0;font-size:14px;color:var(--mute)}
+.go{grid-column:1/4;margin-top:12px;background:var(--soft);border-radius:14px;padding:12px 14px}
+.go b{font-size:14px}
+.go ol{margin:6px 0 0;padding-left:20px;font-size:14px;display:grid;gap:3px}
+.sub{display:grid;gap:10px;margin-top:10px}
+.sub h3{margin:0;font-size:16px;font-weight:900}
+.sub > p{margin:0;font-size:14px;color:var(--mute)}
+.ov{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.oc{background:var(--paper);border-radius:16px;padding:14px;display:grid;gap:4px;box-shadow:var(--shadow);align-content:start}
+.oc b{font-size:16px}
+.oc .c{font:600 17px var(--mono)}
+.oc .c span{font:500 12px var(--sans);color:var(--mute);margin-left:4px}
+.oc p{margin:0;font-size:13px;color:var(--mute)}
+section{margin-top:40px;display:grid;gap:12px}
+section h2{margin:0;font-size:19px;font-weight:900}
+.terms{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.term{background:var(--paper);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow)}
+.term h3{margin:0 0 4px;font-size:15px}
+.term p{margin:0;font-size:14px;color:var(--mute)}
+details{font-size:13px;color:var(--mute)}
+summary{cursor:pointer;font-weight:700;color:var(--ink)}
+details div{margin-top:8px;display:grid;gap:6px}
+details a{color:var(--accent)}
+.peek{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:5;border:0;border-radius:999px;background:var(--accent);color:var(--accentInk);font:700 15px var(--sans);padding:12px 22px;box-shadow:0 8px 24px rgba(0,0,0,.18);cursor:pointer;white-space:nowrap}
+.fade{animation:fd .25s ease}
+@keyframes fd{from{opacity:.4}}
+@media (prefers-reduced-motion:reduce){.fade{animation:none}.chip{transition:none}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">第一次買美股</div>
+  <h1>美股怎麼買最省</h1>
+  <p class="lead">回答三題，直接告訴你從哪裡開始、手續費大概多少。開戶都不用錢。</p>
+</header>
+
+<div class="grid">
+  <div class="panel">
+    <div class="step"><h2><i>1</i>你現在有哪家券商的帳戶？</h2><div class="chips" id="brk"></div></div>
+    <div class="step"><h2><i>2</i>你想怎麼買？</h2><div class="seg" id="how"></div></div>
+    <div class="step"><h2><i>3</i><span id="amtq">每個月買多少？</span></h2><div class="chips" id="amt"></div></div>
+  </div>
+  <div class="res" id="res"></div>
+</div>
+
+<section>
+  <h2>三個名詞就夠了</h2>
+  <div class="terms">
+    <div class="term"><h3>複委託</h3><p>透過台灣的券商幫你買美股。錢從台灣帳戶直接扣，不用匯款，有問題找得到人。</p></div>
+    <div class="term"><h3>定期定額</h3><p>每個月固定扣一筆錢自動買，手續費最低只要 1 塊台幣。新手最推薦。</p></div>
+    <div class="term"><h3>海外券商</h3><p>Firstrade、嘉信、IBKR 這種美國券商。下單幾乎免手續費，但要自己把錢電匯過去，一次大約 NT$500 起。</p></div>
+  </div>
+</section>
+
+<section>
+  <details>
+    <summary>資料來源與計算方式</summary>
+    <div>
+      <span>費率是 2026 年 10 月整理的網路下單買進費率，多數是限期優惠（常見到 2026/12/31），之後可能調回 0.5%～1%。實際以券商 App 顯示為準。</span>
+      <span>只算買進。賣出也要手續費，股利一律先扣 30% 稅。海外券商的匯款以每次約 NT$500 估算、一年最多匯 4 次；把錢匯回台灣另收出金費（Firstrade 25 美元、嘉信 15 美元、IBKR 每月第一次免費）。IBKR 以每股 100 美元估算股數。1 美元以 NT$32 計。</span>
+      <span>來源：<a href="https://mrjoewang.com/sub-brokerage/" target="_blank" rel="noopener">喬王：複委託手續費比較</a>、<a href="https://stevenhongisme.com/securities_firms/sub-brokerage-intro/" target="_blank" rel="noopener">14 家券商複委託比較</a>、<a href="https://george-dewi.com/double-commission/" target="_blank" rel="noopener">複委託 vs 海外券商</a>、<a href="https://grenade.tw/blog/firstrade-deposit-withdraw-card/" target="_blank" rel="noopener">Firstrade 費用</a>、<a href="https://grenade.tw/blog/charles-schwab-debit-card/" target="_blank" rel="noopener">嘉信費用</a>、<a href="https://www.beurlife.com/2026/05/best_way_foreign_remittance.html" target="_blank" rel="noopener">海外匯款手續費</a></span>
+      <span>只是費用試算，不是投資建議，也沒有拿任何券商的推薦費。</span>
+    </div>
+  </details>
+</section>
+</div>
+<button class="peek" id="peek" type="button" hidden>看建議 ↓</button>
+
+<script>
+"use strict";
+const FX=32,WIRE=500;
+const pct=(r,min=0,max=Infinity)=>a=>Math.min(max,Math.max(min,a*r));
+const flat=f=>()=>f;
+const B=[
+ {id:"cathay",n:"國泰證券",one:pct(.0008),dca:flat(.1),oneT:"0.08%",dcaT:"每筆 0.1 美元"},
+ {id:"fubon",n:"富邦證券",one:pct(.0025),oneNew:pct(.0006),dca:pct(.001),oneT:"0.25%",oneNewT:"新戶 0.06%",dcaT:"0.1%"},
+ {id:"sinopac",n:"永豐金證券",one:pct(.0008),dca:flat(.01),oneT:"0.08%",dcaT:"每筆 0.01 美元"},
+ {id:"yuanta",n:"元大證券",one:pct(.001),dca:pct(.001,0,1),oneT:"0.1%",dcaT:"0.1%，最多 1 美元"},
+ {id:"kgi",n:"凱基證券",one:pct(.005,39.9),dca:flat(.03),oneT:"0.5%，最低 39.9 美元",dcaT:"每筆約 1 元台幣"},
+ {id:"ctbc",n:"中信證券",one:pct(.005,35),dca:pct(.002),oneT:"0.5%，最低 35 美元",dcaT:"0.2%"},
+ {id:"capital",n:"群益證券",one:pct(.002,3),dca:pct(.0016),oneT:"0.2%，最低 3 美元",dcaT:"0.16%"},
+ {id:"esun",n:"玉山證券",one:pct(.004),dca:a=>a<150?a*.002:a<667?.3:a*.0018,oneT:"0.4%",dcaT:"約 0.2%"},
+ {id:"taishin",n:"台新證券",one:pct(.005,35),dca:flat(.03),oneT:"0.5%，最低 35 美元",dcaT:"每筆約 1 元台幣"},
+ {id:"mega",n:"兆豐證券",one:pct(.001,1),dca:pct(.0025),oneT:"約 0.1%，最低 1 美元",dcaT:"0.25%"},
+ {id:"masterlink",n:"元富證券",one:pct(.005,35),dca:pct(.0015),oneT:"0.5%，最低 35 美元",dcaT:"0.15%"},
+];
+const OV=[
+ {id:"ft",n:"Firstrade",tag:"中文介面、新手最常用",fee:()=>0,rate:"下單 0 元",note:"中文客服，可以買零股。出金每筆 25 美元。"},
+ {id:"schwab",n:"嘉信 Schwab",tag:"美國大券商",fee:()=>0,rate:"下單 0 元",note:"規模最大，線上出金每筆 15 美元。開戶審核比較久。"},
+ {id:"ibkr",n:"IBKR 盈透",tag:"全球市場都能買",fee:a=>Math.min(a*.01,Math.max(1,a/100*.005)),rate:"每股 0.005 美元，最低 1 美元",note:"每月第一次出金免費，介面比較複雜。"},
+];
+const CH=[...B.map(b=>[b.id,b.n.replace("證券","")]),["none","都沒有"]];
+const AMT={dca:[[3000,"NT$3,000"],[10000,"NT$1 萬"],[30000,"NT$3 萬"]],one:[[30000,"NT$3 萬"],[100000,"NT$10 萬"],[500000,"NT$50 萬"]]};
+let st={b:"none",h:"dca",a:3000};
+try{const s=JSON.parse(localStorage.getItem("usfee3")||"null");if(s&&s.b&&s.h&&s.a)st=s}catch(e){}
+const nt=v=>v<1?"不到 NT$1":"NT$"+Math.round(v).toLocaleString();
+const N=()=>st.h==="dca"?12:1;
+
+function options(){const usd=st.a/FX,n=N(),out=[];
+  for(const b of B){const mine=b.id===st.b;
+    if(st.h==="dca"){const f=b.dca(usd)*FX;out.push({b,mine,kind:"複委託・定期定額",yr:f*n,rate:b.dcaT})}
+    else{const fn=(!mine&&b.oneNew)?b.oneNew:b.one;out.push({b,mine,kind:"複委託",yr:fn(usd)*FX,rate:(!mine&&b.oneNewT)?b.oneNewT:b.oneT})}}
+  for(const o of OV){const wire=WIRE*Math.min(n,4);out.push({b:o,ov:1,mine:false,kind:"海外券商",yr:o.fee(usd)*FX*n+wire,wire,rate:o.rate+`＋匯款 ${nt(wire)}`})}
+  const pen=o=>o.yr+(o.mine?0:320);
+  return out.sort((x,y)=>pen(x)-pen(y))}
+
+function steps(o){const dca=st.h==="dca";
+  if(o.ov)return[`下載 ${o.b.n} App，用護照和身分證線上開戶（約 1 週核准）`,"用網路銀行把美元電匯過去，選「全額到匯」","錢到帳就能下單"];
+  const s=[];
+  if(o.mine)s.push(`打開${o.b.n}的 App，找「複委託」或「海外股票」，線上申請（約 1～3 天）`);
+  else{s.push(`下載${o.b.n}的 App，線上開證券戶（準備身分證、第二證件、銀行帳戶）`);s.push("一起申請「複委託」和外幣交割戶，大約 1～3 天");}
+  s.push(dca?"設定定期定額，選一檔追蹤美國大盤的 ETF，每月自動扣款":"換一點美元進交割戶，直接下單");
+  return s}
+
+function chips(id,items,cur,set){const el=document.getElementById(id);el.innerHTML=items.map(([v,l,s])=>`<button type="button" class="chip" aria-pressed="${String(v)===String(cur)}" data-v="${v}">${l}${s?`<small>${s}</small>`:""}</button>`).join("");
+  el.onclick=e=>{const b=e.target.closest(".chip");if(!b)return;set(b.dataset.v);render();showPeek()}}
+
+function render(){try{localStorage.setItem("usfee3",JSON.stringify(st))}catch(e){}
+  if(!AMT[st.h].some(x=>x[0]===st.a))st.a=AMT[st.h][0][0];
+  chips("brk",CH,st.b,v=>st.b=v);
+  chips("how",[["dca","每月存一點","定期定額"],["one","一次買一筆","單筆下單"]],st.h,v=>st.h=v);
+  document.getElementById("amtq").textContent=st.h==="dca"?"每個月買多少？":"這次想買多少？";
+  chips("amt",AMT[st.h],st.a,v=>st.a=+v);
+  const all=options(),top=[],seen=new Set();for(const o of all){if(seen.has(o.b.n))continue;seen.add(o.b.n);top.push(o);if(top.length===3)break}
+  const unit=st.h==="dca"?"一年手續費":"這筆手續費";
+  const card=(o,i)=>`<article class="card ${i?"":"first"}"><div class="rk">${i+1}</div>
+    <div class="nm">${o.b.n}<em>${o.kind}</em></div>
+    <div class="cost"><b>${nt(o.yr)}</b><span>${unit}</span></div>
+    <div class="tags"><span class="tag ok">開戶費 0</span>${o.mine?'<span class="tag ok">你已經有帳戶</span>':'<span class="tag new">要另外開戶</span>'}<span class="tag">${o.ov?"要自己匯款":"不用匯款"}</span></div>
+    <p class="why">手續費 ${o.rate}。</p>
+    ${i===0?`<div class="go"><b>怎麼開始</b><ol>${steps(o).map(s=>`<li>${s}</li>`).join("")}</ol></div>`:""}</article>`;
+  const ovs=all.filter(o=>o.ov&&!top.includes(o));
+  const best=top[0];
+  const ovTip=st.h==="dca"?"每月小額買的話，光匯款費就比手續費貴，新手先用複委託比較划算。":st.a>=300000?"單筆金額大，海外券商的成本已經接近複委託。之後還會常買的話值得開一個。":"單筆金額不大時，匯款費會吃掉省下的手續費。";
+  document.getElementById("res").innerHTML=`<h2>建議你這樣開始</h2>`+top.map(card).join("")+
+    (ovs.length?`<div class="sub"><h3>海外券商比一比</h3><p>${ovTip}</p><div class="ov">${ovs.map(o=>`<div class="oc"><b>${o.b.n}</b><div class="c">${nt(o.yr)}<span>${unit}</span></div><p><span class="tag">${o.b.tag}</span></p><p>${o.b.rate}。${o.b.note}</p></div>`).join("")}</div></div>`:"");
+  document.getElementById("res").classList.remove("fade");void document.getElementById("res").offsetWidth;document.getElementById("res").classList.add("fade")}
+
+/* phone: offer a jump to the answer when it's below the fold */
+const peek=document.getElementById("peek");let resVisible=true;
+try{new IntersectionObserver(es=>{resVisible=es[0].isIntersecting;if(resVisible)peek.hidden=true},{threshold:.15}).observe(document.getElementById("res"))}catch(e){}
+function showPeek(){if(innerWidth<821&&!resVisible)peek.hidden=false}
+peek.onclick=()=>{document.getElementById("res").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});peek.hidden=true};
+render();
+</script>
+
+</body>
+</html>

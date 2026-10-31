@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:meta-->
+<meta name="description" content="2026 全台百貨週年慶日期一次看">
+<link rel="canonical" href="https://nosmokeagain.github.io/shopping/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="雙11週年慶地圖｜三分鐘遊樂場">
+<meta property="og:description" content="2026 全台百貨週年慶日期一次看">
+<meta property="og:url" content="https://nosmokeagain.github.io/shopping/">
+<meta property="og:image" content="https://nosmokeagain.github.io/shopping/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>雙11週年慶地圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: a department-store directory board — sticky filter bar, then floor-by-floor (region) listings with a sale-progress rail per store */
+:root{
+  --bg:#f6f3ee;--surface:#ffffff;--ink:#1f1a17;--mute:#7a7069;--line:#e6dfd6;
+  --sale:#d6322b;--sale-soft:#fbe7e5;--gold:#b8860b;--gold-soft:#f8efd6;--live:#1f8a5b;--live-soft:#e3f3ea;--track:#efe9e1;
+  --f-display:"Noto Sans TC",system-ui,sans-serif;--f-body:"Noto Sans TC",system-ui,-apple-system,"PingFang TC",sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151312;--surface:#1f1c1a;--ink:#f2ede8;--mute:#a59a91;--line:#332e2a;--sale:#ff5a4f;--sale-soft:#3a1e1c;--gold:#e0b44a;--gold-soft:#342b17;--live:#4cc58e;--live-soft:#16301f;--track:#2b2724;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#151312;--surface:#1f1c1a;--ink:#f2ede8;--mute:#a59a91;--line:#332e2a;--sale:#ff5a4f;--sale-soft:#3a1e1c;--gold:#e0b44a;--gold-soft:#342b17;--live:#4cc58e;--live-soft:#16301f;--track:#2b2724;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:grid;gap:6px;padding-bottom:16px;border-bottom:3px double var(--line)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;color:var(--sale);font-weight:700}
+h1{margin:0;font-family:var(--f-display);font-weight:900;font-size:clamp(30px,8vw,46px);line-height:1.1;text-wrap:balance}
+h1 span{color:var(--sale)}
+.lede{margin:0;color:var(--mute);max-width:62ch}
+.today{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.pill{font-size:13px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--surface);border:1px solid var(--line)}
+.pill b{font-family:var(--f-mono)}
+.pill.live{background:var(--live-soft);border-color:transparent;color:var(--live)}
+.pill.soon{background:var(--gold-soft);border-color:transparent;color:var(--gold)}
+h2{font-size:20px;font-weight:900;margin:28px 0 10px;display:flex;align-items:baseline;gap:10px;text-wrap:balance}
+h2 small{font-size:12px;font-weight:500;color:var(--mute)}
+/* key dates */
+.keys{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(150px,1fr);gap:8px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}
+.key{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;scroll-snap-align:start;min-width:0}
+.key.past{opacity:.45}
+.key .d{font-family:var(--f-mono);font-weight:700;font-size:18px;color:var(--sale)}
+.key.now .d{color:var(--live)}
+.key .t{font-size:13px;font-weight:700;line-height:1.4;margin-top:2px}
+/* filters */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;border-bottom:1px solid var(--line);display:grid;gap:8px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:inherit;font-size:13px;font-weight:700;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:5px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg button:focus-visible,.copy:focus-visible{outline:2px solid var(--sale);outline-offset:2px}
+/* store rows */
+.region h3{margin:20px 0 6px;font-size:13px;letter-spacing:.1em;color:var(--mute);font-weight:700}
+.row{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.row .nm{font-weight:900;font-size:16px;min-width:0}
+.row .br{font-weight:500;color:var(--mute);font-size:13px}
+.row .dt{font-family:var(--f-mono);font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}
+.st{justify-self:end;font-size:12px;font-weight:900;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.st.live{background:var(--live-soft);color:var(--live)}.st.soon{background:var(--gold-soft);color:var(--gold)}.st.end{background:var(--track);color:var(--mute)}
+.rail{grid-column:1/-1;height:5px;border-radius:3px;background:var(--track);overflow:hidden}
+.rail i{display:block;height:100%;background:var(--live)}
+.row.end .nm{color:var(--mute)}
+.empty{color:var(--mute);padding:16px 0}
+/* online */
+.shops{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.shop{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:0}
+.shop h4{margin:0 0 2px;font-size:17px;font-weight:900}
+.shop .when{font-family:var(--f-mono);font-size:13px;color:var(--sale);font-weight:700}
+.shop ul{margin:8px 0 0;padding-left:18px;font-size:14px;display:grid;gap:4px}
+/* SOGO gifts */
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:420px;font-size:14px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{font-size:12px;color:var(--mute);font-weight:700;letter-spacing:.06em}
+td.m{font-family:var(--f-mono);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.tips{display:grid;gap:8px;padding:0;margin:0;list-style:none}
+.tips li{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
+.tips b{color:var(--sale)}
+.copy{font:inherit;font-weight:900;font-size:14px;border:0;border-radius:12px;background:var(--sale);color:#fff;padding:12px 16px;cursor:pointer;width:100%;margin-top:14px}
+.ok{color:var(--live);font-weight:700;font-size:13px;min-height:20px;text-align:center;margin:6px 0 0}
+.src{font-size:12px;color:var(--mute);margin-top:28px;border-top:1px solid var(--line);padding-top:12px}
+.src a{color:var(--mute)}
+.src ol{padding-left:18px;margin:6px 0 0;display:grid;gap:2px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">2026 · 雙11 × 週年慶</div>
+    <h1>全台百貨週年慶<br>＋<span>雙11</span> 懶人包</h1>
+    <p class="lede">現在哪幾家還在打、哪幾家快開跑，一頁看完。日期會依今天自動標「進行中」「即將開跑」。</p>
+    <div class="today" id="today"></div>
+  </header>
+
+  <h2>關鍵日期 <small>左右滑</small></h2>
+  <div class="keys" id="keys"></div>
+
+  <h2>百貨週年慶 <small id="cnt"></small></h2>
+  <div class="bar">
+    <div class="seg" id="reg" aria-label="地區"></div>
+    <div class="seg" id="sts" aria-label="狀態"></div>
+  </div>
+  <div id="stores"></div>
+
+  <h2>電商雙11</h2>
+  <div class="shops">
+    <div class="shop"><h4>蝦皮</h4><div class="when">11/1 VIP Day・11/10–11/13 蝦幣回饋</div><ul>
+      <li>11/1 VIP Day：全站滿 500 折 100；滿 2,000 打 9 折（最高折 2,000）</li>
+      <li>11/10–11/13 蝦幣 100% 回饋，單筆滿 999 最高回 999 蝦幣，限時段限量</li>
+      <li>11/11 蝦皮商城：滿 1,111 打 8 折，最高折 400</li>
+      <li>蝦幣不是現折，是下次可用的點數</li></ul></div>
+    <div class="shop"><h4>PChome 24h</h4><div class="when">10/27–11/16</div><ul>
+      <li>夜間券：10/28–11/1 滿 3,500 折 300</li>
+      <li>夜間券：11/9–11/11 滿 6,000 折 600</li>
+      <li>國泰 CUBE 卡 11/9–11/12 最高 13% 回饋</li></ul></div>
+    <div class="shop"><h4>momo</h4><div class="when">預熱至 10/31</div><ul>
+      <li>每天 10:11、12:11、14:11、18:11、20:11、22:11「知識王」答題賺 mo 點</li>
+      <li>10/24–10/31 單日累積消費滿額送 mo 點（限量）</li>
+      <li>11/1 之後的主檔期：以官方公布為準</li></ul></div>
+    <div class="shop"><h4>Yahoo 購物</h4><div class="when">10/27 起暖慶</div><ul>
+      <li>OPENPOINT 點數發放 3 倍、折抵價值 2 倍</li>
+      <li>新上線 AI 購物助理「AI懂買」</li></ul></div>
+  </div>
+
+  <h2>SOGO 台北忠孝・復興 來店禮 <small>11/5–11/16</small></h2>
+  <div class="tbl"><table>
+    <thead><tr><th>日期</th><th>贈品</th><th>單筆消費</th></tr></thead>
+    <tbody>
+      <tr><td class="m">11/5–11/6</td><td>Hello Kitty 日常托特包</td><td class="m">1,000</td></tr>
+      <tr><td class="m">11/7–11/8</td><td>三麗鷗便當袋組</td><td class="m">2,000</td></tr>
+      <tr><td class="m">11/9–11/10</td><td>三麗鷗旅行保溫瓶</td><td class="m">1,000</td></tr>
+      <tr><td class="m">11/11–11/12</td><td>三麗鷗兩用側背包</td><td class="m">1,000</td></tr>
+      <tr><td class="m">11/13–11/14</td><td>三麗鷗自動傘</td><td class="m">1,000</td></tr>
+      <tr><td class="m">11/15–11/16</td><td>大耳狗雲朵頸枕</td><td class="m">2,000</td></tr>
+    </tbody></table></div>
+  <p class="lede" style="font-size:13px;margin-top:6px">需用遠東 SOGO App 快樂購卡、當日同館發票兌換，每人每期限一份，送完為止，兩館不可合併。</p>
+
+  <h2>怎麼買比較省</h2>
+  <ul class="tips">
+    <li><b>先看開跑日：</b>週年慶頭三天通常是來店禮和限量品最齊的時候，熱門保養品組常常第一天就賣完。</li>
+    <li><b>滿額贈要算單筆：</b>多數「滿千送百」看單筆或當日同館累計，分開結帳可能拿不到。</li>
+    <li><b>信用卡回饋疊加：</b>百貨自家聯名卡回饋 + 滿額禮券 + 雙11 電商券，買大件的先比三邊實拿。</li>
+    <li><b>預購會價格可能更好：</b>化妝品專櫃常在開跑前辦預購，價格和贈品先問櫃姐。</li>
+  </ul>
+
+  <button class="copy" id="copy">複製「現在進行中」清單，貼到 Threads</button>
+  <p class="ok" id="ok" role="status"></p>
+
+  <div class="src">
+    日期整理自 2026 年 9–10 月公開報導，各店可能調整，出發前請以百貨官方公告為準。
+    <ol>
+      <li><a href="https://www.nownews.com/news/6876432" target="_blank" rel="noopener">NOWnews：2026百貨週年慶開跑了！新光三越、SOGO檔期懶人包（9/19）</a></li>
+      <li><a href="https://www.marieclaire.com.tw/beauty/news/95804" target="_blank" rel="noopener">美麗佳人：2026 週年慶檔期整理（10/15 更新）</a></li>
+      <li><a href="https://n.yam.com/Article/20261022378960" target="_blank" rel="noopener">yam：遠東SOGO週慶萌主相挺（10/22）</a></li>
+      <li><a href="https://supertaste.tvbs.com.tw/travel/361989" target="_blank" rel="noopener">食尚玩家：2026 SOGO週年慶三麗鷗聯名、來店禮（10/16）</a></li>
+      <li><a href="https://news.tvbs.com.tw/life/4041849" target="_blank" rel="noopener">TVBS：2026雙11電商優惠懶人包（10/27）</a></li>
+      <li><a href="https://www.newspie.com.tw/pchome-24h-20261027/" target="_blank" rel="noopener">News Pie：2026 PChome 24h 雙11購物節攻略（10/27）</a></li>
+      <li><a href="https://technews.tw/2026/10/27/pchome-2026-11-11-online-shopping-festival/" target="_blank" rel="noopener">科技新報：PChome 雙11（10/27）</a></li>
+      <li><a href="https://www.ctee.com.tw/news/20261024700678-431401" target="_blank" rel="noopener">工商時報：雙11優惠開打！momo答題賺mo點、Yahoo購物（10/24）</a></li>
+    </ol>
+  </div>
+</div>
+
+<script>
+// [region, store, branch, start, end]  (MM-DD, year 2026)
+const S=[
+['北北基','台北101購物中心','','09-03','10-11'],['北北基','微風','廣場・南京','09-17','10-04'],['北北基','新光三越','台北南西店','10-01','10-18'],['北北基','京站時尚廣場','','10-01','11-13'],
+['北北基','美麗華','','10-02','10-26'],['北北基','Global Mall 環球','南港・中和・板橋車站・林口A9','10-02','10-29'],['北北基','統一時代百貨','台北店','10-07','10-26'],['北北基','大葉高島屋','','10-08','10-27'],
+['北北基','NOKE 忠泰樂生活','','10-09','11-10'],['北北基','新光三越','信義新天地 A4・A8・A11','10-15','11-08'],['北北基','遠東百貨','信義 A13','10-15','11-15'],['北北基','LaLaport','南港','10-15','11-08'],
+['北北基','比漾廣場','','10-15','11-08'],['北北基','微風','信義・松高・南山','10-15','11-01'],['北北基','板橋大遠百','Mega City','10-16','11-16'],['北北基','宏匯廣場','','10-22','11-15'],
+['北北基','新光三越','天母店','10-22','11-15'],['北北基','遠東SOGO','忠孝・復興','11-05','11-16'],['北北基','新光三越','DIAMOND TOWERS','11-05','11-22'],['北北基','新光三越','台北站前店','11-26','12-13'],
+['北北基','遠東SOGO','天母店','11-27','12-08'],['北北基','遠東 Garden City','','12-16','12-31'],
+['桃竹苗','台茂購物中心','','09-25','10-20'],['桃竹苗','新光三越','桃園站前店','10-01','10-25'],['桃竹苗','新竹大遠百','','10-15','11-15'],['桃竹苗','Global Mall 環球','桃園 A8・A19','10-22','11-16'],
+['桃竹苗','遠東百貨','桃園店','10-24','11-27'],['桃竹苗','遠東百貨','竹北店','11-12','12-06'],['桃竹苗','遠東巨城','Big City','12-03','12-14'],
+['中部','中友百貨','','09-17','10-28'],['中部','廣三SOGO','','09-17','11-11'],['中部','Top City 台中大遠百','','09-17','10-18'],['中部','豐原太平洋百貨','','09-24','10-18'],
+['中部','新光三越','台中中港店','10-01','10-25'],['中部','漢神洲際購物廣場','台中','10-22','11-17'],['中部','LaLaport','台中','10-23','11-22'],['中部','MITSUI OUTLET PARK','台中港','10-30','11-22'],
+['南部','夢時代（統一時代高雄）','','09-24','10-18'],['南部','新光三越','高雄三多店','10-01','10-25'],['南部','新光三越','台南小北門店','10-01','10-25'],['南部','新光三越','嘉義垂楊店','10-01','10-25'],
+['南部','MITSUI OUTLET PARK','台南','10-02','10-26'],['南部','屏東太平洋百貨','','10-08','11-02'],['南部','漢神巨蛋購物廣場','高雄','10-19','11-10'],['南部','南紡購物中心','','10-22','11-18'],
+['南部','Global Mall 環球','新左營車站','10-22','11-16'],['南部','台南大遠百','成功店','10-29','11-29'],['南部','高雄大遠百','','10-29','11-29'],['南部','遠東百貨','嘉義店','10-30','11-30'],
+['南部','遠東SOGO','高雄店','10-31','11-15'],['南部','新光三越','高雄左營店','11-05','11-29'],['南部','新光三越','台南西門新天地','11-05','11-29'],['南部','漢神百貨','高雄','11-19','12-20'],
+['南部','義大世界購物廣場','','11-27','12-27'],
+['東部','遠東百貨','花蓮店','10-22','11-22'],['東部','宜蘭新月廣場','','10-29','11-08']];
+const KEYS=[['10-31','momo 雙11 預熱最後一天'],['11-01','蝦皮 VIP Day、PChome 夜間券第一波最後一天'],['11-05','SOGO 台北忠孝・復興開跑'],['11-08','新光三越信義新天地收檔'],
+  ['11-09','PChome 夜間券滿 6,000 折 600（至 11/11）'],['11-10','蝦皮蝦幣 100% 回饋（至 11/13）'],['11-11','雙11 當天'],['11-16','SOGO 台北收檔、PChome 雙11 結束'],['11-17','台中漢神洲際收檔'],['11-26','新光三越台北站前店開跑']];
+const REG=['全部','北北基','桃竹苗','中部','南部','東部'],STS=[['open','進行中＋快開跑'],['live','只看進行中'],['all','全部（含已結束）']];
+const tz=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'});
+const todayStr=tz.format(new Date());const today=new Date(todayStr+'T00:00:00');
+const D=md=>new Date('2026-'+md+'T00:00:00');const days=(a,b)=>Math.round((b-a)/864e5);
+const fmt=md=>{const [m,d]=md.split('-').map(Number);return m+'/'+d};
+function status(s,e){const a=D(s),b=D(e);if(today<a)return['soon',days(today,a)];if(today>b)return['end',0];return['live',days(today,b)+1]}
+let reg='全部',sts='open';try{reg=localStorage.getItem('sh_reg')||reg;sts=localStorage.getItem('sh_sts')||sts}catch(e){}
+function seg(el,items,cur,cb){el.innerHTML=items.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${v===cur}">${l}</button>`).join('');el.onclick=e=>{const b=e.target.closest('button');if(b)cb(b.dataset.v)}}
+function render(){
+  seg(document.getElementById('reg'),REG.map(r=>[r,r]),reg,v=>{reg=v;try{localStorage.setItem('sh_reg',v)}catch(e){}render()});
+  seg(document.getElementById('sts'),STS,sts,v=>{sts=v;try{localStorage.setItem('sh_sts',v)}catch(e){}render()});
+  const rows=S.map(r=>{const [st,n]=status(r[3],r[4]);return{r,st,n}}).filter(x=>(reg==='全部'||x.r[0]===reg)&&(sts==='all'||(sts==='live'?x.st==='live':x.st!=='end')));
+  const order={live:0,soon:1,end:2};
+  const out=REG.slice(1).filter(g=>reg==='全部'||g===reg).map(g=>{const list=rows.filter(x=>x.r[0]===g).sort((a,b)=>order[a.st]-order[b.st]||(a.st==='live'?D(a.r[4])-D(b.r[4]):D(a.r[3])-D(b.r[3])));if(!list.length)return'';
+    return`<div class="region"><h3>${g}</h3>${list.map(({r,st,n})=>{const tot=days(D(r[3]),D(r[4]))+1,el=Math.min(tot,Math.max(0,days(D(r[3]),today)+1));
+      const lab=st==='live'?(n<=1?'今天最後一天':`剩 ${n} 天`):st==='soon'?(n===1?'明天開跑':`${n} 天後開跑`):'已結束';
+      return`<div class="row ${st}"><div class="nm">${r[1]}${r[2]?` <span class="br">${r[2]}</span>`:''}<div class="dt">${fmt(r[3])} – ${fmt(r[4])}</div></div><span class="st ${st}">${lab}</span>${st==='live'?`<div class="rail"><i style="width:${el/tot*100}%"></i></div>`:''}</div>`}).join('')}</div>`}).join('');
+  document.getElementById('stores').innerHTML=out||'<p class="empty">這個條件下沒有店家。</p>';
+  const live=S.filter(r=>status(r[3],r[4])[0]==='live').length,soon=S.filter(r=>status(r[3],r[4])[0]==='soon').length;
+  document.getElementById('cnt').textContent=`共 ${S.length} 家`;
+  document.getElementById('today').innerHTML=`<span class="pill">今天 <b>${fmt(todayStr.slice(5))}</b></span><span class="pill live">進行中 <b>${live}</b> 家</span><span class="pill soon">還沒開跑 <b>${soon}</b> 家</span>`;
+  document.getElementById('keys').innerHTML=KEYS.map(([d,t])=>{const k=D(d),cls=k<today?'past':(+k===+today?'now':'');return`<div class="key ${cls}"><div class="d">${fmt(d)}${+k===+today?' 今天':''}</div><div class="t">${t}</div></div>`}).join('');
+  const firstUp=[...document.querySelectorAll('.key')].findIndex(k=>!k.classList.contains('past'));const kb=document.getElementById('keys');if(firstUp>0)kb.scrollLeft=kb.children[firstUp].offsetLeft-kb.offsetLeft;
+}
+render();
+document.getElementById('copy').onclick=()=>{const live=S.map(r=>({r,s:status(r[3],r[4])})).filter(x=>x.s[0]==='live').sort((a,b)=>D(a.r[4])-D(b.r[4]));
+  const txt=`🛍️ ${fmt(todayStr.slice(5))} 還在打週年慶的百貨（快收檔的在前面）\n`+live.map(({r,s})=>`・${r[1]}${r[2]?' '+r[2]:''}｜到 ${fmt(r[4])}（剩 ${s[1]} 天）`).join('\n')+'\n\n雙11：11/1 蝦皮 VIP Day、11/5 SOGO 台北開跑、11/9–11/11 PChome 滿6000折600\n日期以各百貨官方公告為準';
+  const ok=()=>document.getElementById('ok').textContent=`已複製 ${live.length} 家，去貼吧`;
+  const fb=()=>{const ta=document.createElement('textarea');ta.value=txt;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok()}catch(e){document.getElementById('ok').textContent='複製失敗，請長按選取'}ta.remove()};
+  try{navigator.clipboard.writeText(txt).then(ok,fb)}catch(e){fb()}};
+</script>
+
+</body>
+</html>

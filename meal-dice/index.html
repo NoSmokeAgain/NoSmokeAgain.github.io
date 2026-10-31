@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:meta-->
+<meta name="description" content="中餐晚餐各骰一次，順便算營養">
+<link rel="canonical" href="https://nosmokeagain.github.io/meal-dice/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="超商骰一餐｜三分鐘遊樂場">
+<meta property="og:description" content="中餐晚餐各骰一次，順便算營養">
+<meta property="og:url" content="https://nosmokeagain.github.io/meal-dice/">
+<meta property="og:image" content="https://nosmokeagain.github.io/meal-dice/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>超商骰一餐</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: two thermal-receipt cards (lunch, dinner) stacked, a day-total receipt with %DV bars, item editor below. Receipt grammar: mono type, dashed rules, right-aligned figures. */
+:root{
+  --bg:#e7e5df; --paper:#fbfaf6; --ink:#24221f; --mute:#77736b; --rule:#cfcbc2;
+  --dice:#d6402f; --p:#2f7d57; --f:#c08a1e; --c:#3e6fb0; --na:#8a4fb5; --lock:#24221f;
+  --f-body:"Noto Sans TC",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141412;--paper:#1f1e1b;--ink:#ece9e1;--mute:#9b968c;--rule:#3a3832;--dice:#ff6a55;--p:#5cc18c;--f:#e3b04b;--c:#79a3e6;--na:#bb88e6;--lock:#ece9e1;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141412;--paper:#1f1e1b;--ink:#ece9e1;--mute:#9b968c;--rule:#3a3832;--dice:#ff6a55;--p:#5cc18c;--f:#e3b04b;--c:#79a3e6;--na:#bb88e6;--lock:#ece9e1;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body)}
+.wrap{max-width:480px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px;display:grid;gap:16px}
+header{display:grid;gap:6px}
+h1{font:900 30px/1.15 var(--f-body);margin:0;letter-spacing:.02em}
+h1 em{font-style:normal;color:var(--dice)}
+.sub{margin:0;color:var(--mute);font-size:14px;line-height:1.6}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--rule);border-radius:10px;overflow:hidden;background:var(--paper)}
+.modes button{background:transparent;border:0;color:var(--mute);font:700 14px var(--f-body);padding:10px 4px;cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.modes button:focus-visible{outline:2px solid var(--dice);outline-offset:-2px}
+
+.rcpt{background:var(--paper);padding:18px 18px 22px;position:relative;font-family:var(--f-mono);box-shadow:0 1px 0 var(--rule),0 10px 24px -16px #0005;
+  -webkit-mask:radial-gradient(circle 6px at 50% 100%,#0000 98%,#000) 0 0/14px 100% repeat-x;mask:radial-gradient(circle 6px at 50% 100%,#0000 98%,#000) 0 0/14px 100% repeat-x}
+.rhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.rhead h2{font:900 20px var(--f-body);margin:0}
+.rhead small{display:block;font:500 11px var(--f-mono);color:var(--mute);letter-spacing:.08em;margin-top:2px}
+.roll{display:flex;align-items:center;gap:8px;font:900 16px var(--f-body);background:var(--dice);color:#fff;border:0;border-radius:12px;padding:10px 14px;cursor:pointer;touch-action:manipulation}
+.roll svg{width:24px;height:24px}
+.roll.spin svg{animation:spin .5s cubic-bezier(.3,1.4,.6,1)}
+@keyframes spin{from{transform:rotate(-360deg) scale(.6)}}
+.roll:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.dash{border:0;border-top:1.5px dashed var(--rule);margin:12px 0}
+.items{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.it{display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;padding:6px 0;min-height:40px}
+.it.new .nm{animation:tick .35s ease-out}
+@keyframes tick{0%{opacity:0;transform:translateY(-8px)}}
+.lockb{width:30px;height:30px;border-radius:8px;border:1px solid var(--rule);background:transparent;color:var(--mute);display:grid;place-items:center;cursor:pointer;padding:0}
+.lockb svg{width:15px;height:15px}
+.lockb[aria-pressed="true"]{background:var(--lock);color:var(--paper);border-color:var(--lock)}
+.lockb:focus-visible{outline:2px solid var(--dice)}
+.nm{font:500 14px/1.35 var(--f-body);min-width:0}
+.nm small{display:block;font:500 11px var(--f-mono);color:var(--mute);margin-top:1px}
+.nm .est{font:500 10px var(--f-body);color:var(--mute);border:1px solid var(--rule);border-radius:4px;padding:0 4px;margin-left:4px;vertical-align:1px}
+.kc{font:700 14px var(--f-mono);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tot{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;text-align:center}
+.tot div{display:grid;gap:2px}
+.tot small{font:500 10px var(--f-body);color:var(--mute);letter-spacing:.06em}
+.tot b{font:700 15px var(--f-mono);font-variant-numeric:tabular-nums}
+.tot .k b{color:var(--ink)} .tot .p b{color:var(--p)} .tot .f b{color:var(--f)} .tot .c b{color:var(--c)} .tot .n b{color:var(--na)}
+.price{display:flex;justify-content:space-between;font:700 13px var(--f-mono);margin-top:10px;color:var(--mute)}
+
+.day h2{font:900 20px var(--f-body);margin:0}
+.bars{display:grid;gap:10px;margin-top:4px}
+.bar{display:grid;grid-template-columns:52px 1fr 92px;gap:10px;align-items:center;font-size:13px}
+.bar .lab{font:700 13px var(--f-body)}
+.bar .trk{height:10px;background:var(--bg);border-radius:5px;overflow:hidden;position:relative}
+.bar .trk i{display:block;height:100%;border-radius:5px;transition:width .4s cubic-bezier(.3,1.2,.5,1)}
+.bar .trk::after{content:"";position:absolute;top:-2px;bottom:-2px;left:70%;width:1.5px;background:var(--mute);opacity:.6}
+.bar .val{font:500 12px var(--f-mono);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.verdict{margin:12px 0 0;font:500 14px/1.6 var(--f-body)}
+.note{font:400 12px/1.6 var(--f-body);color:var(--mute);margin:0}
+
+details{background:var(--paper);border-radius:6px;padding:4px 16px}
+summary{font:700 15px var(--f-body);padding:12px 0;cursor:pointer}
+summary:focus-visible{outline:2px solid var(--dice)}
+.form{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding-bottom:14px}
+.form label{display:grid;gap:3px;font:500 11px var(--f-body);color:var(--mute);grid-column:span 2;min-width:0}
+.form label.w{grid-column:span 4} .form label.w6{grid-column:span 6}
+.form input,.form select{font:500 15px var(--f-mono);padding:8px;border:1px solid var(--rule);border-radius:8px;background:var(--bg);color:var(--ink);min-width:0;width:100%;box-sizing:border-box}
+.form input:focus-visible,.form select:focus-visible{outline:2px solid var(--dice)}
+.form .btns{grid-column:span 6;display:flex;gap:8px}
+.sbtn{font:700 14px var(--f-body);border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:8px;padding:9px 14px;cursor:pointer}
+.sbtn.ghost{background:transparent;color:var(--ink)}
+.sbtn:focus-visible{outline:2px solid var(--dice);outline-offset:2px}
+.msg{font:500 13px var(--f-body);color:var(--p);min-height:1em;grid-column:span 6;margin:0}
+.list{list-style:none;margin:0;padding:0 0 14px;display:grid;gap:4px;max-height:320px;overflow:auto}
+.list li{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;font:400 13px var(--f-body);padding:5px 0;border-bottom:1px dashed var(--rule)}
+.list li span{min-width:0}
+.list li small{font:500 11px var(--f-mono);color:var(--mute)}
+.list button{font:500 12px var(--f-body);background:transparent;border:1px solid var(--rule);color:var(--ink);border-radius:6px;padding:3px 8px;cursor:pointer}
+.chip{font:500 10px var(--f-body);border-radius:4px;padding:1px 5px;background:var(--bg);color:var(--mute)}
+@media (prefers-reduced-motion:reduce){.roll.spin svg,.it.new .nm{animation:none}.bar .trk i{transition:none}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <h1>超商<em>骰</em>一餐</h1>
+    <p class="sub">中餐、晚餐各骰一次，不想吃的鎖住其他重骰。下面幫你算兩餐加總的熱量、蛋白質、脂肪、碳水和鈉。</p>
+  </header>
+  <div class="modes" id="modes">
+    <button data-m="any" aria-pressed="true">隨便吃</button>
+    <button data-m="pro" aria-pressed="false">高蛋白</button>
+    <button data-m="lite" aria-pressed="false">控卡</button>
+  </div>
+  <section class="rcpt" id="lunch"></section>
+  <section class="rcpt" id="dinner"></section>
+  <section class="rcpt day" id="day"></section>
+
+  <details id="edit">
+    <summary>新增或修正品項（照包裝營養標示填）</summary>
+    <form class="form" id="form">
+      <label class="w">品名<input id="fName" required maxlength="30" placeholder="例：舒肥雞胸 蒜香"></label>
+      <label>類別<select id="fCat"><option value="main">主食</option><option value="side">配菜</option><option value="drink">飲料</option></select></label>
+      <label>熱量 kcal<input id="fK" type="number" inputmode="decimal" min="0" step="any" required></label>
+      <label>蛋白質 g<input id="fP" type="number" inputmode="decimal" min="0" step="any" required></label>
+      <label>脂肪 g<input id="fF" type="number" inputmode="decimal" min="0" step="any" required></label>
+      <label>碳水 g<input id="fC" type="number" inputmode="decimal" min="0" step="any" required></label>
+      <label>鈉 mg<input id="fN" type="number" inputmode="decimal" min="0" step="any" required></label>
+      <label>價格 元<input id="fY" type="number" inputmode="numeric" min="0" step="1"></label>
+      <div class="btns"><button class="sbtn" type="submit" id="fSave">儲存品項</button><button class="sbtn ghost" type="button" id="fClear">清空</button></div>
+      <p class="msg" id="fMsg" role="status"></p>
+    </form>
+    <ul class="list" id="list"></ul>
+  </details>
+  <p class="note">內建品項的營養數字和價格是同類超商商品的估計值，標有「估」字；實際以包裝標示為準，商品也會換季下架。你自己填的品項只存在這台裝置的瀏覽器。每日參考值依衛福部包裝食品營養標示：熱量 2000 大卡、蛋白質 60 克、脂肪 60 克、碳水 300 克、鈉 2000 毫克；兩餐約佔一天的七成，條上的細線就是 70%。</p>
+</div>
+
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+/* name, cat, kcal, protein, fat, carb, sodium(mg), price(NT$) — estimates for typical convenience-store items */
+const BASE=[
+ ['鮪魚御飯糰','main',200,5,6,31,450,35],['鮭魚御飯糰','main',190,6,4,32,430,35],['肉鬆御飯糰','main',210,5,5,35,420,30],
+ ['溏心蛋飯糰','main',220,8,7,31,480,42],['明太子鮭魚飯糰','main',210,7,6,32,500,42],['雞肉鮪魚雙拼飯糰','main',330,10,9,52,700,49],
+ ['大亨堡（原味）','main',330,12,17,32,850,49],['燻雞總匯三明治','main',300,14,12,34,700,45],['鮪魚三明治','main',290,10,13,33,600,39],
+ ['火腿蛋三明治','main',280,12,12,30,650,35],['紐奧良烤雞三明治','main',330,17,13,36,750,55],
+ ['滷雞腿便當','main',750,32,28,90,1500,89],['炸排骨便當','main',820,30,34,95,1650,85],['咖哩雞肉飯','main',650,20,20,95,1400,79],
+ ['嫩雞花椰菜飯','main',297,22,10,28,800,89],['香烤雞胸鮮蔬餐','main',378,30,12,36,900,99],['香草烤雞腿時蔬餐','main',408,26,18,34,950,99],
+ ['麻醬涼麵','main',480,14,18,65,1100,49],['日式炒麵','main',520,13,20,72,1300,55],['肉醬義大利麵','main',550,20,18,75,1200,69],
+ ['白醬雞肉焗飯','main',620,22,26,72,1300,79],['鍋燒烏龍麵','main',450,18,12,65,2200,75],['紅燒牛肉麵','main',600,28,20,75,2400,99],
+ ['烤地瓜（中）','main',230,2,.4,54,40,45],['蔥油餅（微波）','main',300,6,14,38,550,35],
+ ['茶葉蛋','side',75,7,5,1,250,13],['溏心蛋','side',80,7,5.5,1,200,20],['舒肥雞胸（原味）','side',120,24,2,2,450,59],
+ ['蒜香黑胡椒雞胸','side',125,24,2.5,3,500,59],['香滷蛋白丁','side',80,15,.5,4,400,35],['蒸蛋雞白湯','side',110,10.7,6,4.4,700,49],
+ ['關東煮：白蘿蔔','side',15,.5,0,3,150,12],['關東煮：黑輪','side',120,6,5,13,500,15],['關東煮：豆腐','side',70,6,4,2,180,15],
+ ['關東煮：玉米','side',90,3,1.5,17,30,22],['鹽味毛豆','side',150,12,6,10,300,39],['鮮蔬烤雞沙拉','side',150,15,5,10,400,65],
+ ['和風嫩雞沙拉','side',160,14,6,12,500,69],['生菜沙拉（不含醬）','side',40,2,.5,7,30,45],['無糖優格','side',130,7,6,10,90,35],
+ ['香蕉','side',100,1.3,.3,26,1,15],['雞塊（6塊）','side',290,14,18,17,650,59],['薯餅','side',160,2,9,18,300,25],['焦糖布丁','side',160,3,6,24,100,25],
+ ['無糖豆漿 450ml','drink',150,15,7,6,40,30],['鮮乳 290ml','drink',185,9,11,14,130,35],['熱拿鐵（中杯）','drink',150,8,8,12,110,55],
+ ['美式咖啡（中杯）','drink',10,.5,0,1,10,45],['無糖綠茶','drink',0,0,0,0,10,25],['瓶裝奶茶','drink',230,4,6,38,100,30],
+ ['可樂 600ml','drink',252,0,0,63,30,35],['高蛋白飲','drink',160,20,3,13,200,59]
+].map(([n,cat,k,p,f,c,na,y])=>({id:'b:'+n,n,cat,k,p,f,c,na,y,est:true}));
+
+let custom=[];try{custom=JSON.parse(localStorage.getItem('dice_custom')||'[]')}catch(e){}
+const ALL=()=>{const ov=new Map(custom.map(x=>[x.id,x]));return[...BASE.filter(b=>!ov.has(b.id)),...custom]};
+const byId=id=>ALL().find(x=>x.id===id);
+const DV={k:2000,p:60,f:60,c:300,na:2000};
+let mode='any';try{mode=localStorage.getItem('dice_mode')||'any'}catch(e){}
+
+/* ---------- sound ---------- */
+let ac=null;
+function initAudio(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();ac.resume&&ac.resume()}catch(e){}}
+function tone(f,d,type='square',v=.05,at=0){if(!ac)return;const t=ac.currentTime+at,o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+d+.02)}
+const rattle=()=>{for(let k=0;k<7;k++)tone(300+Math.random()*500,.03,'square',.04,k*.045);tone(880,.12,'triangle',.06,.34)};
+
+/* ---------- rolling ---------- */
+const pick=a=>a[Math.random()*a.length|0];
+const sum=ids=>ids.map(byId).filter(Boolean).reduce((s,x)=>({k:s.k+x.k,p:s.p+x.p,f:s.f+x.f,c:s.c+x.c,na:s.na+x.na,y:s.y+(x.y||0)}),{k:0,p:0,f:0,c:0,na:0,y:0});
+function ok(t){if(mode==='pro')return t.p>=30;if(mode==='lite')return t.k<=600&&t.k>=300;return t.k>=350&&t.k<=1300}
+function rollMeal(prev,locks){
+  const pool=c=>ALL().filter(x=>x.cat===c);
+  for(let tries=0;tries<400;tries++){
+    const sides=locks.size&&prev?prev.filter(id=>byId(id)?.cat==='side'&&locks.has(id)).length:0;
+    const nSide=Math.max(sides,Math.random()<(mode==='pro'?.75:.45)?2:1);
+    const slots=['main',...Array(nSide).fill('side'),'drink'];
+    const kept=prev?prev.filter(id=>locks.has(id)&&byId(id)):[];
+    const out=[...kept];
+    for(const c of slots){
+      const have=out.filter(id=>byId(id).cat===c).length,need=slots.filter(s=>s===c).length;
+      for(let k=have;k<need;k++){let cand=pool(c).filter(x=>!out.includes(x.id));
+        if(mode==='pro'&&c!=='main')cand=cand.filter(x=>x.p>=6||Math.random()<.25);
+        if(!cand.length)continue;out.push(pick(cand).id)}
+    }
+    const order={main:0,side:1,drink:2};out.sort((a,b)=>order[byId(a).cat]-order[byId(b).cat]);
+    if(ok(sum(out))||tries===399)return out;
+  }
+}
+const today=()=>new Date().toLocaleDateString('sv-SE');
+let S={date:today(),lunch:null,dinner:null,locks:{lunch:[],dinner:[]}};
+try{const s=JSON.parse(localStorage.getItem('dice_day')||'null');if(s&&s.date===today())S=s}catch(e){}
+function save(){try{localStorage.setItem('dice_day',JSON.stringify(S))}catch(e){}}
+if(!S.lunch)S.lunch=rollMeal(null,new Set());if(!S.dinner)S.dinner=rollMeal(null,new Set());
+/* drop items that were deleted */
+['lunch','dinner'].forEach(m=>{S[m]=S[m].filter(byId);if(!S[m].length)S[m]=rollMeal(null,new Set())});save();
+
+/* ---------- render ---------- */
+const DICE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="16" cy="8" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="8" cy="16" r="1.4" fill="currentColor"/><circle cx="16" cy="16" r="1.4" fill="currentColor"/></svg>';
+const LOCK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+const UNLOCK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg>';
+const CAT={main:'主食',side:'配菜',drink:'飲料'};
+const r1=x=>Math.round(x*10)/10;
+function totals(t){return`<div class="tot">
+  <div class="k"><small>熱量</small><b>${Math.round(t.k)}</b></div><div class="p"><small>蛋白質</small><b>${r1(t.p)}g</b></div>
+  <div class="f"><small>脂肪</small><b>${r1(t.f)}g</b></div><div class="c"><small>碳水</small><b>${r1(t.c)}g</b></div>
+  <div class="n"><small>鈉</small><b>${Math.round(t.na)}</b></div></div>`}
+function meal(m,fresh){
+  const el=$(m),ids=S[m],locks=new Set(S.locks[m]),t=sum(ids);
+  el.innerHTML=`<div class="rhead"><div><h2>${m==='lunch'?'中餐':'晚餐'}</h2><small>${S.date} ・ ${m==='lunch'?'12:00':'18:30'}</small></div>
+    <button class="roll" id="roll-${m}">${DICE}骰${locks.size?'其他':'一次'}</button></div>
+    <hr class="dash"><ul class="items">${ids.map(id=>{const x=byId(id),L=locks.has(id);return`<li class="it${fresh&&!L?' new':''}">
+      <button class="lockb" data-m="${m}" data-id="${id}" aria-pressed="${L}" aria-label="${L?'解鎖':'鎖住'} ${x.n}">${L?LOCK:UNLOCK}</button>
+      <span class="nm">${x.n}${x.est?'<span class="est">估</span>':''}<small>${CAT[x.cat]} ・ P${r1(x.p)} F${r1(x.f)} C${r1(x.c)}</small></span>
+      <span class="kc">${Math.round(x.k)}<small style="font-size:10px;color:var(--mute)"> kcal</small></span></li>`}).join('')}</ul>
+    <hr class="dash">${totals(t)}<div class="price"><span>小計</span><span>約 NT$${t.y}</span></div>`;
+  $('roll-'+m).onclick=()=>{initAudio();rattle();const b=$('roll-'+m);S[m]=rollMeal(S[m],new Set(S.locks[m]));S.locks[m]=S.locks[m].filter(id=>S[m].includes(id));save();meal(m,true);day();
+    const nb=$('roll-'+m);nb.classList.add('spin');nb.focus({preventScroll:true})};
+  el.querySelectorAll('.lockb').forEach(b=>b.onclick=()=>{const id=b.dataset.id,arr=S.locks[m];const i=arr.indexOf(id);i<0?arr.push(id):arr.splice(i,1);
+    initAudio();tone(i<0?520:380,.06,'triangle',.06);save();meal(m,false)});
+}
+function day(){
+  const t=sum([...S.lunch,...S.dinner]);
+  const row=(lab,v,dv,unit,color)=>{const pct=v/dv*100;return`<div class="bar"><span class="lab" style="color:${color}">${lab}</span>
+    <span class="trk"><i style="width:${Math.min(100,pct)}%;background:${color}"></i></span><span class="val">${unit==='kcal'?Math.round(v):r1(v)}${unit==='kcal'?'':unit} ・ ${Math.round(pct)}%</span></div>`};
+  const tips=[];
+  if(t.p<36)tips.push('蛋白質偏少，可以加顆茶葉蛋、雞胸或無糖豆漿');
+  if(t.na>1400)tips.push('鈉偏高，湯和醬料少喝一點，飲料選無糖');
+  if(t.k>1600)tips.push('熱量偏高，早餐和點心收斂一點');
+  if(t.k<900)tips.push('兩餐熱量偏低，早餐記得吃');
+  if(t.c>230)tips.push('碳水偏多，飲料換無糖');
+  $('day').innerHTML=`<h2>今日兩餐加總</h2><hr class="dash">${totals(t)}<hr class="dash"><div class="bars">
+    ${row('熱量',t.k,DV.k,'kcal','var(--ink)')}${row('蛋白質',t.p,DV.p,'g','var(--p)')}${row('脂肪',t.f,DV.f,'g','var(--f)')}${row('碳水',t.c,DV.c,'g','var(--c)')}${row('鈉',t.na,DV.na,'mg','var(--na)')}</div>
+    <p class="verdict">${tips.length?tips.join('。')+'。':'兩餐都落在每日參考值七成上下，這樣吃算均衡。'}</p>
+    <div class="price"><span>兩餐合計</span><span>約 NT$${t.y}</span></div>`;
+}
+function setMode(m){mode=m;try{localStorage.setItem('dice_mode',m)}catch(e){}$('modes').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m?'true':'false'))}
+$('modes').querySelectorAll('button').forEach(b=>b.onclick=()=>{setMode(b.dataset.m);initAudio();rattle();
+  ['lunch','dinner'].forEach(m=>{S[m]=rollMeal(S[m],new Set(S.locks[m]))});save();meal('lunch',true);meal('dinner',true);day()});
+
+/* ---------- editor ---------- */
+let editing=null;
+function list(){
+  const items=ALL().sort((a,b)=>a.cat.localeCompare(b.cat)||a.n.localeCompare(b.n,'zh-Hant'));
+  $('list').innerHTML=items.map(x=>`<li><span>${x.n} <span class="chip">${CAT[x.cat]}${x.est?'・估':'・自填'}</span><br><small>${Math.round(x.k)}kcal P${r1(x.p)} F${r1(x.f)} C${r1(x.c)} Na${Math.round(x.na)}</small></span>
+    <button data-e="${x.id}">修正</button>${x.est?'':`<button data-d="${x.id}">刪除</button>`}</li>`).join('')||'';
+  $('list').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{const x=byId(b.dataset.e);editing=x.id;
+    $('fName').value=x.n;$('fCat').value=x.cat;$('fK').value=x.k;$('fP').value=x.p;$('fF').value=x.f;$('fC').value=x.c;$('fN').value=x.na;$('fY').value=x.y||'';
+    $('fSave').textContent='更新品項';$('fMsg').textContent='';$('fName').focus()});
+  $('list').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{custom=custom.filter(x=>x.id!==b.dataset.d);persist();$('fMsg').textContent='已刪除';refresh()});
+}
+function persist(){try{localStorage.setItem('dice_custom',JSON.stringify(custom))}catch(e){$('fMsg').textContent='這個瀏覽器無法儲存，重新整理後會消失'}}
+function clearForm(){editing=null;$('form').reset();$('fSave').textContent='儲存品項'}
+$('fClear').onclick=()=>{clearForm();$('fMsg').textContent=''};
+$('form').addEventListener('submit',e=>{e.preventDefault();
+  const n=$('fName').value.trim();if(!n){$('fMsg').textContent='請填品名';return}
+  const v=id=>Math.max(0,parseFloat($(id).value)||0);
+  const item={id:editing||('c:'+Date.now()),n,cat:$('fCat').value,k:v('fK'),p:v('fP'),f:v('fF'),c:v('fC'),na:v('fN'),y:Math.round(v('fY')),est:false};
+  custom=custom.filter(x=>x.id!==item.id);custom.push(item);persist();
+  $('fMsg').textContent=editing?`已更新「${n}」，之後骰到會用新數字`:`已加入「${n}」，之後會一起被骰到`;clearForm();refresh()});
+function refresh(){['lunch','dinner'].forEach(m=>{S[m]=S[m].filter(byId);if(!S[m].length)S[m]=rollMeal(null,new Set())});save();meal('lunch');meal('dinner');day();list()}
+
+setMode(mode);meal('lunch');meal('dinner');day();list();
+})();
+</script>
+
+</body>
+</html>
