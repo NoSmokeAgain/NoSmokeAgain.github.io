@@ -85,7 +85,8 @@ h1{margin:0;font-size:clamp(34px,7vw,56px);font-weight:900;line-height:1;letter-
 .chip{border:1.5px solid var(--line);border-radius:4px;padding:6px 10px;font-size:14px;font-weight:700}
 .chip.on{background:var(--yellow);border-color:var(--yellow);color:#17190f}
 .chip span{display:block;font-family:var(--num);font-size:14px;font-weight:600;opacity:.75;font-variant-numeric:tabular-nums}.chip.over{opacity:.5;border-style:dashed}.chip.on.over{opacity:1;background:var(--red);border-color:var(--red);color:#fff}
-#carName{width:100%;box-sizing:border-box;background:var(--asphalt);border:1.5px solid var(--line);border-radius:4px;color:var(--fg);font:700 16px var(--display);padding:8px 10px;user-select:text;-webkit-user-select:text}
+#signText{margin-top:8px}
+#carName,#signText{width:100%;box-sizing:border-box;background:var(--asphalt);border:1.5px solid var(--line);border-radius:4px;color:var(--fg);font:700 16px var(--display);padding:8px 10px;user-select:text;-webkit-user-select:text}
 .go:disabled{background:var(--red);color:#fff;cursor:not-allowed}
 #wallet{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding-inline:14px}#wallet small{display:block;color:var(--mute);font-size:12.5px}#wallet b{font-family:var(--num);font-weight:800;font-size:26px;font-variant-numeric:tabular-nums}#wallet .left b{color:var(--yellow)}#wallet .neg b{color:var(--red)}
 .grid.intro{grid-template-columns:minmax(0,560px);justify-content:center}.grid.intro #rightCol{display:none}
@@ -247,7 +248,8 @@ const PARTS={
 };
 const ACCS=[
  {id:"wing",n:"巨型尾翼",p:15},{id:"lights",n:"車頂霧燈",p:8},{id:"neon",n:"底盤霓虹",p:12},{id:"pipes",n:"水桶排氣管",p:10},{id:"kit",n:"寬體大包",p:18},
- {id:"marquee",n:"廟會跑馬燈",p:12},{id:"stage",n:"電子花車舞台",p:30},{id:"lantern",n:"神明燈",p:6},{id:"shrine",n:"土地公小廟",p:15},{id:"betel",n:"檳榔招牌",p:10}];
+ {id:"marquee",n:"廟會跑馬燈",p:12},{id:"stage",n:"電子花車舞台",p:30},{id:"lantern",n:"神明燈",p:6},{id:"shrine",n:"土地公小廟",p:15},{id:"betel",n:"車頂招牌",p:10}];
+const signOf=b=>(b.signText||"").trim()||"檳榔";
 const accSpend=b=>(b.acc||[]).reduce((a,id)=>a+(ACCS.find(x=>x.id===id)||{p:0}).p,0);
 const COLORS=[["白",0xeeeeea],["紅",0xd8392b],["藍",0x1f6fd1],["黃",0xf0b81e],["綠",0x3fa35a],["黑",0x24282c],["銀",0xb9bfc4],["金",0xd9a521]];
 const BUDGET=200;
@@ -263,7 +265,7 @@ function rankBuilds(T){const out=[];
   for(let body=0;body<6;body++)for(let engine=0;engine<6;engine++)for(let tire=0;tire<4;tire++)for(let nitro=0;nitro<3;nitro++){const b={body,engine,tire,nitro,color:0},c=buildCost(b);if(c>BUDGET)continue;out.push({b:`${PARTS.body.items[body].n}/${PARTS.engine.items[engine].n}/${PARTS.tire.items[tire].n}/${PARTS.nitro.items[nitro].n}`,c,t:simBot(b,T).t,w:simBot(b,T).wall})}
   return out.sort((a,b)=>a.t-b.t)}
 function carType(b){if(accSpend(b)>=40)return "帥就好型";const S=buildStat(b),sc=[["極速型",(S.top-33)/6.5],["爆發型",(S.acc-13)/6],["過彎型",(S.hand-.8)/.55],["氮氣型",(S.nr*S.nd-1)/1],["耐撞型",S.tough>0?.62:0]];sc.sort((a,c)=>c[1]-a[1]);return sc[0][0]}
-const carSpec=b=>({k:PARTS.body.items[b.body].k,c:COLORS[b.color][1],eng:b.engine,tire:b.tire,nitro:b.nitro,acc:(b.acc||[]).slice()});
+const carSpec=b=>({k:PARTS.body.items[b.body].k,c:COLORS[b.color][1],eng:b.engine,tire:b.tire,nitro:b.nitro,acc:(b.acc||[]).slice(),sign:signOf(b)});
 const buildName=b=>`${PARTS.body.items[b.body].n}＋${PARTS.engine.items[b.engine].n}`;
 
 const TRACKS=[
@@ -471,7 +473,7 @@ function makeCar(car,opts={}){
 
 /* 只有帥的配件 */
 const boardTex={};
-function ledTex(key,bg,fg,txt){return boardTex[key]||(boardTex[key]=canvasTex(256,128,(g,w,h)=>{g.fillStyle=bg;g.fillRect(0,0,w,h);g.strokeStyle=fg;g.lineWidth=8;g.strokeRect(6,6,w-12,h-12);g.fillStyle=fg;g.font='900 76px "Noto Sans TC","Noto Sans CJK TC",sans-serif';g.textAlign="center";g.textBaseline="middle";g.fillText(txt,w/2,h/2+4)}))}
+function ledTex(key,bg,fg,txt){return boardTex[key]||(boardTex[key]=canvasTex(256,128,(g,w,h)=>{g.fillStyle=bg;g.fillRect(0,0,w,h);g.strokeStyle=fg;g.lineWidth=8;g.strokeRect(6,6,w-12,h-12);g.fillStyle=fg;let fz=76;g.font=`900 ${fz}px "Noto Sans TC","Noto Sans CJK TC",sans-serif`;while(g.measureText(txt).width>w-36&&fz>24){fz-=4;g.font=`900 ${fz}px "Noto Sans TC","Noto Sans CJK TC",sans-serif`}g.textAlign="center";g.textBaseline="middle";g.fillText(txt,w/2,h/2+4)}))}
 function addAccessories(g,car,K,W,mat,opts){
   const has=id=>(car.acc||[]).includes(id),fy=.42+K.H,ry=fy+K.cabH,cz=(K.cabS+K.cabE)/2;
   const box=(w,h,d,m,x,y,z)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);g.add(o);return o};
@@ -487,7 +489,7 @@ function addAccessories(g,car,K,W,mat,opts){
     [-1,1].forEach(s=>box(.1,.55,.1,au,s*W*.4,b0+.3,cz+L/2-.15))}
   if(has("lantern")){[-1,1].forEach(s=>{const x=s*W*.42;box(.06,.65,.06,mat(0x4a3a2a),x,ry+.3,cz);const l=new THREE.Mesh(new THREE.SphereGeometry(.28,10,8),glow(0xe5242a));l.scale.y=.85;l.position.set(x,ry+.72,cz);g.add(l);box(.34,.06,.34,mat(0xf2c230),x,ry+.97,cz);box(.34,.06,.34,mat(0xf2c230),x,ry+.47,cz)})}
   if(has("shrine")){const z=K.L/2-.6;box(.8,.55,.65,mat(0xc8352a),0,fy+.28,z);const rf=new THREE.Mesh(new THREE.ConeGeometry(.72,.42,4),mat(0xf2c230));rf.rotation.y=Math.PI/4;rf.position.set(0,fy+.76,z);g.add(rf);box(.36,.4,.05,glow(0xffd56a),0,fy+.25,z+.34)}
-  if(has("betel")){const m=new THREE.MeshBasicMaterial({map:ledTex("bt","#c8102e","#7dff5a","檳榔"),transparent:!!opts.ghost,opacity:opts.ghost?.35:1}),z=K.cabS+.25,y=ry+1.2;box(.1,1,.1,mat(0x777d80),0,ry+.45,z);box(1.72,.9,.1,mat(0x17191b),0,y,z);[1,-1].forEach(s=>{const a=new THREE.Mesh(new THREE.PlaneGeometry(1.6,.8),m);if(s<0)a.rotation.y=Math.PI;a.position.set(0,y,z+s*.06);g.add(a)})}
+  if(has("betel")){const m=new THREE.MeshBasicMaterial({map:ledTex("bt:"+(car.sign||"檳榔"),"#c8102e","#7dff5a",car.sign||"檳榔"),transparent:!!opts.ghost,opacity:opts.ghost?.35:1}),z=K.cabS+.25,y=ry+(has("stage")?2.05:1.2);box(.1,y-ry-.2,.1,mat(0x777d80),0,ry+(y-ry-.2)/2,z);box(1.72,.9,.1,mat(0x17191b),0,y,z);[1,-1].forEach(s=>{const a=new THREE.Mesh(new THREE.PlaneGeometry(1.6,.8),m);if(s<0)a.rotation.y=Math.PI;a.position.set(0,y,z+s*.06);g.add(a)})}
 }
 /* 地形高度 */
 function groundFn(T){
@@ -616,7 +618,7 @@ function startRace(){
   const w=themeWorld(ti),T=w.T;
   if(player)scene.remove(player);if(ghostMesh){scene.remove(ghostMesh);ghostMesh=null}
   player=makeCar(carSpec(save.build));scene.add(player);player.add(flame);flame.position.set(0,.8,-2.6);
-  race={ti,T,c:newCar(buildStat(save.build),T),spec:carSpec(save.build),bname:buildName(save.build),cname:carName(),cost:buildCost(save.build),ctype:carType(save.build),style:accSpend(save.build),spec2:["body","engine","tire","nitro"].map(k=>PARTS[k].items[save.build[k]].n).concat((save.build.acc||[]).map(id=>ACCS.find(x=>x.id===id).n)).join("、"),phase:"cd",cd:3.2,acc:0,kmT:[],photos:[],rec:[],tickets:[],camSeen:new Set(),camH:T.hs[8],bumpShow:0,fired:0,cornerShown:-1};
+  race={ti,T,c:newCar(buildStat(save.build),T),spec:carSpec(save.build),bname:buildName(save.build),cname:carName(),cost:buildCost(save.build),ctype:carType(save.build),style:accSpend(save.build),spec2:["body","engine","tire","nitro"].map(k=>PARTS[k].items[save.build[k]].n).concat((save.build.acc||[]).map(id=>id==="betel"?`車頂招牌「${signOf(save.build)}」`:ACCS.find(x=>x.id===id).n)).join("、"),phase:"cd",cd:3.2,acc:0,kmT:[],photos:[],rec:[],tickets:[],camSeen:new Set(),camH:T.hs[8],bumpShow:0,fired:0,cornerShown:-1};
   const g=ghosts[ti];if(g){ghostMesh=makeCar(g.spec,{ghost:true});scene.add(ghostMesh)}
   T.pads.forEach(p=>p.used=false);
   $("menu").hidden=true;$("modal").hidden=true;$("hud").hidden=false;
@@ -655,7 +657,7 @@ function capturePhoto(r,kmh){
   const asp=innerWidth/innerHeight,hf=44*Math.PI/180;
   photoCam.aspect=asp;photoCam.fov=2*Math.atan(Math.tan(hf/2)/asp)*180/Math.PI;photoCam.updateProjectionMatrix();
   const lat=Math.min(4.6,T.hw-1.2-Math.abs(c.lat)*.2);
-  const tall=accSpend(save.build)>0,pd=tall?11:8.5;
+  const tall=accSpend(save.build)>0,pd=tall?12.5:8.5;
   photoCam.position.set(c.x+Math.sin(h)*pd+rx*side*lat,y+1.9,c.z+Math.cos(h)*pd+rz*side*lat);
   photoCam.lookAt(c.x,y+(tall?1.9:1),c.z);
   flame.visible=false;world.tm.forEach(m=>m.visible=false);
@@ -900,10 +902,11 @@ function renderGarage(){
     const P=PARTS[sl],cur=P.items[b[sl]];
     h+=`<div class="slot"><div class="sl"><b>${P.label}</b><small>${cur.d}</small></div><div class="chips">`+P.items.map((it,i)=>{const after=C-cur.p+it.p;return `<button class="chip ${i===b[sl]?"on":""} ${after>F?"over":""}" data-s="${sl}" data-i="${i}">${it.n}<span>${it.p} 萬</span></button>`}).join("")+`</div></div>`;
   }
-  h+=`<div class="slot"><div class="sl"><b>只有帥的配件</b><small>零性能，${accSpend(b)?"帥度 "+accSpend(b)+" 萬":"可多選"}</small></div><div class="chips">`+ACCS.map(a=>{const on=b.acc.includes(a.id);return `<button class="chip ${on?"on":""} ${!on&&C+a.p>F?"over":""}" data-a="${a.id}">${a.n}<span>${a.p} 萬</span></button>`}).join("")+`</div></div>`;
+  h+=`<div class="slot"><div class="sl"><b>只有帥的配件</b><small>零性能，${accSpend(b)?"帥度 "+accSpend(b)+" 萬":"可多選"}</small></div><div class="chips">`+ACCS.map(a=>{const on=b.acc.includes(a.id);return `<button class="chip ${on?"on":""} ${!on&&C+a.p>F?"over":""}" data-a="${a.id}">${a.n}<span>${a.p} 萬</span></button>`}).join("")+`</div>${b.acc.includes("betel")?`<input id="signText" maxlength="8" placeholder="檳榔" value="${esc(b.signText||"")}" aria-label="招牌文字">`:""}</div>`;
   h+=`<div class="slot"><div class="sl"><b>烤漆</b><small>免費</small></div><div class="chips">`+COLORS.map((c,i)=>`<button class="sw ${i===b.color?"on":""}" aria-label="${c[0]}色" data-s="color" data-i="${i}" style="background:#${c[1].toString(16).padStart(6,"0")}"></button>`).join("")+`</div></div>`;
   $("slots").innerHTML=h;
   $("slots").querySelectorAll("button").forEach(el=>el.addEventListener("click",()=>{if(el.dataset.a){const a=save.build.acc,i=a.indexOf(el.dataset.a);i<0?a.push(el.dataset.a):a.splice(i,1)}else save.build[el.dataset.s]=+el.dataset.i;persist();renderGarage();setPreview()}));
+  if($("signText"))$("signText").addEventListener("input",e=>{save.build.signText=e.target.value;persist();setPreview()});
   $("carName").addEventListener("input",e=>{save.name=e.target.value.trim();persist()});
   setPreview();
 }
