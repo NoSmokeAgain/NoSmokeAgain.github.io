@@ -47,7 +47,7 @@ h1{margin:0;font-size:clamp(34px,7vw,56px);font-weight:900;line-height:1;letter-
 .mission .goal{font-family:var(--num);font-weight:800;font-size:40px;line-height:1;color:var(--yellow);font-variant-numeric:tabular-nums}
 .go{background:var(--yellow);color:#17190f;font-weight:900;font-size:20px;padding:13px;border-radius:6px;width:100%}
 .go:hover{filter:brightness(1.08)}
-#preview{width:100%;height:210px;display:block}
+#preview{width:100%;height:clamp(170px,26vh,230px);display:block}
 .mapbox{padding:8px;position:relative}
 .mapbox svg{display:block;width:100%;max-height:420px}
 .pin{cursor:pointer}
@@ -72,6 +72,8 @@ h1{margin:0;font-size:clamp(34px,7vw,56px);font-weight:900;line-height:1;letter-
 .how kbd{font-family:var(--num);font-weight:800;background:var(--line);color:var(--fg);border-radius:3px;padding:0 6px}
 .src{font-size:12px;line-height:1.6;color:var(--mute)}
 .garage{display:flex;flex-direction:column;gap:12px;padding-bottom:14px}
+.gTop{position:sticky;top:0;z-index:5;background:var(--asphalt2);padding-bottom:10px;border-bottom:2px solid var(--line);border-radius:6px 6px 0 0}
+#wallet b{font-size:22px!important}
 #stats{display:flex;flex-direction:column;gap:6px;padding-inline:14px}
 .st{display:grid;grid-template-columns:40px minmax(0,1fr) 78px;gap:8px;align-items:center;font-size:13px}
 .st small{grid-column:2/4;color:var(--yellow)}
@@ -194,8 +196,8 @@ h1{margin:0;font-size:clamp(34px,7vw,56px);font-weight:900;line-height:1;letter-
       <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
         <section class="mission" id="mission"></section>
         <section class="panel garage">
-          <canvas id="preview"></canvas>
-          <div id="wallet"></div>
+          <div class="gTop"><canvas id="preview"></canvas>
+          <div id="wallet"></div></div>
           <div id="stats"></div>
           <div id="slots"></div>
         </section>
@@ -906,7 +908,7 @@ function renderGarage(){
   setPreview();
 }
 /* 車庫轉盤 */
-let P=null,pCar=null,pIdx=-1;
+let P=null,pCar=null,pIdx=-1,pPulse=0;
 function setupPreview(){
   try{
     const c=$("preview"),r=new THREE.WebGLRenderer({canvas:c,antialias:true,alpha:true});r.setPixelRatio(Math.min(devicePixelRatio||1,2));
@@ -916,11 +918,11 @@ function setupPreview(){
     P={r,s,pc,c};
   }catch(e){P=null}
 }
-function setPreview(){if(!P)return;const k=JSON.stringify(save.build);if(pIdx===k)return;pIdx=k;const a=pCar?pCar.rotation.y:.6;if(pCar)P.s.remove(pCar);pCar=makeCar(carSpec(save.build));pCar.rotation.y=a;P.s.add(pCar)}
+function setPreview(){if(!P)return;const k=JSON.stringify(save.build);if(pIdx===k)return;pIdx=k;const a=pCar?pCar.rotation.y:.6;if(pCar)P.s.remove(pCar);pCar=makeCar(carSpec(save.build));pCar.rotation.y=a;P.s.add(pCar);pPulse=1}
 function previewTick(dt){
   if(!P||!pCar||$("menu").hidden)return;
   const w=P.c.clientWidth,h=P.c.clientHeight;if(P.c.width!==Math.floor(w*P.r.getPixelRatio())){P.r.setSize(w,h,false);P.pc.aspect=w/h;P.pc.updateProjectionMatrix()}
-  pCar.rotation.y+=dt*.6;P.r.render(P.s,P.pc);
+  pCar.rotation.y+=dt*.6;pPulse=Math.max(0,pPulse-dt*3.5);pCar.scale.setScalar(1+Math.sin(pPulse*Math.PI)*.14);P.r.render(P.s,P.pc);
 }
 
 setupPreview();renderMenu();
