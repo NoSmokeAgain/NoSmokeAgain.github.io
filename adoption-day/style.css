@@ -55,3 +55,6 @@ a.download-card{text-decoration:none;display:block;text-align:center}
 /* Skill is a full-width text button, not the icon/text grid of regular actions. */
 #tray #special-action{display:flex;align-items:center;justify-content:center;grid-column:1/-1;grid-template-columns:none;width:100%;min-width:0;min-height:44px;height:auto;padding:10px 8px;white-space:nowrap;word-break:normal;font-size:14px;line-height:1.4;background:#f5cf69;color:#3d4c37;border:2px solid #9b813e}
 #tray #special-action[hidden]{display:none}
+
+/* 防止連點兩下放大 */
+html,body,#app{touch-action:manipulation}:where(#app *){touch-action:manipulation}
