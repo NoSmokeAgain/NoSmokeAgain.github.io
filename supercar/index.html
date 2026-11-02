@@ -916,7 +916,7 @@ function setupPreview(){
   try{
     const c=$("preview"),r=new THREE.WebGLRenderer({canvas:c,antialias:true,alpha:true});r.setPixelRatio(Math.min(devicePixelRatio||1,2));
     const s=new THREE.Scene();s.add(new THREE.HemisphereLight(0xffffff,0x555555,1));const d=new THREE.DirectionalLight(0xffffff,.7);d.position.set(3,5,4);s.add(d);
-    const pc=new THREE.PerspectiveCamera(30,2,.1,50);pc.position.set(0,3.9,12.5);pc.lookAt(0,1.45,0);
+    const pc=new THREE.PerspectiveCamera(30,2,.1,50);pc.position.set(0,4.6,15.5);pc.lookAt(0,2,0);
     const floor=new THREE.Mesh(new THREE.CircleGeometry(3.6,32),new THREE.MeshBasicMaterial({color:0x3b4142}));floor.rotation.x=-Math.PI/2;s.add(floor);
     P={r,s,pc,c};
   }catch(e){P=null}
