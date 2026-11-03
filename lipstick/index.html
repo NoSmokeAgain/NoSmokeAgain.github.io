@@ -45,6 +45,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 #settle{background:var(--bg);overflow-y:auto;align-items:center;gap:12px;z-index:4}
 .lv{font-weight:900;color:var(--cream);font-size:18px;display:flex;justify-content:space-between;width:100%;max-width:430px;flex:none}
 #setImg{width:100%;max-width:430px;aspect-ratio:66/44;border-radius:16px;display:block;box-shadow:0 10px 26px rgba(42,13,27,.3);flex:none;background:var(--cream)}
+.setWrap{position:relative;width:100%;max-width:430px;flex:none}
+.setWrap #setImg{max-width:none}
+#setStamp{position:absolute;right:12px;top:10px;border:5px solid var(--red);color:var(--red);background:rgba(255,244,234,.86);font-weight:900;font-size:28px;line-height:1;padding:8px 12px;border-radius:8px;transform:rotate(-11deg)}
+#setStamp:empty,#setWho:empty{display:none}
+#setStamp.good{border-color:#1f8a70;color:#1f8a70}
+#setStamp.in{animation:stampIn .32s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes stampIn{from{transform:rotate(-11deg) scale(2.4);opacity:0}to{transform:rotate(-11deg) scale(1);opacity:1}}
+#setWho{position:absolute;left:10px;bottom:10px;max-width:calc(100% - 20px);background:#fff;border:2px solid var(--ink);border-radius:12px;padding:5px 11px;font-weight:700;font-size:14px}
 .pct{font:900 clamp(70px,22vw,104px)/1 var(--sans);color:var(--cream);text-shadow:4px 4px 0 var(--red);font-variant-numeric:tabular-nums;flex:none}
 .pct small{font-size:.45em}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:430px;flex:none}
@@ -64,7 +72,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 #lbName{font:inherit;font-size:16px;font-weight:500;padding:10px 12px;border:1.5px solid #e2c3cc;border-radius:10px;background:#fff;color:var(--ink);min-width:0;user-select:text;-webkit-user-select:text}
 #lbSend{border:0;border-radius:10px;background:var(--red);color:#fff;font-weight:900;padding:0 18px}
 #lbSend:disabled{opacity:.5}
-#lbMsg{margin:9px 0;font-weight:700;line-height:1.6}
+#lbMsg{margin:9px 0 0;font-weight:700;line-height:1.6}
 #lbMsg:empty{display:none}
 .lbtabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 6px}
 .lbtabs button{border:0;background:#f4e3e6;border-radius:8px;padding:8px;font-weight:700;color:var(--mute)}
@@ -94,7 +102,7 @@ button{font:inherit;color:inherit;cursor:pointer}
   <h1 class="big">擦口紅<br>不出界</h1>
   <p class="tagline">十關，公車、貓、颱風都想害妳。</p>
   <button class="btn" id="start">開始擦</button>
-  <span style="font-size:11px;opacity:.6">版本 4</span>
+  <span style="font-size:11px;opacity:.6">版本 5</span>
 </div>
 <div id="play" class="screen" hidden>
   <button class="snd" aria-pressed="true"></button>
@@ -104,7 +112,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 </div>
 <div id="settle" class="screen" hidden>
   <div class="lv"><span id="setName"></span><span id="setNo"></span></div>
-  <img id="setImg" alt="本關的嘴">
+  <div class="setWrap"><img id="setImg" alt="本關的嘴"><span id="setStamp"></span><span id="setWho"></span></div>
   <div class="pct"><span id="setPct">0</span><small>%</small></div>
   <div class="stats"><div class="stat"><span>塗滿</span><b id="setCover"></b></div><div class="stat"><span>出界</span><b id="setSpill"></b></div></div>
   <p id="setLine"></p>
@@ -113,17 +121,19 @@ button{font:inherit;color:inherit;cursor:pointer}
 </div>
 <div id="result" class="screen" hidden>
   <img id="shareImg" alt="">
-  <p class="rtext" id="rText"></p>
   <div class="tot" id="rTot"></div>
+  <p class="rtext" id="rText"></p>
+  <section class="board" aria-label="上榜">
+    <form id="lbForm"><input id="lbName" maxlength="8" placeholder="取個暱稱上榜（最多 8 字）" autocomplete="off" aria-label="暱稱"><button id="lbSend" type="submit">上榜</button></form>
+    <p id="lbMsg" role="status"></p>
+  </section>
+  <div class="acts"><button class="btn" id="rShare" disabled>分享卡片</button><button class="btn alt" id="rAgain">再擦一次</button></div>
   <section class="board" aria-label="排行榜">
     <h2>排行榜</h2>
-    <form id="lbForm"><input id="lbName" maxlength="8" placeholder="妳的暱稱（最多 8 字）" autocomplete="off" aria-label="暱稱"><button id="lbSend" type="submit">上榜</button></form>
-    <p id="lbMsg" role="status"></p>
     <div class="lbtabs" role="tablist"><button role="tab" data-p="week" aria-selected="true">本週榜</button><button role="tab" data-p="all" aria-selected="false">總榜</button></div>
     <ol id="lbList"></ol>
   </section>
   <div class="tally" id="tally"></div>
-  <div class="acts"><button class="btn" id="rShare" disabled>分享卡片</button><button class="btn alt" id="rAgain">再擦一次</button></div>
 </div>
 <div id="cardView" hidden><img alt="結果卡片"><p>長按圖片，存下來或直接分享</p><button id="cardClose">關閉</button></div>
 
@@ -149,6 +159,8 @@ const Snd=(()=>{let c,master,fx,mus,nb,on=true,timer=0,next=0,step=0,sw=null,sil
   bump(){if(ok()){const t=now();tone(110,t,.2,.6,'sine',fx,.002,45);noise(t,.1,.32,'lowpass',700,fx,.001)}},
   meow(){if(ok()){const t=now();tone(520,t,.42,.17,'sawtooth',fx,.05,820);tone(780,t+.18,.28,.08,'triangle',fx,.04,430)}},
   hey(){if(ok()){const t=now();tone(420,t,.13,.26,'square',fx,.005,700);tone(700,t+.1,.09,.12,'square',fx,.004)}},
+  full(){if(ok()){const t=now();[880,1174.66,1567.98].forEach((f,i)=>tone(f,t+i*.07,.24,.11))}},
+  stamp(){if(ok()){const t=now();tone(130,t,.16,.42,'sine',fx,.002,60);noise(t,.05,.26,'lowpass',1400,fx,.001)}},
   press(){if(ok()){const t=now();tone(150,t,.13,.2,'sine',fx,.03,110);tone(150,t+.4,.13,.2,'sine',fx,.03,110)}},
   pop(){if(ok()){const t=now();tone(240,t,.09,.42,'sine',fx,.002,920);noise(t,.025,.16,'bandpass',2600,fx,.001,1.4)}},
   sneeze(){if(ok()){const t=now();noise(t,.22,.5,'bandpass',2600,fx,.01,.7);tone(620,t,.13,.18,'sawtooth',fx,.005,260)}},
@@ -165,22 +177,38 @@ for(const ev of ['touchend','click','keydown'])document.addEventListener(ev,()=>
 document.addEventListener('visibilitychange',()=>Snd.hide(document.hidden));
 function sndLabels(){document.querySelectorAll('.snd').forEach(b=>{b.textContent=Snd.isOn()?'聲音 開':'聲音 關';b.setAttribute('aria-pressed',Snd.isOn());b.onclick=()=>{Snd.toggle();sndLabels()}})}
 sndLabels();
+const LINES={
+ home:{a:['手很穩，今天可以的。','連唇峰都有畫到，今天運氣用在這裡了。','這支口紅遇到妳，算它幸運。'],b:['熱身就有點抖，先深呼吸。','這裡沒人害妳，但還是有點歪。','昨晚睡飽再來，應該會更好。'],c:['這裡沒人害妳，妳自己來的。','鏡子都想轉過去不看了。','第一關就這樣，後面有點危險。']},
+ bus:{a:['司機煞車，妳沒在怕。','這手可以去當公車化妝師。','全車只有妳的嘴是穩的。'],b:['有幾次被甩出去，司機看後照鏡笑了。','過彎那下有點可惜。','再一站就能塗完，可惜下車了。'],c:['這不是塗口紅，這是公車事故。','旁邊的小朋友看得很認真。','下一站：急診室。']},
+ cat:{a:['貓都拿妳沒辦法。','貓看了看妳，決定改推杯子。','妳和貓之間，這次妳贏了。'],b:['貓只碰了妳一下，牠很滿意。','尾巴過去那段，真的看不到。','貓已經走了，口紅還沒回來。'],c:['貓贏了，而且不會道歉。','牠還回頭看了一眼，確認有成功。','妳養的不是貓，是妝容破壞者。']},
+ friend:{a:['閨蜜拍了三次，妳完全沒理她。','這段友誼經得起考驗，妳的手也是。','她想害妳，但她失敗了。'],b:['她說「對不起啦」，但她在笑。','被拍第三下才歪，算有定力。','她已經拍照傳到群組了。'],c:['這段友誼需要討論一下。','她說這樣比較好看，她在說謊。','限動已經發了，標記的是妳。']},
+ moto:{a:['台灣路面都沒辦法阻止妳。','坑洞見到妳都要讓路。','騎士不知道，後座出了一位高手。'],b:['坑洞比想像中多，但妳撐住了。','安全帽擋了一下，妳盡力了。','再少一個坑洞，妳就完美了。'],c:['縣市政府應該賠妳一支口紅。','這條路該重鋪了，妳的嘴也是。','到了目的地，還是先去洗個臉。']},
+ mrt:{a:['站穩又塗滿，很適合當通勤族。','列車進站，妳的手沒進站。','車廂裡沒有人發現妳在塗口紅。'],b:['急停那下差點撞到旁邊的人。','拉環比妳的手還穩一點。','廣播說請握緊扶手，妳的手很忙。'],c:['隔壁的阿姨默默把包包換到另一邊。','車廂裡有人把手機舉起來了。','這站下車，先去廁所。']},
+ dark:{a:['關燈都能塗，這是記憶力。','燈亮了，大家以為妳開了外掛。','妳可能其實不需要鏡子。'],b:['摸黑還算準，但有幾筆是賭的。','有一筆跑去鼻子問候了一下。','台電修好了，妳的嘴還沒。'],c:['燈一亮，全家都安靜了。','媽媽開燈後問妳是不是受傷了。','下次停電，先找手電筒。']},
+ quake:{a:['這也能塗？妳該先躲桌子下。','地牛翻身，妳的手不翻。','連氣象局都想問妳的手有多穩。'],b:['搖成這樣還塗得上去，算妳厲害。','規模四的手，還算穩。','主震撐過去了，餘震輸了。'],c:['請先就地掩護，口紅等一下再說。','這不是出界，是板塊位移。','手機收到警報，嘴也收到了。']},
+ sneeze:{a:['鼻子癢都不影響，這叫專業。','連打噴嚏都沒歪，太誇張了。','妳的鼻子和手是分開上班的。'],b:['噴嚏那一下，口紅飛去臉頰了。','衛生紙在旁邊，來不及了。','再撐一秒就塗完了。'],c:['這不是妝，這是過敏紀錄。','噴嚏後大家都幫妳說保重。','先看醫生，再塗口紅。']},
+ storm:{a:['颱風天還出門，而且口紅沒歪。','十七級陣風也拿妳沒辦法。','氣象主播想訪問妳。'],b:['頭髮一直飛進來，妳盡力了。','傘飛走了，口紅還在。','有放颱風假的話，就不用這麼辛苦了。'],c:['放颱風假了，還塗什麼口紅。','嘴巴被風帶到下一個縣市了。','路邊招牌都比妳的口紅穩。']}
+};
+const WHO={home:['鏡子：我盡力了。','牙刷：這不關我的事。'],bus:['司機：不好意思喔。','隔壁阿伯：小姐，妳那個……'],cat:['貓：喵。','貓：看什麼，再來一次嗎？'],friend:['閨蜜：哈哈哈哈哈','閨蜜：我已經截圖了。'],moto:['騎士：剛剛有坑洞。','騎士：妳在後面幹嘛？'],mrt:['阿姨：妹妹，這樣不行啦。','廣播：請站穩扶好。'],dark:['媽媽：妳的嘴怎麼了？','手電筒：現在才找我？'],quake:['地牛：不好意思。','手機：國家級警報。'],sneeze:['鼻子：我控制不了。','衛生紙：來晚了。'],storm:['風：抱歉吹到妳。','主播：請民眾不要外出。']};
+let seenL={};try{seenL=JSON.parse(localStorage.getItem('lipLines')||'{}')}catch(e){}
+function nextL(id,list){const n=seenL[id]||0;seenL[id]=n+1;try{localStorage.setItem('lipLines',JSON.stringify(seenL))}catch(e){}return list[n%list.length]}
+const TUBES=[{b:'#16111a',h:'#5a4a5e',m:'#fbe7ad',d:'#a97c2e'},{b:'#c92a5a',h:'#ff8fb0',m:'#f6d7c6',d:'#b98463'},{b:'#f5efe6',h:'#ffffff',m:'#d6b25e',d:'#9a7428',stripe:'#d3123d'},{b:'#2d3f63',h:'#7a90bd',m:'#dfe3ea',d:'#8d95a3'},{b:'#7c1f35',h:'#c85a75',m:'#fbe7ad',d:'#a97c2e',wide:1},{b:'#e8a8b8',h:'#ffe0e8',m:'#ffffff',d:'#c9b3ba',slim:1},{b:'#1c1a1d',h:'#6a666d',m:'#c9ccd2',d:'#6e7178',stripe:'#e8bb5a'},{b:'#4a5a44',h:'#8ca086',m:'#d6b25e',d:'#9a7428',wide:1},{b:'#f4c430',h:'#fff0a8',m:'#23262b',d:'#000000',slim:1},{b:'#5a3fa8',h:'#a18be6',m:'#fbe7ad',d:'#a97c2e',stripe:'#fff4ea'}];
 /* ---------- 十個場景 ---------- */
 const bump=(t,dx,dy,dur=300,x={})=>Object.assign({t,dx,dy,dur,snd:'bump'},x);
 const S=[
- {id:'home',n:'浴室鏡子',short:'鏡子',lose:'連鏡子都能輸',c:'#e8405f',W:118,T:44,B:58,bg:'#bfe3e0',T_:7,lines:['手很穩，今天可以的。','熱身就有點抖，先深呼吸。','這裡沒人害妳，妳自己來的。']},
- {id:'bus',n:'公車上',short:'公車',lose:'輸給了公車司機',c:'#c8102e',W:114,T:42,B:54,bg:'#ffd98a',T_:7,ev:[bump(1000,-14,56),bump(2300,30,-44),bump(3500,-52,34),bump(4700,44,60),bump(5800,-20,-56)],sway:[10,4,.0022],lines:['司機煞車，妳沒在怕。','有幾次被甩出去，司機看後照鏡笑了。','這不是塗口紅，這是公車事故。']},
- {id:'cat',n:'貓跳上來',short:'貓',lose:'輸給了貓',c:'#a43a24',W:112,T:40,B:52,bg:'#dac6ee',T_:7,ev:[{t:1400,dx:-100,dy:-16,dur:520,snd:'meow',paw:1},{t:4400,dx:108,dy:32,dur:520,snd:'meow',paw:-1}],tail:[[2500,3700]],lines:['貓都拿妳沒辦法。','貓只碰了妳一下，牠很滿意。','貓贏了，而且不會道歉。']},
- {id:'friend',n:'閨蜜拍肩',short:'閨蜜',lose:'輸給了閨蜜',c:'#ec2f8c',W:108,T:38,B:50,bg:'#c9e8b8',T_:7,ev:[bump(1700,88,66,330,{warn:'欸！'}),bump(3700,-104,58,330,{warn:'欸欸！'}),bump(5500,58,-100,330,{warn:'看這個！'})],lines:['閨蜜拍了三次，妳完全沒理她。','她說「對不起啦」，但她在笑。','這段友誼需要討論一下。']},
- {id:'moto',n:'機車後座',short:'機車',lose:'輸給了路上的坑洞',c:'#5e0d22',W:104,T:36,B:48,bg:'#9fc6ef',T_:7,moto:1,ev:[bump(1400,0,-66,260),bump(2700,-50,62,260),bump(4200,62,-58,260),bump(5500,-42,-64,260)],sway:[7,11,.03],lines:['台灣路面都沒辦法阻止妳。','坑洞比想像中多，但妳撐住了。','縣市政府應該賠妳一支口紅。']},
- {id:'mrt',n:'捷運急停',short:'捷運',lose:'輸給了捷運進站',c:'#b5626a',W:100,T:36,B:46,bg:'#d8dde2',T_:7,sway:[20,5,.0042],ev:[bump(2600,120,12,620),bump(5200,-130,-12,620)],lines:['站穩又塗滿，很適合當通勤族。','急停那下差點撞到旁邊的人。','隔壁的阿姨默默把包包換到另一邊。']},
- {id:'dark',n:'突然停電',short:'停電',lose:'輸給了台電',c:'#c9402b',W:96,T:34,B:44,bg:'#3a3550',T_:7,dark:[[1200,2800],[3700,5500]],lines:['關燈都能塗，這是記憶力。','摸黑還算準，但有幾筆是賭的。','燈一亮，全家都安靜了。']},
- {id:'quake',n:'地震',short:'地震',lose:'輸給了板塊運動',c:'#7c1f35',W:92,T:32,B:42,bg:'#e9d8b4',T_:7,quake:[1100,5200,30],lines:['這也能塗？妳該先躲桌子下。','搖成這樣還塗得上去，算妳厲害。','請先就地掩護，口紅等一下再說。']},
- {id:'sneeze',n:'要打噴嚏',short:'噴嚏',lose:'輸給了自己的鼻子',c:'#f06a55',W:88,T:30,B:40,bg:'#f3c9c9',T_:7,ev:[{t:2200,dx:-60,dy:118,dur:300,snd:'sneeze',say:['哈…','哈…','哈啾！']},{t:5000,dx:70,dy:-110,dur:300,snd:'sneeze',say:['哈…','哈…','哈啾！']}],lines:['鼻子癢都不影響，這叫專業。','噴嚏那一下，口紅飛去臉頰了。','這不是妝，這是過敏紀錄。']},
- {id:'storm',n:'颱風天',short:'颱風',lose:'輸給了颱風',c:'#2e0813',W:84,T:28,B:36,bg:'#8f9fae',T_:8,storm:1,sway:[44,14,.0032],hair:[[1300,2300],[3500,4600],[5600,6800]],ev:[bump(3000,-70,30,520),bump(6100,84,-30,520)],lines:['颱風天還出門，而且口紅沒歪。','頭髮一直飛進來，妳盡力了。','放颱風假了，還塗什麼口紅。']}
+ {id:'home',n:'浴室鏡子',short:'鏡子',lose:'連鏡子都能輸',c:'#e8405f',W:118,T:44,B:58,bg:'#bfe3e0',T_:7},
+ {id:'bus',n:'公車上',short:'公車',lose:'輸給了公車司機',c:'#c8102e',W:114,T:42,B:54,bg:'#ffd98a',T_:7,ev:[bump(1000,-14,56),bump(2300,30,-44),bump(3500,-52,34),bump(4700,44,60),bump(5800,-20,-56)],sway:[10,4,.0022]},
+ {id:'cat',n:'貓跳上來',short:'貓',lose:'輸給了貓',c:'#a43a24',W:112,T:40,B:52,bg:'#dac6ee',T_:7,ev:[{t:1400,dx:-100,dy:-16,dur:520,snd:'meow',paw:1},{t:4400,dx:108,dy:32,dur:520,snd:'meow',paw:-1}],tail:[[2500,3700]]},
+ {id:'friend',n:'閨蜜拍肩',short:'閨蜜',lose:'輸給了閨蜜',c:'#ec2f8c',W:108,T:38,B:50,bg:'#c9e8b8',T_:7,ev:[bump(1700,88,66,330,{warn:'欸！'}),bump(3700,-104,58,330,{warn:'欸欸！'}),bump(5500,58,-100,330,{warn:'看這個！'})]},
+ {id:'moto',n:'機車後座',short:'機車',lose:'輸給了路上的坑洞',c:'#5e0d22',W:104,T:36,B:48,bg:'#9fc6ef',T_:7,moto:1,ev:[bump(1400,0,-66,260),bump(2700,-50,62,260),bump(4200,62,-58,260),bump(5500,-42,-64,260)],sway:[7,11,.03]},
+ {id:'mrt',n:'捷運急停',short:'捷運',lose:'輸給了捷運進站',c:'#b5626a',W:100,T:36,B:46,bg:'#d8dde2',T_:7,sway:[20,5,.0042],ev:[bump(2600,120,12,620),bump(5200,-130,-12,620)]},
+ {id:'dark',n:'突然停電',short:'停電',lose:'輸給了台電',c:'#c9402b',W:96,T:34,B:44,bg:'#3a3550',T_:7,dark:[[1200,2800],[3700,5500]]},
+ {id:'quake',n:'地震',short:'地震',lose:'輸給了板塊運動',c:'#7c1f35',W:92,T:32,B:42,bg:'#e9d8b4',T_:7,quake:[1100,5200,30]},
+ {id:'sneeze',n:'要打噴嚏',short:'噴嚏',lose:'輸給了自己的鼻子',c:'#f06a55',W:88,T:30,B:40,bg:'#f3c9c9',T_:7,ev:[{t:2200,dx:-60,dy:118,dur:300,snd:'sneeze',say:['哈…','哈…','哈啾！']},{t:5000,dx:70,dy:-110,dur:300,snd:'sneeze',say:['哈…','哈…','哈啾！']}]},
+ {id:'storm',n:'颱風天',short:'颱風',lose:'輸給了颱風',c:'#2e0813',W:84,T:28,B:36,bg:'#8f9fae',T_:8,storm:1,sway:[44,14,.0032],hair:[[1300,2300],[3500,4600],[5600,6800]],ev:[bump(3000,-70,30,520),bump(6100,84,-30,520)]}
 ];
 const G=$('#game'),g=G.getContext('2d');
-const LY=285;
+const LY=285,TIP=64;
 function lipsPath(sc){const W=sc.W,T=sc.T,B=sc.B,m=LY,cx=200,p=new Path2D();
  p.moveTo(cx-W,m-2);p.bezierCurveTo(cx-W*.6,m-T*.55,cx-W*.38,m-T*1.02,cx-W*.2,m-T);p.bezierCurveTo(cx-W*.1,m-T*.98,cx-W*.05,m-T*.68,cx,m-T*.68);p.bezierCurveTo(cx+W*.05,m-T*.68,cx+W*.1,m-T*.98,cx+W*.2,m-T);p.bezierCurveTo(cx+W*.38,m-T*1.02,cx+W*.6,m-T*.55,cx+W,m-2);
  p.bezierCurveTo(cx+W*.62,m+B*.96,cx+W*.3,m+B*1.08,cx,m+B*1.08);p.bezierCurveTo(cx-W*.3,m+B*1.08,cx-W*.62,m+B*.96,cx-W,m-2);p.closePath();return p}
@@ -207,17 +235,26 @@ function drawFace(x,sc){
  /* 頭髮與光澤 */
  x.strokeStyle='rgba(255,255,255,.07)';x.lineWidth=2;for(let i=0;i<7;i++){x.beginPath();x.moveTo(22+i*4,62);x.quadraticCurveTo(12+i*3,280,44+i*6,490);x.stroke();x.beginPath();x.moveTo(378-i*4,62);x.quadraticCurveTo(388-i*3,280,356-i*6,490);x.stroke()}
  /* 脖子與領口 */
- const nk=x.createLinearGradient(0,400,0,490);nk.addColorStop(0,'#c98f73');nk.addColorStop(.6,'#e7b596');x.fillStyle=nk;x.fillRect(118,396,164,100);
+ const nk=x.createLinearGradient(0,400,0,490);nk.addColorStop(0,'#b97c62');nk.addColorStop(.45,'#e7b596');x.fillStyle=nk;x.fillRect(128,372,144,124);
  x.fillStyle='#2a0d1b';x.beginPath();x.moveTo(60,490);x.quadraticCurveTo(120,466,146,452);x.quadraticCurveTo(200,492,254,452);x.quadraticCurveTo(280,466,340,490);x.fill();
  /* 臉 */
- const sk=x.createRadialGradient(200,210,70,200,250,250);sk.addColorStop(0,'#fde4d3');sk.addColorStop(.7,'#f6cdb3');sk.addColorStop(1,'#e2a98a');x.fillStyle=sk;x.beginPath();x.moveTo(40,40);x.lineTo(360,40);x.bezierCurveTo(374,180,368,322,284,420);x.quadraticCurveTo(200,478,116,420);x.bezierCurveTo(32,322,26,180,40,40);x.fill();
- soft(x,84,214,62,'rgba(236,100,130,1)',.28,.62);soft(x,316,214,62,'rgba(236,100,130,1)',.28,.62);
+ const sk=x.createRadialGradient(200,210,70,200,250,250);sk.addColorStop(0,'#fde4d3');sk.addColorStop(.7,'#f6cdb3');sk.addColorStop(1,'#e2a98a');x.fillStyle=sk;x.beginPath();x.moveTo(40,40);x.lineTo(360,40);x.bezierCurveTo(382,170,380,300,292,388);x.quadraticCurveTo(200,452,108,388);x.bezierCurveTo(20,300,18,170,40,40);x.fill();
+ soft(x,76,226,70,'rgba(236,100,130,1)',.24,.55);soft(x,324,226,70,'rgba(236,100,130,1)',.24,.55);
+  /* 低頭專心看嘴巴的眼睛 */
+ for(const sd of [-1,1]){const ex=200+sd*80,ey=128;x.save();x.translate(ex,ey);x.scale(sd,1);
+  x.strokeStyle='#5a3a2c';x.lineWidth=5.5;x.lineCap='round';x.beginPath();x.moveTo(-40,-32);x.quadraticCurveTo(-4,-46,36,-30);x.stroke();
+  x.beginPath();x.moveTo(-32,2);x.quadraticCurveTo(0,-14,32,1);x.quadraticCurveTo(0,20,-32,2);x.closePath();x.fillStyle='#fffaf6';x.fill();x.save();x.clip();x.fillStyle='#3a2115';x.beginPath();x.arc(-2,8,14,0,7);x.fill();x.fillStyle='#0d0809';x.beginPath();x.arc(-2,9,7,0,7);x.fill();x.fillStyle='#fff';x.beginPath();x.arc(-7,3,3,0,7);x.fill();x.fillStyle='rgba(120,70,60,.28)';x.fillRect(-36,-20,72,18);x.restore();
+  x.strokeStyle='#1f1411';x.lineWidth=3.2;x.beginPath();x.moveTo(-32,2);x.quadraticCurveTo(0,-14,34,0);x.stroke();x.lineWidth=1.6;for(let i=0;i<6;i++){const q=8+i*5;x.beginPath();x.moveTo(q,-5+i*.8);x.lineTo(q+6,-13+i*1.1);x.stroke()}
+  x.strokeStyle='rgba(150,90,70,.45)';x.lineWidth=1.4;x.beginPath();x.moveTo(-24,12);x.quadraticCurveTo(0,20,24,10);x.stroke();x.restore()}
+
  /* 鼻 */
+ x.save();x.translate(0,52);
  soft(x,200,132,44,'rgba(255,255,255,1)',.42,1.1);soft(x,200,167,48,'rgba(170,95,70,1)',.26,.3);
  x.strokeStyle='rgba(160,92,70,.72)';x.lineWidth=2.4;x.lineCap='round';x.beginPath();x.moveTo(166,134);x.quadraticCurveTo(156,158,176,158);x.moveTo(234,134);x.quadraticCurveTo(244,158,224,158);x.stroke();x.fillStyle='rgba(118,60,48,.62)';x.beginPath();x.ellipse(183,157,7,3.4,.2,0,7);x.ellipse(217,157,7,3.4,-.2,0,7);x.fill();
+ x.restore();
  /* 人中、下巴 */
  soft(x,200,LY-sc.T-18,18,'rgba(170,95,70,1)',.2,1.6);
- soft(x,200,LY+sc.B*1.08+22,60,'rgba(170,95,70,1)',.3,.22);soft(x,200,420,44,'rgba(255,255,255,1)',.22,.5);
+ soft(x,200,LY+sc.B*1.08+22,60,'rgba(170,95,70,1)',.3,.22);soft(x,200,402,36,'rgba(255,255,255,1)',.2,.45);
  /* 原唇 */
  const p=lipsPath(sc);x.fillStyle='#dc9a92';x.fill(p);x.strokeStyle='rgba(135,70,66,.8)';x.lineWidth=1.8;x.stroke(p);
  x.restore();
@@ -235,16 +272,16 @@ function mirrorRim(x){x.save();x.lineWidth=7;const q=x.createLinearGradient(0,60
 /* ---------- 狀態 ---------- */
 const paint=document.createElement('canvas');paint.width=800;paint.height=1000;const pg=paint.getContext('2d');
 const cache=document.createElement('canvas');cache.width=800;cache.height=1000;const cg=cache.getContext('2d');
-let cur=0,t0=0,running=false,raf=0,finger=null,prevTip=null,fired=new Set(),shots=[],pressed=false,intro=0,shake=0,bubble=null;
+let fullAt=0,fullDone=false,lastM=0,cur=0,t0=0,running=false,raf=0,finger=null,prevTip=null,fired=new Set(),shots=[],pressed=false,intro=0,shake=0,bubble=null;
 const LOW_W=100,LOW_H=125,low=document.createElement('canvas');low.width=LOW_W;low.height=LOW_H;const lg=low.getContext('2d',{willReadFrequently:true});
-function masks(sc){const k=LOW_W/400;lg.setTransform(1,0,0,1,0,0);lg.clearRect(0,0,LOW_W,LOW_H);lg.setTransform(k,0,0,k,0,0);const p=lipsPath(sc);lg.fillStyle='#000';lg.fill(p);const inside=lg.getImageData(0,0,LOW_W,LOW_H).data;lg.lineWidth=12;lg.strokeStyle='#000';lg.stroke(p);const safe=lg.getImageData(0,0,LOW_W,LOW_H).data;return{inside,safe}}
+function masks(sc){if(sc._m)return sc._m;const k=LOW_W/400;lg.setTransform(1,0,0,1,0,0);lg.clearRect(0,0,LOW_W,LOW_H);lg.setTransform(k,0,0,k,0,0);const p=lipsPath(sc);lg.fillStyle='#000';lg.fill(p);const inside=lg.getImageData(0,0,LOW_W,LOW_H).data;lg.lineWidth=12;lg.strokeStyle='#000';lg.stroke(p);const safe=lg.getImageData(0,0,LOW_W,LOW_H).data;sc._m={inside,safe};return sc._m}
 function measure(sc){const{inside,safe}=masks(sc);lg.setTransform(1,0,0,1,0,0);lg.clearRect(0,0,LOW_W,LOW_H);lg.drawImage(paint,0,0,LOW_W,LOW_H);const d=lg.getImageData(0,0,LOW_W,LOW_H).data;let area=0,cov=0,sp=0;for(let i=3;i<d.length;i+=4){const on=d[i]>70,inn=inside[i]>127;if(inn){area++;if(on)cov++}else if(on&&safe[i]<128)sp++}const cover=area?cov/area:0,spill=area?sp/area:0;return{cover,spill,score:Math.max(0,Math.min(100,Math.round(cover*100-spill*55)))}}
 function offset(sc,el){let dx=0,dy=0;if(sc.sway){dx+=Math.sin(el*sc.sway[2])*sc.sway[0];dy+=Math.sin(el*sc.sway[2]*1.7+1)*sc.sway[1]}if(sc.quake&&el>sc.quake[0]&&el<sc.quake[1]){const k=Math.sin((el-sc.quake[0])/(sc.quake[1]-sc.quake[0])*Math.PI)*sc.quake[2];dx+=Math.sin(el*.045)*k;dy+=Math.cos(el*.033)*k}(sc.ev||[]).forEach(e=>{const u=(el-e.t)/e.dur;if(u>=0&&u<=1){const a=Math.sin(u*Math.PI);dx+=e.dx*a;dy+=e.dy*a}});return[dx,dy]}
 function toLogic(e){const r=G.getBoundingClientRect(),k=Math.min(r.width/400,r.height/500),ox=(r.width-400*k)/2,oy=(r.height-500*k)/2;return[(e.clientX-r.left-ox)/k,(e.clientY-r.top-oy)/k]}
 G.addEventListener('pointerdown',e=>{if(!running)return;e.preventDefault();try{G.setPointerCapture(e.pointerId)}catch(err){}finger=toLogic(e);pressed=true;prevTip=null;Snd.swipe(true)});
 G.addEventListener('pointermove',e=>{if(pressed)finger=toLogic(e)});
 const up=()=>{pressed=false;prevTip=null;Snd.swipe(false)};G.addEventListener('pointerup',up);G.addEventListener('pointercancel',up);
-function startScene(i){cur=i;const sc=S[i];pg.clearRect(0,0,800,1000);cg.setTransform(2,0,0,2,0,0);drawFace(cg,sc);fired=new Set();pressed=false;prevTip=null;finger=null;shake=0;bubble=null;sc._q=0;$('#settle').hidden=true;$('#play').hidden=false;$('#scName').textContent=`${i+1}/${S.length} ${sc.n}`;$('#bar').style.transform='scaleX(1)';running=false;intro=performance.now();Snd.scene();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
+function startScene(i){cur=i;const sc=S[i];pg.clearRect(0,0,800,1000);cg.setTransform(2,0,0,2,0,0);drawFace(cg,sc);fired=new Set();pressed=false;prevTip=null;finger=null;shake=0;bubble=null;fullAt=0;fullDone=false;lastM=0;$('#settle').hidden=true;$('#play').hidden=false;$('#scName').textContent=`${i+1}/${S.length} ${sc.n}`;$('#bar').style.transform='scaleX(1)';running=false;intro=performance.now();Snd.scene();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
 function composite(sc){const c=document.createElement('canvas');c.width=800;c.height=1000;const x=c.getContext('2d');x.drawImage(cache,0,0);x.save();x.beginPath();x.roundRect(28,124,744,856,52);x.clip();x.drawImage(paint,0,0);x.restore();x.scale(2,2);lipLight(x,sc);mirrorRim(x);return c}
 /* 抿嘴：以嘴縫為中心，整列像素平滑擠壓，皮膚也跟著動 */
 function playPress(shot,sc,done){
@@ -268,15 +305,15 @@ $('#done').onclick=stopScene;
 function mouthURL(s,w=660,h=440){const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(s.shot,70,330,660,440,0,0,w,h);return c.toDataURL('image/jpeg',.88)}
 let settleAnim=0;
 function settle(i){const s=shots[i],sc=s.sc,r=s.r,pct=r.score;$('#play').hidden=true;$('#settle').hidden=false;$('#settle').scrollTop=0;$('#setName').textContent=sc.n;$('#setNo').textContent=`第 ${i+1} / ${S.length} 關`;$('#setImg').src=mouthURL(s);
- $('#setCover').textContent=Math.round(r.cover*100)+'%';$('#setSpill').textContent=Math.round(r.spill*100)+'%';$('#setLine').textContent=sc.lines[pct>=85?0:pct>=55?1:2];
+ $('#setCover').textContent=Math.round(r.cover*100)+'%';$('#setSpill').textContent=Math.round(r.spill*100)+'%';const tier=pct>=85?'a':pct>=55?'b':'c';$('#setLine').textContent=nextL(sc.id+tier,LINES[sc.id][tier]);const st=$('#setStamp');st.className='';st.textContent=r.spill>=.9?'嚴重出界':r.spill>=.4?'出界':pct>=90?'完美':r.cover<.5?'沒塗完':'';if(pct>=90&&r.spill<.4)st.className='good';$('#setWho').textContent=(r.spill>=.4||pct<55)?nextL('w'+sc.id,WHO[sc.id]):'';if(st.textContent)setTimeout(()=>{void st.offsetWidth;st.classList.add('in');Snd.stamp()},620);
  $('#dots').innerHTML=S.map((_,k)=>`<i style="background:${k<=i?(shots[k].r.score>=85?'#fff4ea':shots[k].r.score>=55?'#ffd98a':'#2a0d1b'):''}"></i>`).join('');
  $('#setNext').textContent=i<S.length-1?`下一關：${S[i+1].n}`:'看總結算';
  cancelAnimationFrame(settleAnim);const el=$('#setPct'),t=performance.now(),still=matchMedia('(prefers-reduced-motion:reduce)').matches;let last=-5;const up2=n=>{const u=still?1:Math.min(1,(n-t)/650),v=Math.round(pct*(1-Math.pow(1-u,3)));el.textContent=v;if(v-last>=5){last=v;Snd.tick(v)}if(u<1)settleAnim=requestAnimationFrame(up2)};settleAnim=requestAnimationFrame(up2)}
 $('#setNext').onclick=()=>{if(cur<S.length-1)startScene(cur+1);else{$('#settle').hidden=true;showResult()}};
-function drawTube(x,tp,c){x.save();x.translate(tp[0],tp[1]);x.rotate(.42);
- x.fillStyle=c;x.beginPath();x.moveTo(-9,4);x.lineTo(-9,-22);x.quadraticCurveTo(0,-38,9,-40);x.lineTo(9,4);x.fill();x.fillStyle='rgba(255,255,255,.4)';x.fillRect(-6,-22,3.5,24);
- const go=x.createLinearGradient(-12,0,12,0);go.addColorStop(0,'#a97c2e');go.addColorStop(.4,'#fbe7ad');go.addColorStop(1,'#a97c2e');x.fillStyle=go;x.fillRect(-11,4,22,18);x.fillStyle='rgba(90,60,10,.5)';x.fillRect(-11,20,22,2);
- const bd=x.createLinearGradient(-14,0,14,0);bd.addColorStop(0,'#16111a');bd.addColorStop(.35,'#5a4a5e');bd.addColorStop(1,'#16111a');x.fillStyle=bd;x.beginPath();x.roundRect(-14,22,28,52,3);x.fill();x.restore()}
+function drawTube(x,tp,c,idx){const s=TUBES[idx==null?cur:idx]||TUBES[0],w=s.wide?17:s.slim?11:14,sw=s.slim?7:9;x.save();x.translate(tp[0],tp[1]);x.rotate(.42);
+ x.fillStyle=c;x.beginPath();x.moveTo(-sw,4);x.lineTo(-sw,-22);x.quadraticCurveTo(0,-38,sw,-40);x.lineTo(sw,4);x.fill();x.fillStyle='rgba(255,255,255,.4)';x.fillRect(-sw+3,-22,3.5,24);
+ const go=x.createLinearGradient(-w,0,w,0);go.addColorStop(0,s.d);go.addColorStop(.4,s.m);go.addColorStop(1,s.d);x.fillStyle=go;x.fillRect(-w+3,4,(w-3)*2,18);x.fillStyle='rgba(40,25,5,.35)';x.fillRect(-w+3,20,(w-3)*2,2);
+ const bd=x.createLinearGradient(-w,0,w,0);bd.addColorStop(0,s.b);bd.addColorStop(.35,s.h);bd.addColorStop(1,s.b);x.fillStyle=bd;x.beginPath();x.roundRect(-w,22,w*2,s.slim?60:52,s.wide?7:3);x.fill();if(s.stripe){x.fillStyle=s.stripe;x.fillRect(-w,44,w*2,4)}x.restore()}
 function drawPaw(x,el,e){const u=(el-e.t)/e.dur;if(u<-.2||u>1.2)return;const a=Math.sin(Math.max(0,Math.min(1,u))*Math.PI),side=e.paw,X=side>0?420-a*190:-20+a*190,Y=250+e.dy;x.save();x.translate(X,Y);if(side<0)x.scale(-1,1);const q=x.createLinearGradient(0,-28,0,28);q.addColorStop(0,'#f0a257');q.addColorStop(1,'#c9742a');x.fillStyle=q;x.fillRect(0,-27,220,54);x.beginPath();x.arc(0,0,36,0,7);x.fill();x.strokeStyle='#a95d1f';x.lineWidth=5;for(let i=0;i<4;i++){x.beginPath();x.moveTo(44+i*42,-26);x.lineTo(52+i*42,6);x.stroke()}x.fillStyle='#ffc9c2';x.beginPath();x.ellipse(-8,3,14,12,0,0,7);x.fill();[[-20,-18],[-29,0],[-20,18]].forEach(p=>{x.beginPath();x.arc(p[0],p[1],6,0,7);x.fill()});x.restore()}
 function drawTail(x,el,w){if(el<w[0]-100||el>w[1]+100)return;const u=(el-w[0])/(w[1]-w[0]),X=-60+u*520;x.save();const path=new Path2D();path.moveTo(X-90,380);path.quadraticCurveTo(X,200,X+60,250+Math.sin(el*.01)*40);x.strokeStyle='#d9812f';x.lineWidth=46;x.lineCap='round';x.stroke(path);x.strokeStyle='#a95d1f';x.lineWidth=46;x.setLineDash([12,34]);x.lineCap='butt';x.stroke(path);x.restore()}
 function drawHair(x,el,w){if(el<w[0]||el>w[1])return;const u=(el-w[0])/(w[1]-w[0]),a=Math.sin(u*Math.PI);x.save();x.strokeStyle='#1f1411';x.lineCap='round';for(let i=0;i<34;i++){x.globalAlpha=.9*a;x.lineWidth=1.6+(i%4)*.7;x.beginPath();const y=196+i*5,dr=Math.sin(el*.006+i)*18;x.moveTo(-10,y-80);x.bezierCurveTo(120,y-34+dr,250,y+34-dr,410,y-10+dr);x.stroke()}x.restore()}
@@ -285,12 +322,14 @@ function loop(n){const sc=S[cur],since=n-intro;
  const el=running?n-t0:0;
  if(running&&el>=sc.T_*1000){stopScene();return}
  bubble=null;
+ if(running&&pressed&&!fullDone&&n-lastM>280){lastM=n;if(measure(sc).cover>=.96){fullDone=true;fullAt=n;Snd.full()}}
+ if(n-fullAt<1100&&fullAt)bubble='塗滿了！';
  if(running){$('#bar').style.transform=`scaleX(${Math.max(0,1-el/(sc.T_*1000))})`;
   (sc.ev||[]).forEach((e,i)=>{if(e.warn&&el>e.t-430&&el<e.t+80)bubble=e.warn;if(e.say){const d=e.t-el;if(d<1300&&d>800)bubble=e.say[0];else if(d<=800&&d>300)bubble=e.say[1];else if(d<=300&&d>-160)bubble=e.say[2]}if(el>=e.t&&!fired.has(i)){fired.add(i);shake=n;Snd[e.snd]();if(navigator.vibrate)try{navigator.vibrate(50)}catch(err){}}});
   if(sc.moto&&Math.floor(el/700)!=Math.floor((el-16)/700))Snd.moto();
   (sc.dark||[]).forEach((w,i)=>{if(el>=w[0]&&!fired.has('d'+i)){fired.add('d'+i);Snd.dark()}});
   if(sc.storm&&Math.floor(el/1600)!=Math.floor((el-16)/1600))Snd.wind()}
- const off=offset(sc,el),tip=finger?[finger[0]+off[0],finger[1]+off[1]-34]:null;
+ const off=offset(sc,el),tip=finger?[finger[0]+off[0],finger[1]+off[1]-TIP]:null;
  if(running&&pressed&&tip){pg.save();pg.scale(2,2);pg.strokeStyle=sc.c;pg.lineWidth=18;pg.lineCap='round';pg.lineJoin='round';pg.shadowColor=sc.c;pg.shadowBlur=3;pg.beginPath();const a=prevTip||tip;pg.moveTo(a[0],a[1]);pg.lineTo(tip[0]+.01,tip[1]);pg.stroke();pg.restore();prevTip=tip}
  g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,800,1000);let sk=n-shake<180?(1-(n-shake)/180)*9:0;if(sc.quake&&el>sc.quake[0]&&el<sc.quake[1])sk=Math.max(sk,6);if(sc.storm)sk=Math.max(sk,1.2);const mo=sc.moto?Math.sin(n*.09)*1.6:0,dx=Math.sin(n*.2)*sk*2,dy=(Math.cos(n*.17)*sk+mo)*2;
  g.fillStyle=sc.bg;g.fillRect(0,0,800,1000);g.drawImage(cache,dx,dy);g.save();g.translate(dx,dy);g.beginPath();g.roundRect(28,124,744,856,52);g.clip();g.drawImage(paint,0,0);g.restore();
@@ -369,7 +408,9 @@ $('#cardClose').onclick=()=>{$('#cardView').hidden=true};
 function begin(){shots=[];$('#intro').hidden=true;$('#result').hidden=true;$('#settle').hidden=true;$('#play').hidden=false;startScene(0)}
 $('#start').onclick=begin;$('#rAgain').onclick=begin;
 /* ---------- 開場圖：出界的嘴 ---------- */
-(function(){const c=$('#introC').getContext('2d'),sc={W:130,T:52,B:64};c.fillStyle='#fde2cf';c.beginPath();c.roundRect(0,0,720,540,30);c.fill();c.save();c.translate(360,270);c.scale(1.45,1.45);c.translate(-210,-285);const p=lipsPath(sc);c.fillStyle='#dd9a93';c.fill(p);c.strokeStyle='#d40f3c';c.lineWidth=38;c.lineCap='round';c.lineJoin='round';c.beginPath();[[80,275],[150,235],[240,240],[320,270],[280,325],[160,335],[90,300],[180,275],[290,285],[350,335],[405,385],[440,370]].forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.stroke();c.fillStyle='rgba(255,255,255,.35)';c.beginPath();c.ellipse(200,330,48,8,0,0,7);c.fill();c.restore()})();
+(function(){const cv=$('#introC'),c=cv.getContext('2d'),sc=S[1];cg.setTransform(2,0,0,2,0,0);drawFace(cg,sc);pg.clearRect(0,0,800,1000);pg.save();pg.scale(2,2);pg.strokeStyle=sc.c;pg.lineWidth=18;pg.lineCap='round';pg.lineJoin='round';pg.beginPath();[[92,283],[150,246],[250,246],[308,284],[268,334],[132,338],[96,298],[190,290],[296,300],[346,344],[372,376]].forEach((q,i)=>i?pg.lineTo(q[0],q[1]):pg.moveTo(q[0],q[1]));pg.stroke();pg.restore();
+ const shot=composite(sc);pg.clearRect(0,0,800,1000);const k=720/620;c.save();c.beginPath();c.roundRect(4,4,712,532,28);c.clip();c.drawImage(shot,90,380,620,465,0,0,720,540);c.setTransform(k*2,0,0,k*2,-90*k,-380*k);drawTube(c,[372,376],sc.c,1);c.restore();c.lineWidth=8;const q=c.createLinearGradient(0,0,720,540);q.addColorStop(0,'#f6dda0');q.addColorStop(.5,'#b98a33');q.addColorStop(1,'#f3d68f');c.strokeStyle=q;c.beginPath();c.roundRect(4,4,712,532,28);c.stroke();
+ c.save();c.translate(590,92);c.rotate(.2);c.fillStyle='#d40f3c';c.beginPath();c.arc(0,0,66,0,7);c.fill();c.strokeStyle='#fff4ea';c.lineWidth=3;c.beginPath();c.arc(0,0,56,0,7);c.stroke();c.fillStyle='#fff4ea';c.textAlign='center';c.font='900 40px "Noto Sans TC",sans-serif';c.fillText('出界',0,14);c.restore()})();
 </script>
 
 </body></html>
