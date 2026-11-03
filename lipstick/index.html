@@ -102,7 +102,7 @@ button{font:inherit;color:inherit;cursor:pointer}
   <h1 class="big">擦口紅<br>不出界</h1>
   <p class="tagline">十關，公車、貓、颱風都想害妳。</p>
   <button class="btn" id="start">開始擦</button>
-  <span style="font-size:11px;opacity:.6">版本 5</span>
+  <span style="font-size:11px;opacity:.6">版本 6</span>
 </div>
 <div id="play" class="screen" hidden>
   <button class="snd" aria-pressed="true"></button>
@@ -310,7 +310,7 @@ function settle(i){const s=shots[i],sc=s.sc,r=s.r,pct=r.score;$('#play').hidden=
  $('#setNext').textContent=i<S.length-1?`下一關：${S[i+1].n}`:'看總結算';
  cancelAnimationFrame(settleAnim);const el=$('#setPct'),t=performance.now(),still=matchMedia('(prefers-reduced-motion:reduce)').matches;let last=-5;const up2=n=>{const u=still?1:Math.min(1,(n-t)/650),v=Math.round(pct*(1-Math.pow(1-u,3)));el.textContent=v;if(v-last>=5){last=v;Snd.tick(v)}if(u<1)settleAnim=requestAnimationFrame(up2)};settleAnim=requestAnimationFrame(up2)}
 $('#setNext').onclick=()=>{if(cur<S.length-1)startScene(cur+1);else{$('#settle').hidden=true;showResult()}};
-function drawTube(x,tp,c,idx){const s=TUBES[idx==null?cur:idx]||TUBES[0],w=s.wide?17:s.slim?11:14,sw=s.slim?7:9;x.save();x.translate(tp[0],tp[1]);x.rotate(.42);
+function drawTube(x,tp,c,idx){const s=TUBES[idx==null?cur:idx]||TUBES[0],w=s.wide?17:s.slim?11:14,sw=s.slim?7:9;x.save();x.translate(tp[0],tp[1]);x.rotate(.42);x.translate(-sw,40);/* 口紅尖端對準實際下筆點 */
  x.fillStyle=c;x.beginPath();x.moveTo(-sw,4);x.lineTo(-sw,-22);x.quadraticCurveTo(0,-38,sw,-40);x.lineTo(sw,4);x.fill();x.fillStyle='rgba(255,255,255,.4)';x.fillRect(-sw+3,-22,3.5,24);
  const go=x.createLinearGradient(-w,0,w,0);go.addColorStop(0,s.d);go.addColorStop(.4,s.m);go.addColorStop(1,s.d);x.fillStyle=go;x.fillRect(-w+3,4,(w-3)*2,18);x.fillStyle='rgba(40,25,5,.35)';x.fillRect(-w+3,20,(w-3)*2,2);
  const bd=x.createLinearGradient(-w,0,w,0);bd.addColorStop(0,s.b);bd.addColorStop(.35,s.h);bd.addColorStop(1,s.b);x.fillStyle=bd;x.beginPath();x.roundRect(-w,22,w*2,s.slim?60:52,s.wide?7:3);x.fill();if(s.stripe){x.fillStyle=s.stripe;x.fillRect(-w,44,w*2,4)}x.restore()}
