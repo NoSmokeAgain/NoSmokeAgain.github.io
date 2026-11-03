@@ -42,6 +42,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 #game{height:100%;max-width:100%;aspect-ratio:4/5;border-radius:18px;display:block;touch-action:none;background:#f5cdb4;cursor:crosshair}
 #card{position:absolute;inset:0;display:none}
 #done{flex:none}
+#stageUp{align-items:center;justify-content:center;gap:10px;background:var(--bg);z-index:4;overflow-y:auto}
+.upk{font:900 64px var(--sans);margin:0;color:var(--cream);text-shadow:3px 3px 0 var(--red)}
+.uph{font:900 26px var(--sans);margin:0}
+#upFace{height:min(56vh,520px);max-width:100%;aspect-ratio:4/5;border-radius:18px}
 #settle{background:var(--bg);overflow-y:auto;align-items:center;gap:12px;z-index:4}
 .lv{font-weight:900;color:var(--cream);font-size:18px;display:flex;justify-content:space-between;width:100%;max-width:430px;flex:none}
 #setImg{width:100%;max-width:430px;aspect-ratio:66/44;border-radius:16px;display:block;box-shadow:0 10px 26px rgba(42,13,27,.3);flex:none;background:var(--cream)}
@@ -61,7 +65,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .stat b{font-size:27px;font-weight:900;font-variant-numeric:tabular-nums}
 #setLine{font-weight:700;margin:0;line-height:1.6;text-align:center;max-width:430px;flex:none}
 .dots{display:flex;gap:6px;flex:none;flex-wrap:wrap;justify-content:center}
-.dots i{width:22px;height:8px;border-radius:4px;background:rgba(42,13,27,.2)}
+.dots i{width:14px;height:8px;border-radius:4px;background:rgba(42,13,27,.2)}
 .tally{width:100%;max-width:430px;background:var(--cream);border-radius:14px;padding:12px 14px;display:grid;grid-template-columns:auto minmax(0,1fr) 3em;gap:7px 10px;align-items:center;font-size:13.5px;font-weight:700;flex:none}
 .tally .b{height:8px;border-radius:4px;background:#f0d7dc;overflow:hidden}.tally .b i{display:block;height:100%;background:var(--red)}
 .tally span:nth-child(3n){text-align:right;font-variant-numeric:tabular-nums}
@@ -102,7 +106,8 @@ button{font:inherit;color:inherit;cursor:pointer}
   <h1 class="big">擦口紅<br>不出界</h1>
   <p class="tagline">十關，公車、貓、颱風都想害妳。</p>
   <button class="btn" id="start">開始擦</button>
-  <span style="font-size:11px;opacity:.6">版本 6</span>
+  <button class="btn alt" id="stage2" hidden>直接玩後 20 關</button>
+  <span style="font-size:11px;opacity:.6">版本 7</span>
 </div>
 <div id="play" class="screen" hidden>
   <button class="snd" aria-pressed="true"></button>
@@ -119,6 +124,7 @@ button{font:inherit;color:inherit;cursor:pointer}
   <div class="dots" id="dots"></div>
   <button class="btn" id="setNext"></button>
 </div>
+<div id="stageUp" class="screen" hidden><p class="upk">晉級！</p><h2 class="uph">第二位模特兒登場</h2><canvas id="upFace" width="800" height="1000" aria-label="新模特兒"></canvas><p class="tagline">接下來 20 關，一關比一關難。</p><button class="btn" id="upGo">開始後 20 關</button></div>
 <div id="result" class="screen" hidden>
   <img id="shareImg" alt="">
   <div class="tot" id="rTot"></div>
@@ -127,7 +133,7 @@ button{font:inherit;color:inherit;cursor:pointer}
     <form id="lbForm"><input id="lbName" maxlength="8" placeholder="取個暱稱上榜（最多 8 字）" autocomplete="off" aria-label="暱稱"><button id="lbSend" type="submit">上榜</button></form>
     <p id="lbMsg" role="status"></p>
   </section>
-  <div class="acts"><button class="btn" id="rShare" disabled>分享卡片</button><button class="btn alt" id="rAgain">再擦一次</button></div>
+  <div class="acts"><button class="btn" id="rUp" style="background:var(--red)" hidden>進入後 20 關</button><button class="btn" id="rShare" disabled>分享卡片</button><button class="btn alt" id="rAgain">再擦一次</button></div>
   <section class="board" aria-label="排行榜">
     <h2>排行榜</h2>
     <div class="lbtabs" role="tablist"><button role="tab" data-p="week" aria-selected="true">本週榜</button><button role="tab" data-p="all" aria-selected="false">總榜</button></div>
@@ -207,6 +213,78 @@ const S=[
  {id:'sneeze',n:'要打噴嚏',short:'噴嚏',lose:'輸給了自己的鼻子',c:'#f06a55',W:88,T:30,B:40,bg:'#f3c9c9',T_:7,ev:[{t:2200,dx:-60,dy:118,dur:300,snd:'sneeze',say:['哈…','哈…','哈啾！']},{t:5000,dx:70,dy:-110,dur:300,snd:'sneeze',say:['哈…','哈…','哈啾！']}]},
  {id:'storm',n:'颱風天',short:'颱風',lose:'輸給了颱風',c:'#2e0813',W:84,T:28,B:36,bg:'#8f9fae',T_:8,storm:1,sway:[44,14,.0032],hair:[[1300,2300],[3500,4600],[5600,6800]],ev:[bump(3000,-70,30,520),bump(6100,84,-30,520)]}
 ];
+/* ---------- 第二階段：後 20 關（新模特兒） ---------- */
+const L2=(id,n,short,lose,c,W,T,B,bg,cfg,a,b,c2,who)=>{S.push(Object.assign({id,n,short,lose,c,W:Math.round(W*.92),T:Math.round(T*.92),B:Math.round(B*.92),bg,T_:6,model:2},cfg));LINES[id]={a,b,c:c2};WHO[id]=who};
+L2('elevator','電梯擠人','電梯','輸給了電梯超載','#e8405f',104,40,50,'#d8dde2',{crowd:[[1000,2600,'#3a3f4a',1],[3000,4700,'#59414a',-1]],ev:[bump(1200,50,20),bump(3300,-56,24)]},['擠成這樣還塗得好，電梯該請妳代言。','超載鈴響了，妳的手沒響。'],['被肩膀撞了幾次，還算能看。','下一站開門，先呼吸。'],['隔壁大哥的背包，塗得比妳的嘴還滿。','這部電梯，妳以後會走樓梯。'],['大哥：不好意思。','電梯：超載。']);
+L2('kid','小孩搶口紅','小孩','輸給了三歲小孩','#ec2f8c',102,38,50,'#ffe5a8',{crowd:[[1400,2300,'#f1c3a2',1],[3500,4400,'#f1c3a2',-1]],ev:[bump(1500,-96,30,400,{warn:'給我！'}),bump(3600,92,40,400,{warn:'我要！'})]},['小孩都沒搶走，妳是帶過孩子的。','手速贏了三歲小孩。'],['被搶了兩次，還能畫成這樣。','小孩笑了，妳也只能笑。'],['小孩說阿姨好漂亮，他在騙妳。','現在她也想塗了，嘴巴在哪她也不知道。'],['小孩：嘻嘻！','小孩：再一次！']);
+L2('kiss','男友靠近','男友','輸給了男友的臉','#c8102e',100,38,48,'#f5c7d2',{crowd:[[1500,3000,'#2b2230',0],[3800,5200,'#2b2230',0]],ev:[bump(2700,60,-50)]},['他靠這麼近，妳還是畫完了。','他只能乖乖等。'],['有一段完全被擋住，是憑感覺的。','他問妳在幹嘛，手就歪了。'],['他親完之後，兩個人都有口紅了。','他的臉現在也有妝了。'],['男友：好了沒？','男友：我看一下。']);
+L2('boba','邊喝珍奶','珍奶','輸給了一顆珍珠','#a43a24',98,36,48,'#ead6bd',{fly:[[1200,1700,'#2a1610',11,4],[2800,3300,'#2a1610',13,5],[4300,4800,'#2a1610',15,6]],ev:[bump(1400,-40,60),bump(3000,50,-54),bump(4500,-60,-50)]},['邊喝邊塗，手和嘴都沒閒著。','珍珠都沒能阻止妳。'],['珍珠噴出來那下有點可惜。','嘴巴同時要做兩件事，確實很難。'],['全糖去冰，口紅全毀。','這杯喝完，先擦一下鼻子。'],['珍珠：咻。','店員：要再一杯嗎？']);
+L2('roach','蟑螂飛來','蟑螂','輸給了會飛的蟑螂','#5e0d22',96,36,46,'#e9e1cf',{fly:[[1700,2600,'#4a2a14',20,1],[4000,4800,'#4a2a14',22,1]],ev:[bump(1900,130,70,420,{warn:'啊！！'}),bump(4200,-130,-70,420,{warn:'又來了！'})]},['蟑螂飛過來，妳連眼都沒眨。','這種膽量，可以去處理家裡所有蟲。'],['尖叫時手還在嘴上，已經很好了。','蟑螂走了，手還在抖。'],['妳和蟑螂都逃走了。','嘴沒畫好，但命保住了。'],['蟑螂：路過。','室友：我不敢打。']);
+L2('boss','主管開鏡頭','主管','輸給了線上會議','#b5626a',94,34,46,'#cfe0ee',{pop:[[1600,2500,'主管：妳在嗎？'],[3600,4500,'請開鏡頭']],ev:[bump(2500,80,64),bump(4500,-90,50)]},['會議繼續開，口紅也塗完了。','主管完全沒發現。'],['關鏡頭那下有點慌。','聽到自己名字，手就歪了。'],['全公司都看到了。','主管問妳是不是牙齦流血。'],['主管：可以分享畫面嗎？','同事：妳麥克風沒關。']);
+L2('fog','鏡子起霧','起霧','輸給了洗澡的水蒸氣','#e8405f',92,34,44,'#bfe3e0',{fog:[[800,3000],[3400,5600]]},['看不到還能塗，這是肌肉記憶。','整片白霧，妳心裡有數。'],['霧太濃，有幾筆憑感覺。','擦了鏡子，也擦到臉了。'],['霧散了，真相也出現了。','這不是霧的問題。'],['鏡子：我也看不到。','蓮蓬頭：滴。']);
+L2('mountain','遊覽車山路','山路','輸給了九彎十八拐','#c9402b',92,34,44,'#c9e8b8',{sway:[58,12,.0034],ev:[bump(2100,-90,30,500),bump(4300,90,-30,500)]},['九彎十八拐，妳一彎都沒出界。','導遊想讓妳來開車。'],['過彎時整車都在叫，妳還算冷靜。','快暈了，還有這個水準。'],['導遊把塑膠袋遞過來了。','嘴巴也暈車了。'],['導遊：左手邊是龜山島。','隔壁阿嬤：要吃暈車藥嗎？']);
+L2('mom','老媽碎念','老媽','輸給了媽媽的關心','#f06a55',90,34,44,'#f3e0c4',{pop:[[900,1800,'又要出門？'],[2300,3200,'穿這樣不冷？'],[3700,4600,'幾點回來？'],[4900,5700,'塗那麼紅幹嘛']],ev:[bump(3200,-50,40)]},['媽媽唸成這樣，妳還能專心。','妳已經練成左耳進右耳出了。'],['回了一句話，手就歪了。','有幾筆是被唸歪的。'],['媽媽說：看吧，我就說。','這下她更有話說了。'],['媽媽：我是為妳好。','媽媽：帶件外套。']);
+L2('concert','演唱會人潮','演唱會','輸給了前排粉絲','#ec2f8c',90,32,44,'#2a1b3f',{flash:[[1000,5400]],sway:[20,14,.012],ev:[bump(1700,70,-50),bump(3100,-80,50),bump(4600,60,62)]},['全場尖叫，妳的手一動也沒動。','燈光師想把追光給妳。'],['被擠了幾下，妝還算在。','拍手那段真的控制不了。'],['妳唱得很開心，嘴不太開心。','手幅比妳的唇線還直。'],['粉絲：啊啊啊啊！','保全：後面不要推。']);
+L2('nightmarket','夜市人潮','夜市','輸給了夜市人潮','#d40f3c',88,32,42,'#ffcf8a',{crowd:[[1100,2200,'#40323a',1],[2700,3800,'#6a4a3a',-1],[4300,5300,'#40323a',1]],ev:[bump(1300,70,30),bump(2900,-70,40),bump(4500,70,-40)]},['夜市這麼擠，還能塗這麼準。','手比炸雞排的老闆還穩。'],['被擠到一半，雞排也差點掉了。','人太多，只能盡量。'],['有人問妳這攤怎麼排。','嘴上是口紅，還是甜不辣醬？'],['老闆：小心燙。','路人：借過借過。']);
+L2('dog','狗撲上來','狗','輸給了狗的熱情','#a43a24',88,32,42,'#dbeac4',{ev:[{t:1200,dx:-100,dy:30,dur:520,snd:'bump',paw:1},{t:2900,dx:110,dy:40,dur:520,snd:'bump',paw:-1},{t:4500,dx:-90,dy:-60,dur:520,snd:'bump',paw:1}]},['狗撲三次，妳都沒倒。','牠也覺得妳今天很好看。'],['牠只是太愛妳了。','妝歪了，但牠很開心。'],['牠舔完之後，就不用塗了。','狗：這個味道不錯。'],['狗：汪！','狗：再抱一下！']);
+L2('tunnel','高鐵進隧道','隧道','輸給了隧道','#7c1f35',86,32,42,'#b9c7d6',{dark:[[900,1700],[2400,3100],[3800,4700]],sway:[8,4,.01]},['進隧道也沒事，妳不用光。','黑了三次，都沒影響妳。'],['出隧道才發現，有一筆跑掉了。','窗戶映出來才知道歪了。'],['鄰座乘客不敢看妳。','下一站左營，先去洗手間。'],['廣播：列車即將抵達。','鄰座：妳的嘴……']);
+L2('bike','腳踏車下坡','下坡','輸給了煞車線','#c8102e',86,30,42,'#a9d4ef',{sway:[14,24,.024],ev:[bump(1500,-60,70,260),bump(3100,70,-70,260),bump(4700,-70,-70,260)]},['放開一隻手還塗得好，請不要模仿。','手比煞車還靈。'],['下坡太快，有幾筆趕不上。','石頭不只一顆。'],['請先看路，口紅不重要。','這個妝是風吹出來的。'],['路人：小心！','煞車：我盡力了。']);
+L2('umbrella','雨傘被吹翻','雨傘','輸給了一把傘','#2e0813',84,30,40,'#8f9fae',{storm:1,sway:[40,16,.0045],hair:[[1600,2600],[3900,4900]],ev:[bump(2900,-100,-50,480,{warn:'傘！'})]},['傘都翻了，口紅沒翻。','暴風雨中的一抹穩定。'],['傘翻那下完全顧不到。','有一隻手在救傘。'],['妳的嘴和傘一起壞了。','淋成這樣，妝反而不重要了。'],['傘：我先走了。','路人：要塑膠袋嗎？']);
+L2('bride','伴娘趕時間','伴娘','輸給了新娘的催促','#e8405f',84,30,40,'#f7e4ec',{pop:[[1100,1900,'快一點！'],[2700,3500,'要進場了！'],[4300,5100,'還沒好？！']],ev:[bump(1900,60,50),bump(3500,-60,54),bump(5100,70,-50)]},['在新娘崩潰前畫完了，感人。','妳比新秘還穩。'],['被催到手抖，但還能進場。','婚攝等一下會修圖。'],['新娘說：今天的主角是我，謝謝。','婚攝默默把妳拍在後排。'],['新娘：我要哭了！','婚秘：讓我來。']);
+L2('numb','麻藥還沒退','麻藥','輸給了牙醫','#b5626a',82,30,40,'#d6eae6',{sway:[34,30,.0018],ev:[bump(2900,0,84,700,{warn:'咦？'})]},['嘴沒感覺，手還是很準。','牙醫都想問妳怎麼做到的。'],['嘴巴在哪裡，有點不確定。','麻藥還在，這樣算不錯了。'],['摸不到自己的嘴，也看得出來。','牙醫說兩小時內別照鏡子。'],['牙醫：先不要吃東西。','護士：妳在流口水。']);
+L2('yawn','想打哈欠','哈欠','輸給了昨晚熬夜','#c9402b',82,28,40,'#d9cdeb',{ev:[{t:2100,dx:-40,dy:-96,dur:520,snd:'sneeze',say:['啊…','啊…','啊～']},{t:4600,dx:50,dy:96,dur:520,snd:'sneeze',say:['又…','又要…','啊～']}]},['哈欠都忍住了，下班可以早點睡。','熬夜也不影響專業。'],['哈欠那一下，手也跟著打開了。','眼淚也流出來了，一起擦掉。'],['這個妝看起來也很想睡。','先去睡覺，明天再塗。'],['枕頭：回來吧。','鬧鐘：還有五分鐘。']);
+L2('aftershock','餘震加停電','餘震','輸給了餘震','#5e0d22',80,28,38,'#d4c8a8',{quake:[800,4700,34],dark:[[2000,3100]]},['又搖又黑，妳還塗完了。','防災演習應該請妳當示範。'],['第二波有點撐不住。','燈沒亮的那段全靠運氣。'],['就地掩護，真的。','這個妝列入災損。'],['手機：國家級警報。','手電筒：終於想起我了。']);
+L2('finale','全部一起來','大魔王','輸給了全世界','#d40f3c',78,28,38,'#ff9ab8',{T_:7,quake:[900,2500,26],sway:[20,10,.004],dark:[[3000,3700]],pop:[[3900,4700,'欸妳看這個！']],flash:[[5000,6700]],fly:[[1300,1900,'#2a1610',14,4]],hair:[[2500,3000]],ev:[{t:1500,dx:-100,dy:-20,dur:500,snd:'meow',paw:1},bump(4700,90,70,350),bump(5900,-90,-70,350)]},['全世界都來了，妳還是畫好了。彩妝女神。','沒有什麼能阻止妳的手。'],['能撐到這裡的人已經不多了。','大魔王有點太多了，不怪妳。'],['這關本來就是來害妳的。','至少妳走到了最後。'],['全世界：不好意思。','貓：我也有來。']);
+function fxDraw(g,sc,el){
+ (sc.crowd||[]).forEach(w=>{if(el<w[0]||el>w[1])return;const u=(el-w[0])/(w[1]-w[0]),a=Math.sin(u*Math.PI),col=w[2],side=w[3];g.fillStyle=col;g.save();if(side==0){const y=500-a*330;g.beginPath();g.ellipse(200,y+190,240,210,0,0,7);g.fill();g.fillStyle='rgba(255,255,255,.08)';g.beginPath();g.ellipse(200,y+60,90,18,0,0,7);g.fill()}else{const x=side>0?450-a*240:-50+a*240;g.beginPath();g.ellipse(x,430,132,210,0,0,7);g.fill();g.beginPath();g.arc(x,205,52,0,7);g.fill();g.fillStyle='rgba(255,255,255,.1)';g.beginPath();g.ellipse(x+(side>0?-30:30),300,20,70,0,0,7);g.fill()}g.restore()});
+ (sc.fly||[]).forEach(w=>{if(el<w[0]||el>w[1])return;const u=(el-w[0])/(w[1]-w[0]);for(let i=0;i<w[4];i++){const x=-30+u*460+i*34-i*i*3,y=90+i*42+Math.sin(u*14+i)*22;g.fillStyle=w[2];g.beginPath();g.ellipse(x,y,w[3],w[3]*(w[4]==1?.6:1),0,0,7);g.fill();if(w[4]==1){g.strokeStyle=w[2];g.lineWidth=2;for(let k=-1;k<=1;k++){g.beginPath();g.moveTo(x+k*8,y);g.lineTo(x+k*12,y-20);g.moveTo(x+k*8,y);g.lineTo(x+k*12,y+20);g.stroke()}g.fillStyle='rgba(255,255,255,.3)';g.beginPath();g.ellipse(x-4,y-3,w[3]*.5,3,0,0,7);g.fill()}else{g.fillStyle='rgba(255,255,255,.3)';g.beginPath();g.arc(x-w[3]*.3,y-w[3]*.3,w[3]*.25,0,7);g.fill()}}});
+ (sc.fog||[]).forEach(w=>{if(el<w[0]||el>w[1])return;const u=(el-w[0])/(w[1]-w[0]),a=Math.min(1,Math.sin(u*Math.PI)*1.4)*.97;g.fillStyle=`rgba(240,246,246,${a})`;g.fillRect(0,0,400,500);g.strokeStyle=`rgba(255,255,255,${a*.8})`;g.lineWidth=2;for(let i=0;i<7;i++){g.beginPath();const x=30+i*55;g.moveTo(x,70+i*8);g.lineTo(x+(i%2?3:-3),170+(i*37)%240);g.stroke()}});
+ (sc.flash||[]).forEach(w=>{if(el<w[0]||el>w[1])return;const b=Math.floor(el/250);g.fillStyle=['rgba(255,60,160,.42)','rgba(40,20,90,.62)','rgba(255,255,255,.78)','rgba(60,190,255,.4)','rgba(10,5,30,.8)'][b%5];g.fillRect(0,0,400,500)});
+ (sc.pop||[]).forEach(w=>{if(el<w[0]||el>w[1])return;const y=LY-58+Math.sin(w[0])*34,a=Math.min(1,(el-w[0])/90);g.save();g.globalAlpha=a;g.font='900 34px "Noto Sans TC",sans-serif';const wd=Math.min(350,g.measureText(w[2]).width+46);g.fillStyle='#fff';g.strokeStyle='#2a0d1b';g.lineWidth=4;g.beginPath();g.roundRect(200-wd/2,y,wd,84,14);g.fill();g.stroke();g.fillStyle='#2a0d1b';g.textAlign='center';g.fillText(w[2],200,y+55);g.textAlign='left';g.restore()})}
+function drawFace2(x,sc){
+ band(x,sc);x.save();const R=new Path2D();R.roundRect(14,62,372,428,26);x.clip(R);
+ const bgf=x.createLinearGradient(0,62,0,490);bgf.addColorStop(0,'#f8e8df');bgf.addColorStop(1,'#e9c8c4');x.fillStyle=bgf;x.fillRect(0,0,400,500);
+ /* 長捲髮（後） */
+ const hg=x.createLinearGradient(0,60,0,490);hg.addColorStop(0,'#3d2318');hg.addColorStop(.55,'#6b3c24');hg.addColorStop(1,'#a56a3f');x.fillStyle=hg;
+ x.beginPath();x.moveTo(30,20);x.lineTo(370,20);x.bezierCurveTo(414,150,366,230,396,320);x.bezierCurveTo(424,400,350,430,372,500);x.lineTo(28,500);x.bezierCurveTo(50,430,-24,400,4,320);x.bezierCurveTo(34,230,-14,150,30,20);x.fill();
+ /* 脖子、肩、鎖骨、項鍊 */
+ const nk=x.createLinearGradient(0,360,0,490);nk.addColorStop(0,'#c98d71');nk.addColorStop(.42,'#f0c5a8');nk.addColorStop(1,'#f6d4bc');x.fillStyle=nk;x.fillRect(146,350,108,120);
+ x.fillStyle='#f6d4bc';x.beginPath();x.moveTo(146,430);x.quadraticCurveTo(84,452,50,500);x.lineTo(350,500);x.quadraticCurveTo(316,452,254,430);x.fill();
+ x.strokeStyle='rgba(170,110,85,.4)';x.lineWidth=2;x.beginPath();x.moveTo(118,462);x.quadraticCurveTo(160,458,186,470);x.moveTo(282,462);x.quadraticCurveTo(240,458,214,470);x.stroke();
+ x.strokeStyle='#e0bd6a';x.lineWidth=1.8;x.beginPath();x.moveTo(150,432);x.quadraticCurveTo(200,482,250,432);x.stroke();x.fillStyle='#fff';x.strokeStyle='#d6b25e';x.beginPath();x.arc(200,458,4.5,0,7);x.fill();x.stroke();
+ x.fillStyle='#f4e7ea';x.beginPath();x.moveTo(40,500);x.quadraticCurveTo(110,474,146,470);x.quadraticCurveTo(200,496,254,470);x.quadraticCurveTo(290,474,360,500);x.fill();
+ /* 臉 */
+ const sk=x.createRadialGradient(200,210,70,200,245,240);sk.addColorStop(0,'#fff0e4');sk.addColorStop(.72,'#fcdcc7');sk.addColorStop(1,'#eab79b');x.fillStyle=sk;x.beginPath();x.moveTo(60,40);x.lineTo(340,40);x.bezierCurveTo(366,170,358,286,290,358);x.bezierCurveTo(254,396,226,420,200,420);x.bezierCurveTo(174,420,146,396,110,358);x.bezierCurveTo(42,286,34,170,60,40);x.fill();
+ soft(x,96,236,58,'rgba(242,108,136,1)',.24,.5);soft(x,304,236,58,'rgba(242,108,136,1)',.24,.5);soft(x,104,202,44,'rgba(255,255,255,1)',.45,.34);soft(x,296,202,44,'rgba(255,255,255,1)',.45,.34);
+ /* 眼 */
+ for(const sd of [-1,1]){x.save();x.translate(200+sd*68,146);x.scale(sd*.86,.9);
+  soft(x,6,-10,50,'rgba(205,120,120,1)',.5,.5);
+  x.strokeStyle='#553423';x.lineWidth=4.5;x.lineCap='round';x.beginPath();x.moveTo(-40,-38);x.quadraticCurveTo(2,-58,46,-34);x.stroke();
+  const eye=new Path2D();eye.moveTo(-36,6);eye.quadraticCurveTo(-2,-27,40,-4);eye.quadraticCurveTo(4,26,-36,6);eye.closePath();x.fillStyle='#fffdfb';x.fill(eye);x.save();x.clip(eye);
+  const ir=x.createRadialGradient(0,6,3,0,4,21);ir.addColorStop(0,'#c58d4e');ir.addColorStop(.7,'#70421f');ir.addColorStop(1,'#2d170b');x.fillStyle=ir;x.beginPath();x.arc(1,3,20,0,7);x.fill();x.fillStyle='#0c0706';x.beginPath();x.arc(1,4,9,0,7);x.fill();x.fillStyle='#fff';x.beginPath();x.arc(-7,-5,4.5,0,7);x.arc(8,10,2,0,7);x.fill();x.fillStyle='rgba(80,40,30,.2)';x.fillRect(-40,-30,84,18);x.restore();
+  x.strokeStyle='#160d0a';x.lineWidth=4.2;x.beginPath();x.moveTo(-36,6);x.quadraticCurveTo(-2,-27,40,-4);x.lineTo(50,-14);x.stroke();
+  x.lineWidth=1.8;for(let i=0;i<9;i++){const u=i/8,q=-22+u*60,y=-15+Math.pow(u-.42,2)*30;x.beginPath();x.moveTo(q,y);x.quadraticCurveTo(q+u*5,y-9,q+u*13-2,y-15);x.stroke()}
+  x.strokeStyle='rgba(120,60,50,.45)';x.lineWidth=1.2;x.beginPath();x.moveTo(-28,11);x.quadraticCurveTo(4,27,36,3);x.stroke();
+  soft(x,2,23,26,'rgba(255,255,255,1)',.55,.28);x.restore()}
+ /* 鼻 */
+ soft(x,200,178,16,'rgba(255,255,255,1)',.72,2.4);soft(x,200,213,30,'rgba(170,95,70,1)',.2,.28);
+ x.strokeStyle='rgba(165,96,76,.62)';x.lineWidth=1.8;x.lineCap='round';x.beginPath();x.moveTo(181,202);x.quadraticCurveTo(174,215,187,216);x.moveTo(219,202);x.quadraticCurveTo(226,215,213,216);x.stroke();x.fillStyle='rgba(120,60,50,.5)';x.beginPath();x.ellipse(191,215,4.5,2.3,.2,0,7);x.ellipse(209,215,4.5,2.3,-.2,0,7);x.fill();
+ soft(x,200,LY-sc.T-12,12,'rgba(170,95,70,1)',.2,1.5);soft(x,200,LY+sc.B*1.08+18,46,'rgba(170,95,70,1)',.26,.2);soft(x,200,408,24,'rgba(255,255,255,1)',.34,.5);
+ const p=lipsPath(sc);x.fillStyle='#e6a59b';x.fill(p);x.strokeStyle='rgba(150,80,74,.7)';x.lineWidth=1.5;x.stroke(p);
+ /* 瀏海與前髮 */
+ const fg=x.createLinearGradient(0,40,0,500);fg.addColorStop(0,'#2e1a11');fg.addColorStop(.6,'#6d3f28');fg.addColorStop(1,'#a56a3f');x.fillStyle=fg;
+ for(const sd of [1,-1]){x.save();x.translate(200,0);x.scale(sd,1);
+  x.fillStyle=fg;x.beginPath();x.moveTo(-200,30);x.lineTo(36,30);x.bezierCurveTo(-6,74,-96,90,-136,168);x.bezierCurveTo(-154,216,-148,270,-132,322);x.bezierCurveTo(-116,372,-146,420,-124,500);x.lineTo(-200,500);x.fill();
+  x.strokeStyle='rgba(240,190,130,.22)';x.lineCap='round';x.lineWidth=5;x.beginPath();x.moveTo(-90,88);x.bezierCurveTo(-150,140,-172,230,-156,320);x.bezierCurveTo(-146,380,-168,430,-150,492);x.stroke();x.lineWidth=2.5;x.beginPath();x.moveTo(-58,76);x.bezierCurveTo(-120,110,-160,190,-146,280);x.stroke();x.restore()}
+ x.strokeStyle='rgba(60,32,20,.5)';x.lineWidth=1.4;x.beginPath();x.moveTo(236,30);x.quadraticCurveTo(205,60,200,76);x.stroke();
+ /* 珍珠耳環 */
+ for(const ex of [70,330]){x.fillStyle='#fffaf0';x.strokeStyle='#d8c6a5';x.lineWidth=1;x.beginPath();x.arc(ex,286,9,0,7);x.fill();x.stroke();x.fillStyle='#fff';x.beginPath();x.arc(ex-3,283,3,0,7);x.fill()}
+ x.restore()}
+const STAGES=[[0,10,'lipstick'],[10,S.length,'lipstick2']];let stage=0;const PASS=80;
+let unlocked=false;try{unlocked=localStorage.getItem('lipStage2')=='1'}catch(e){}
+const runShots=()=>shots.filter(Boolean);
+function startStage(n){stage=n;shots=[];['intro','result','settle','stageUp'].forEach(id=>{$('#'+id).hidden=true});$('#play').hidden=false;startScene(STAGES[n][0])}
+function refreshIntro(){$('#stage2').hidden=!unlocked}
 const G=$('#game'),g=G.getContext('2d');
 const LY=285,TIP=64;
 function lipsPath(sc){const W=sc.W,T=sc.T,B=sc.B,m=LY,cx=200,p=new Path2D();
@@ -228,6 +306,7 @@ function band(x,sc){ /* 鏡子外的場景 */
  if(id=='storm'){x.strokeStyle='rgba(255,255,255,.55)';x.lineWidth=2;for(let i=0;i<30;i++){x.beginPath();x.moveTo(i*16,(i*23)%60);x.lineTo(i*16-12,(i*23)%60+22);x.stroke()}}
 }
 function drawFace(x,sc){
+ if(sc.model==2)return drawFace2(x,sc);
  band(x,sc);
  /* 鏡框內的臉 */
  x.save();const R=new Path2D();R.roundRect(14,62,372,428,26);x.clip(R);
@@ -281,7 +360,7 @@ function toLogic(e){const r=G.getBoundingClientRect(),k=Math.min(r.width/400,r.h
 G.addEventListener('pointerdown',e=>{if(!running)return;e.preventDefault();try{G.setPointerCapture(e.pointerId)}catch(err){}finger=toLogic(e);pressed=true;prevTip=null;Snd.swipe(true)});
 G.addEventListener('pointermove',e=>{if(pressed)finger=toLogic(e)});
 const up=()=>{pressed=false;prevTip=null;Snd.swipe(false)};G.addEventListener('pointerup',up);G.addEventListener('pointercancel',up);
-function startScene(i){cur=i;const sc=S[i];pg.clearRect(0,0,800,1000);cg.setTransform(2,0,0,2,0,0);drawFace(cg,sc);fired=new Set();pressed=false;prevTip=null;finger=null;shake=0;bubble=null;fullAt=0;fullDone=false;lastM=0;$('#settle').hidden=true;$('#play').hidden=false;$('#scName').textContent=`${i+1}/${S.length} ${sc.n}`;$('#bar').style.transform='scaleX(1)';running=false;intro=performance.now();Snd.scene();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
+function startScene(i){cur=i;const sc=S[i];pg.clearRect(0,0,800,1000);cg.setTransform(2,0,0,2,0,0);drawFace(cg,sc);fired=new Set();pressed=false;prevTip=null;finger=null;shake=0;bubble=null;fullAt=0;fullDone=false;lastM=0;$('#settle').hidden=true;$('#play').hidden=false;$('#scName').textContent=`${i-STAGES[stage][0]+1}/${STAGES[stage][1]-STAGES[stage][0]} ${sc.n}`;$('#bar').style.transform='scaleX(1)';running=false;intro=performance.now();Snd.scene();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
 function composite(sc){const c=document.createElement('canvas');c.width=800;c.height=1000;const x=c.getContext('2d');x.drawImage(cache,0,0);x.save();x.beginPath();x.roundRect(28,124,744,856,52);x.clip();x.drawImage(paint,0,0);x.restore();x.scale(2,2);lipLight(x,sc);mirrorRim(x);return c}
 /* 抿嘴：以嘴縫為中心，整列像素平滑擠壓，皮膚也跟著動 */
 function playPress(shot,sc,done){
@@ -304,13 +383,13 @@ function stopScene(){if(!running)return;running=false;Snd.swipe(false);pressed=f
 $('#done').onclick=stopScene;
 function mouthURL(s,w=660,h=440){const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(s.shot,70,330,660,440,0,0,w,h);return c.toDataURL('image/jpeg',.88)}
 let settleAnim=0;
-function settle(i){const s=shots[i],sc=s.sc,r=s.r,pct=r.score;$('#play').hidden=true;$('#settle').hidden=false;$('#settle').scrollTop=0;$('#setName').textContent=sc.n;$('#setNo').textContent=`第 ${i+1} / ${S.length} 關`;$('#setImg').src=mouthURL(s);
+function settle(i){const s=shots[i],sc=s.sc,r=s.r,pct=r.score;$('#play').hidden=true;$('#settle').hidden=false;$('#settle').scrollTop=0;$('#setName').textContent=sc.n;$('#setNo').textContent=`第 ${i+1} 關`;$('#setImg').src=mouthURL(s);
  $('#setCover').textContent=Math.round(r.cover*100)+'%';$('#setSpill').textContent=Math.round(r.spill*100)+'%';const tier=pct>=85?'a':pct>=55?'b':'c';$('#setLine').textContent=nextL(sc.id+tier,LINES[sc.id][tier]);const st=$('#setStamp');st.className='';st.textContent=r.spill>=.9?'嚴重出界':r.spill>=.4?'出界':pct>=90?'完美':r.cover<.5?'沒塗完':'';if(pct>=90&&r.spill<.4)st.className='good';$('#setWho').textContent=(r.spill>=.4||pct<55)?nextL('w'+sc.id,WHO[sc.id]):'';if(st.textContent)setTimeout(()=>{void st.offsetWidth;st.classList.add('in');Snd.stamp()},620);
- $('#dots').innerHTML=S.map((_,k)=>`<i style="background:${k<=i?(shots[k].r.score>=85?'#fff4ea':shots[k].r.score>=55?'#ffd98a':'#2a0d1b'):''}"></i>`).join('');
- $('#setNext').textContent=i<S.length-1?`下一關：${S[i+1].n}`:'看總結算';
+ $('#dots').innerHTML=S.slice(STAGES[stage][0],STAGES[stage][1]).map((_,q)=>{const k=q+STAGES[stage][0];return `<i style="background:${k<=i?(shots[k].r.score>=85?'#fff4ea':shots[k].r.score>=55?'#ffd98a':'#2a0d1b'):''}"></i>`}).join('');
+ $('#setNext').textContent=i<STAGES[stage][1]-1?`下一關：${S[i+1].n}`:'看總結算';
  cancelAnimationFrame(settleAnim);const el=$('#setPct'),t=performance.now(),still=matchMedia('(prefers-reduced-motion:reduce)').matches;let last=-5;const up2=n=>{const u=still?1:Math.min(1,(n-t)/650),v=Math.round(pct*(1-Math.pow(1-u,3)));el.textContent=v;if(v-last>=5){last=v;Snd.tick(v)}if(u<1)settleAnim=requestAnimationFrame(up2)};settleAnim=requestAnimationFrame(up2)}
-$('#setNext').onclick=()=>{if(cur<S.length-1)startScene(cur+1);else{$('#settle').hidden=true;showResult()}};
-function drawTube(x,tp,c,idx){const s=TUBES[idx==null?cur:idx]||TUBES[0],w=s.wide?17:s.slim?11:14,sw=s.slim?7:9;x.save();x.translate(tp[0],tp[1]);x.rotate(.42);x.translate(-sw,40);/* 口紅尖端對準實際下筆點 */
+$('#setNext').onclick=()=>{if(cur<STAGES[stage][1]-1)startScene(cur+1);else{$('#settle').hidden=true;showResult()}};
+function drawTube(x,tp,c,idx){const s=TUBES[idx==null?cur%TUBES.length:idx]||TUBES[0],w=s.wide?17:s.slim?11:14,sw=s.slim?7:9;x.save();x.translate(tp[0],tp[1]);x.rotate(.42);x.translate(-sw,40);/* 口紅尖端對準實際下筆點 */
  x.fillStyle=c;x.beginPath();x.moveTo(-sw,4);x.lineTo(-sw,-22);x.quadraticCurveTo(0,-38,sw,-40);x.lineTo(sw,4);x.fill();x.fillStyle='rgba(255,255,255,.4)';x.fillRect(-sw+3,-22,3.5,24);
  const go=x.createLinearGradient(-w,0,w,0);go.addColorStop(0,s.d);go.addColorStop(.4,s.m);go.addColorStop(1,s.d);x.fillStyle=go;x.fillRect(-w+3,4,(w-3)*2,18);x.fillStyle='rgba(40,25,5,.35)';x.fillRect(-w+3,20,(w-3)*2,2);
  const bd=x.createLinearGradient(-w,0,w,0);bd.addColorStop(0,s.b);bd.addColorStop(.35,s.h);bd.addColorStop(1,s.b);x.fillStyle=bd;x.beginPath();x.roundRect(-w,22,w*2,s.slim?60:52,s.wide?7:3);x.fill();if(s.stripe){x.fillStyle=s.stripe;x.fillRect(-w,44,w*2,4)}x.restore()}
@@ -335,7 +414,7 @@ function loop(n){const sc=S[cur],since=n-intro;
  g.fillStyle=sc.bg;g.fillRect(0,0,800,1000);g.drawImage(cache,dx,dy);g.save();g.translate(dx,dy);g.beginPath();g.roundRect(28,124,744,856,52);g.clip();g.drawImage(paint,0,0);g.restore();
  g.setTransform(2,0,0,2,dx,dy);lipLight(g,sc);
  g.save();const Rc=new Path2D();Rc.roundRect(14,62,372,428,26);g.clip(Rc);
- if(running){(sc.ev||[]).filter(e=>e.paw).forEach(e=>drawPaw(g,el,e));(sc.tail||[]).forEach(w=>drawTail(g,el,w));(sc.hair||[]).forEach(w=>drawHair(g,el,w));
+ if(running){(sc.ev||[]).filter(e=>e.paw).forEach(e=>drawPaw(g,el,e));(sc.tail||[]).forEach(w=>drawTail(g,el,w));(sc.hair||[]).forEach(w=>drawHair(g,el,w));fxDraw(g,sc,el);
   (sc.dark||[]).forEach(w=>{if(el>=w[0]&&el<w[1]){const flick=(el-w[0])<120&&(Math.floor(el/30)%2)?.5:.965;g.fillStyle=`rgba(8,6,14,${flick})`;g.fillRect(0,0,400,500)}});
   if(sc.storm){g.strokeStyle='rgba(255,255,255,.28)';g.lineWidth=1.6;for(let i=0;i<26;i++){const X=(i*37+el*.5)%440-20,Y=(i*61+el*.9)%460+40;g.beginPath();g.moveTo(X,Y);g.lineTo(X-10,Y+24);g.stroke()}}}
  g.restore();mirrorRim(g);
@@ -346,7 +425,7 @@ function loop(n){const sc=S[cur],since=n-intro;
  raf=requestAnimationFrame(loop)}
 /* ---------- 總結算 ---------- */
 const END={
- none:{n:'根本沒擦',t:'妳是來看風景的嗎？',c:'十個場景過去，嘴唇還是原本的樣子。素顏也是一種勇氣。'},
+ none:{n:'根本沒擦',t:'妳是來看風景的嗎？',c:'這麼多關過去，嘴唇還是原本的樣子。素顏也是一種勇氣。'},
  face:{n:'整張臉都是嘴',t:'下巴也算嘴唇的一部分。',c:'這不是出界，這是擴張領土。卸妝油建議買家庭號。'},
  half:{n:'只擦到一半',t:'不敢出界，也不敢塗滿。',c:'妳很小心，小心到只有中間有顏色。這叫咬唇妝，妳就這樣說。'},
  pro:{n:'手比外科醫師穩',t:'颱風天也能畫唇線。',c:'這雙手拿去開刀也沒問題。朋友以後都會排隊找妳。'},
@@ -360,16 +439,16 @@ function pickEnd(avg,cover,spill){if(cover<.15)return END.none;if(spill>1.1)retu
 const LB={url:'https://jcqjuxdfauoogggvmvsb.supabase.co/rest/v1/rpc/',key:'sb_publishable_lxibDGz3bN4P5lnKFNeraA_9PXimKhn',game:'lipstick'};
 function lbPlayer(){let id='';try{id=localStorage.getItem('hd_player')||''}catch(e){}if(!/^[0-9a-f-]{36}$/.test(id)){id=crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g,()=>(crypto.getRandomValues(new Uint8Array(1))[0]&15).toString(16));try{localStorage.setItem('hd_player',id)}catch(e){}}return id}
 async function lbCall(fn,body){const c=new AbortController(),to=setTimeout(()=>c.abort(),8000);try{const r=await fetch(LB.url+fn,{method:'POST',headers:{apikey:LB.key,'Content-Type':'application/json'},body:JSON.stringify(body),signal:c.signal});if(!r.ok)throw new Error('http '+r.status);return await r.json()}finally{clearTimeout(to)}}
-let lbPeriod='week',lbRun=null;
-async function lbLoad(){const ol=$('#lbList');try{const rows=await lbCall('lb_top',{p_game:LB.game,p_period:lbPeriod,p_player:lbPlayer(),p_limit:20});ol.replaceChildren();if(!rows.length){const li=document.createElement('li');li.className='empty';li.textContent='還沒有人上榜，妳可以當第一個。';ol.append(li);return}rows.forEach(r=>{const li=document.createElement('li');if(r.is_me)li.className='me';[String(r.rank),r.nickname,r.score+'%'].forEach(v=>{const s=document.createElement('span');s.textContent=v;li.append(s)});ol.append(li)})}catch(e){ol.replaceChildren();const li=document.createElement('li');li.className='empty';li.textContent='排行榜暫時連不上，稍後再試。';ol.append(li)}}
+let lbPeriod='week',lbRun=null;const lbGame=()=>STAGES[stage][2];
+async function lbLoad(){const ol=$('#lbList');try{const rows=await lbCall('lb_top',{p_game:lbGame(),p_period:lbPeriod,p_player:lbPlayer(),p_limit:20});ol.replaceChildren();if(!rows.length){const li=document.createElement('li');li.className='empty';li.textContent='還沒有人上榜，妳可以當第一個。';ol.append(li);return}rows.forEach(r=>{const li=document.createElement('li');if(r.is_me)li.className='me';[String(r.rank),r.nickname,r.score+'%'].forEach(v=>{const s=document.createElement('span');s.textContent=v;li.append(s)});ol.append(li)})}catch(e){ol.replaceChildren();const li=document.createElement('li');li.className='empty';li.textContent='排行榜暫時連不上，稍後再試。';ol.append(li)}}
 function lbInit(run){lbRun=run;lbPeriod='week';$('#lbMsg').textContent='';$('#lbSend').disabled=false;$('#lbSend').textContent='上榜';try{$('#lbName').value=localStorage.getItem('hd_nick')||''}catch(e){}document.querySelectorAll('.lbtabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.p=='week'));lbLoad()}
 document.querySelector('.lbtabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lbPeriod=b.dataset.p;document.querySelectorAll('.lbtabs button').forEach(x=>x.setAttribute('aria-selected',x==b));Snd.click();lbLoad()});
 $('#lbForm').addEventListener('submit',async e=>{e.preventDefault();const name=$('#lbName').value.trim(),msg=$('#lbMsg'),btn=$('#lbSend');if(!name){msg.textContent='先取個暱稱。';return}if(!lbRun)return;btn.disabled=true;msg.textContent='送出中…';
- try{const res=await lbCall('lb_submit',{p_game:LB.game,p_player:lbPlayer(),p_nickname:name,p_score:lbRun.avg,p_details:lbRun.details});
+ try{const res=await lbCall('lb_submit',{p_game:lbGame(),p_player:lbPlayer(),p_nickname:name,p_score:lbRun.avg,p_details:lbRun.details});
   if(res!='ok'){btn.disabled=false;msg.textContent={bad_name:'這個暱稱不能用，換一個。',too_fast:'送太快了，等 30 秒再試。',too_busy:'現在人太多，等一下再試。',bad_score:'這次的成績無法上榜。'}[res]||'送出失敗，再試一次。';return}
   try{localStorage.setItem('hd_nick',name)}catch(err){}
   btn.textContent='已上榜';
-  const[w]=await lbCall('lb_my_rank',{p_game:LB.game,p_period:'week',p_player:lbPlayer()});
+  const[w]=await lbCall('lb_my_rank',{p_game:lbGame(),p_period:'week',p_player:lbPlayer()});
   let line=w&&w.my_rank?`本週第 ${w.my_rank} 名`:'已上榜';if(w&&w.total>=5)line+=`，贏過 ${w.beat_pct}% 的人`;if(w&&w.my_score>lbRun.avg)line+=`（妳的最佳是 ${w.my_score}%）`;msg.textContent=line+'。';Snd.scene();
   lbLoad();
   if(w&&w.my_rank){const rankLine=w.total>=5?`本週第 ${w.my_rank} 名，贏過 ${w.beat_pct}% 的人`:`本週第 ${w.my_rank} 名`;applyCard({avg:lbRun.avg,end:lbRun.end,rankLine},true)}
@@ -381,12 +460,12 @@ async function makeCard(res){
  const cv=document.createElement('canvas');cv.width=1080;cv.height=1350;const x=cv.getContext('2d'),F='"Noto Sans TC","PingFang TC",sans-serif',m=56;
  const bg=x.createLinearGradient(0,0,0,1350);bg.addColorStop(0,'#ff5a93');bg.addColorStop(1,'#f0326f');x.fillStyle=bg;x.fillRect(0,0,1080,1350);
  x.fillStyle='#fff4ea';x.font=`900 34px ${F}`;x.fillText('擦口紅不出界',m,74);
- const sorted=shots.slice().sort((a,b)=>a.r.score-b.r.score),worst=sorted[0],best=sorted[sorted.length-1];
+ const all=runShots(),sorted=all.slice().sort((a,b)=>a.r.score-b.r.score),worst=sorted[0],best=sorted[sorted.length-1];
  const tile=(s,X,Y,W,H,sx=70,sy=330,sw=660,sh=440)=>{x.save();x.beginPath();x.roundRect(X,Y,W,H,Math.min(20,W/9));x.clip();x.drawImage(s.shot,sx,sy,sw,sh,X,Y,W,H);x.restore()};
  tile(worst,m,96,968,440,70,350,660,300);
  x.fillStyle='rgba(42,13,27,.82)';x.beginPath();x.roundRect(m+16,96+370,420,54,12);x.fill();x.fillStyle='#fff4ea';x.font=`700 26px ${F}`;x.fillText(`最慘：${worst.sc.n} ${worst.r.score}%`,m+32,96+406);
  const cols=5,gap=10,w=(968-gap*(cols-1))/cols,h=w*.72;
- shots.forEach((s,i)=>{const X=m+(i%cols)*(w+gap),Y=552+Math.floor(i/cols)*(h+gap);tile(s,X,Y,w,h);x.fillStyle='rgba(42,13,27,.82)';x.fillRect(X,Y+h-30,w,30);x.fillStyle='#fff4ea';x.font=`700 18px ${F}`;x.textAlign='center';x.fillText(`${s.sc.short} ${s.r.score}%`,X+w/2,Y+h-9);x.textAlign='left'});
+ (all.length>10?all.filter(s=>sorted.indexOf(s)<10):all).forEach((s,i)=>{const X=m+(i%cols)*(w+gap),Y=552+Math.floor(i/cols)*(h+gap);tile(s,X,Y,w,h);x.fillStyle='rgba(42,13,27,.82)';x.fillRect(X,Y+h-30,w,30);x.fillStyle='#fff4ea';x.font=`700 18px ${F}`;x.textAlign='center';x.fillText(`${s.sc.short} ${s.r.score}%`,X+w/2,Y+h-9);x.textAlign='left'});
  x.save();x.translate(936,174);x.rotate(-.14);x.fillStyle='#d40f3c';x.beginPath();x.arc(0,0,92,0,7);x.fill();x.strokeStyle='#fff4ea';x.lineWidth=3;x.beginPath();x.arc(0,0,80,0,7);x.stroke();x.fillStyle='#fff4ea';x.textAlign='center';x.font=`900 72px ${F}`;x.fillText(res.avg+'%',0,18);x.font=`700 20px ${F}`;x.fillText('總完成度',0,50);x.restore();x.textAlign='left';
  let z=124;do{x.font=`900 ${z}px ${F}`;z-=4}while(x.measureText(res.end.n).width>968&&z>50);x.fillStyle='#fff4ea';x.fillText(res.end.n,m,1000);
  x.fillStyle='#2a0d1b';x.font=`700 38px ${F}`;x.fillText(res.end.t,m,1066);
@@ -396,17 +475,18 @@ async function makeCard(res){
 }
 function applyCard(res,quiet){return makeCard(res).then(u=>{$('#shareImg').src=u;cardURL=u;const b=atob(u.split(',')[1]),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);cardFile=new File([a],'擦口紅不出界.png',{type:'image/png'});$('#rShare').disabled=false;if(!quiet)Snd.verdict(res.avg>=60)})}
 function showResult(){
- Snd.swipe(false);const n=shots.length,avg=Math.round(shots.reduce((a,s)=>a+s.r.score,0)/n),cover=shots.reduce((a,s)=>a+s.r.cover,0)/n,spill=shots.reduce((a,s)=>a+s.r.spill,0)/n,end=pickEnd(avg,cover,spill);
+ Snd.swipe(false);const run=runShots(),n=run.length,avg=Math.round(run.reduce((a,s)=>a+s.r.score,0)/n),cover=run.reduce((a,s)=>a+s.r.cover,0)/n,spill=run.reduce((a,s)=>a+s.r.spill,0)/n,end=pickEnd(avg,cover,spill),passed=stage==0&&avg>=PASS;if(passed){unlocked=true;try{localStorage.setItem('lipStage2','1')}catch(e){}}
  $('#play').hidden=true;$('#settle').hidden=true;$('#result').hidden=false;$('#result').scrollTop=0;
- $('#rText').textContent=end.c;$('#rTot').textContent=`十關總完成度 ${avg}%`;
- $('#tally').innerHTML=shots.map(s=>`<span>${s.sc.n}</span><span class="b"><i style="width:${s.r.score}%"></i></span><span>${s.r.score}%</span>`).join('');
+ $('#rText').textContent=end.c;$('#rTot').textContent=stage==0?(passed?`前十關 ${avg}%，晉級成功！`:`前十關 ${avg}%，還差 ${PASS-avg}% 才能晉級`):`後二十關總完成度 ${avg}%`;$('#rUp').hidden=!passed;$('#rAgain').textContent=stage==0?'再擦一次':'再挑戰後二十關';
+ $('#tally').innerHTML=run.map(s=>`<span>${s.sc.n}</span><span class="b"><i style="width:${s.r.score}%"></i></span><span>${s.r.score}%</span>`).join('');
  $('#shareImg').alt=`結果：${end.n}，總完成度 ${avg}%`;$('#shareImg').removeAttribute('src');$('#rShare').disabled=true;
- applyCard({avg,end});lbInit({avg,end,details:shots.map(s=>s.r.score)});
+ applyCard({avg,end});lbInit({avg,end,details:run.map(s=>s.r.score)});
 }
 $('#rShare').onclick=async()=>{if(!cardURL)return;try{if(navigator.canShare&&navigator.canShare({files:[cardFile]})){await navigator.share({files:[cardFile],title:'擦口紅不出界'});return}}catch(e){if(e.name=='AbortError')return}const v=$('#cardView');v.querySelector('img').src=cardURL;v.hidden=false};
 $('#cardClose').onclick=()=>{$('#cardView').hidden=true};
-function begin(){shots=[];$('#intro').hidden=true;$('#result').hidden=true;$('#settle').hidden=true;$('#play').hidden=false;startScene(0)}
-$('#start').onclick=begin;$('#rAgain').onclick=begin;
+$('#start').onclick=()=>startStage(0);$('#stage2').onclick=()=>startStage(1);$('#rAgain').onclick=()=>startStage(stage);
+$('#rUp').onclick=()=>{$('#result').hidden=true;cg.setTransform(2,0,0,2,0,0);drawFace(cg,S[10]);const c=$('#upFace'),x=c.getContext('2d');x.drawImage(cache,0,0);$('#stageUp').hidden=false;Snd.verdict(true)};
+$('#upGo').onclick=()=>startStage(1);refreshIntro();
 /* ---------- 開場圖：出界的嘴 ---------- */
 (function(){const cv=$('#introC'),c=cv.getContext('2d'),sc=S[1];cg.setTransform(2,0,0,2,0,0);drawFace(cg,sc);pg.clearRect(0,0,800,1000);pg.save();pg.scale(2,2);pg.strokeStyle=sc.c;pg.lineWidth=18;pg.lineCap='round';pg.lineJoin='round';pg.beginPath();[[92,283],[150,246],[250,246],[308,284],[268,334],[132,338],[96,298],[190,290],[296,300],[346,344],[372,376]].forEach((q,i)=>i?pg.lineTo(q[0],q[1]):pg.moveTo(q[0],q[1]));pg.stroke();pg.restore();
  const shot=composite(sc);pg.clearRect(0,0,800,1000);const k=720/620;c.save();c.beginPath();c.roundRect(4,4,712,532,28);c.clip();c.drawImage(shot,90,380,620,465,0,0,720,540);c.setTransform(k*2,0,0,k*2,-90*k,-380*k);drawTube(c,[372,376],sc.c,1);c.restore();c.lineWidth=8;const q=c.createLinearGradient(0,0,720,540);q.addColorStop(0,'#f6dda0');q.addColorStop(.5,'#b98a33');q.addColorStop(1,'#f3d68f');c.strokeStyle=q;c.beginPath();c.roundRect(4,4,712,532,28);c.stroke();
