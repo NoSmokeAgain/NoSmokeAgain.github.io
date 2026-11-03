@@ -148,6 +148,8 @@ const Snd=(()=>{let c,master,fx,mus,nb,on=true,timer=0,next=0,step=0,sw=null,sil
   bump(){if(ok()){const t=now();tone(110,t,.2,.6,'sine',fx,.002,45);noise(t,.1,.32,'lowpass',700,fx,.001)}},
   meow(){if(ok()){const t=now();tone(520,t,.42,.17,'sawtooth',fx,.05,820);tone(780,t+.18,.28,.08,'triangle',fx,.04,430)}},
   hey(){if(ok()){const t=now();tone(420,t,.13,.26,'square',fx,.005,700);tone(700,t+.1,.09,.12,'square',fx,.004)}},
+  press(){if(ok()){const t=now();tone(150,t,.13,.2,'sine',fx,.03,110);tone(150,t+.4,.13,.2,'sine',fx,.03,110)}},
+  pop(){if(ok()){const t=now();tone(240,t,.09,.42,'sine',fx,.002,920);noise(t,.025,.16,'bandpass',2600,fx,.001,1.4)}},
   sneeze(){if(ok()){const t=now();noise(t,.22,.5,'bandpass',2600,fx,.01,.7);tone(620,t,.13,.18,'sawtooth',fx,.005,260)}},
   click(){if(ok())tone(1200,now(),.03,.13,'triangle',fx,.002,800)},
   rumble(){if(ok()){const t=now();for(let i=0;i<9;i++)tone(46+i%3*8,t+i*.42,.5,.3,'sawtooth',fx,.05);noise(t,3.5,.08,'lowpass',260,fx,.3)}},
@@ -243,7 +245,25 @@ G.addEventListener('pointermove',e=>{if(pressed)finger=toLogic(e)});
 const up=()=>{pressed=false;prevTip=null;Snd.swipe(false)};G.addEventListener('pointerup',up);G.addEventListener('pointercancel',up);
 function startScene(i){cur=i;const sc=S[i];pg.clearRect(0,0,800,1000);cg.setTransform(2,0,0,2,0,0);drawFace(cg,sc);fired=new Set();pressed=false;prevTip=null;finger=null;shake=0;bubble=null;sc._q=0;$('#settle').hidden=true;$('#play').hidden=false;$('#scName').textContent=`${i+1}/${S.length} ${sc.n}`;$('#bar').style.transform='scaleX(1)';running=false;intro=performance.now();Snd.scene();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
 function composite(sc){const c=document.createElement('canvas');c.width=800;c.height=1000;const x=c.getContext('2d');x.drawImage(cache,0,0);x.save();x.beginPath();x.roundRect(28,124,744,856,52);x.clip();x.drawImage(paint,0,0);x.restore();x.scale(2,2);lipLight(x,sc);mirrorRim(x);return c}
-function stopScene(){if(!running)return;running=false;Snd.swipe(false);pressed=false;cancelAnimationFrame(raf);const sc=S[cur],r=measure(sc);shots[cur]={r,shot:composite(sc),sc};Snd.end();settle(cur)}
+/* 抿嘴：以嘴縫為中心，整列像素平滑擠壓，皮膚也跟著動 */
+function playPress(shot,sc,done){
+ if(matchMedia('(prefers-reduced-motion:reduce)').matches){done();return}
+ const my=(LY+1)*2,R=(Math.max(sc.T,sc.B)+58)*2,KEYS=[[0,1],[150,.42],[280,.42],[400,1.04],[500,.46],[620,.46],[730,1.12],[840,.98],[930,1]],dur=930,t0=performance.now();
+ const ease=u=>u*u*(3-2*u),kAt=t=>{for(let i=1;i<KEYS.length;i++)if(t<=KEYS[i][0]){const a=KEYS[i-1],b=KEYS[i];return a[1]+(b[1]-a[1])*ease((t-a[0])/(b[0]-a[0]))}return 1};
+ let popped=0;Snd.press();
+ const frame=n=>{const t=n-t0,k=kAt(t);g.setTransform(1,0,0,1,0,0);g.drawImage(shot,0,0);
+  const top=Math.max(124,my-R),bot=Math.min(980,my+R),STEP=3;
+  g.save();g.beginPath();g.roundRect(28,124,744,856,52);g.clip();
+  for(let d=top;d<bot;d+=STEP){const u=Math.min(1,Math.abs(d-my)/R),f=.5+.5*Math.cos(u*Math.PI),sc2=1-(1-k)*f,sy=my+(d-my)/Math.max(.25,sc2),wide=1+(1-k)*.12*f,w=744*wide;g.drawImage(shot,28,sy,744,STEP/Math.max(.25,sc2)+.6,400-w/2,d,w,STEP+.6)}
+  /* 抿緊時嘴縫加深 */
+  if(k<.8){g.strokeStyle=`rgba(50,6,18,${(.8-k)*1.3})`;g.lineWidth=7;g.lineCap='round';g.beginPath();g.moveTo(400-sc.W*2.04,my);g.quadraticCurveTo(400,my+7,400+sc.W*2.04,my);g.stroke()}
+  g.restore();
+  if(t>=700&&!popped){popped=1;Snd.pop()}
+  /* 鬆開時的亮點 */
+  if(t>700){const a=Math.sin(Math.min(1,(t-700)/230)*Math.PI);g.save();g.translate(400+sc.W*1.05,my-sc.T*1.5);g.rotate(a);g.globalAlpha=a;g.fillStyle='#fff';g.beginPath();for(let i=0;i<8;i++){const r=i%2?7:30*a+4,an=i*Math.PI/4;g.lineTo(Math.cos(an)*r,Math.sin(an)*r)}g.fill();g.restore()}
+  if(t<dur)requestAnimationFrame(frame);else{g.drawImage(shot,0,0);setTimeout(done,170)}};
+ requestAnimationFrame(frame)}
+function stopScene(){if(!running)return;running=false;Snd.swipe(false);pressed=false;cancelAnimationFrame(raf);const sc=S[cur],r=measure(sc);const shot=composite(sc),i=cur;shots[cur]={r,shot,sc};playPress(shot,sc,()=>{Snd.end();settle(i)})}
 $('#done').onclick=stopScene;
 function mouthURL(s,w=660,h=440){const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(s.shot,70,330,660,440,0,0,w,h);return c.toDataURL('image/jpeg',.88)}
 let settleAnim=0;
