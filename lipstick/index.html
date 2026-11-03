@@ -106,8 +106,8 @@ button{font:inherit;color:inherit;cursor:pointer}
   <h1 class="big">擦口紅<br>不出界</h1>
   <p class="tagline">十關，公車、貓、颱風都想害妳。</p>
   <button class="btn" id="start">開始擦</button>
-  <button class="btn alt" id="stage2" hidden>直接玩後 20 關</button>
-  <span style="font-size:11px;opacity:.6">版本 7</span>
+  <button class="btn alt" id="stage2" hidden>直接玩後 10 關</button>
+  <span style="font-size:11px;opacity:.6">版本 8</span>
 </div>
 <div id="play" class="screen" hidden>
   <button class="snd" aria-pressed="true"></button>
@@ -124,7 +124,7 @@ button{font:inherit;color:inherit;cursor:pointer}
   <div class="dots" id="dots"></div>
   <button class="btn" id="setNext"></button>
 </div>
-<div id="stageUp" class="screen" hidden><p class="upk">晉級！</p><h2 class="uph">第二位模特兒登場</h2><canvas id="upFace" width="800" height="1000" aria-label="新模特兒"></canvas><p class="tagline">接下來 20 關，一關比一關難。</p><button class="btn" id="upGo">開始後 20 關</button></div>
+<div id="stageUp" class="screen" hidden><p class="upk">晉級！</p><h2 class="uph">第二位模特兒登場</h2><canvas id="upFace" width="800" height="1000" aria-label="新模特兒"></canvas><p class="tagline">接下來 10 關，一關比一關難。</p><button class="btn" id="upGo">開始後 10 關</button></div>
 <div id="result" class="screen" hidden>
   <img id="shareImg" alt="">
   <div class="tot" id="rTot"></div>
@@ -133,7 +133,7 @@ button{font:inherit;color:inherit;cursor:pointer}
     <form id="lbForm"><input id="lbName" maxlength="8" placeholder="取個暱稱上榜（最多 8 字）" autocomplete="off" aria-label="暱稱"><button id="lbSend" type="submit">上榜</button></form>
     <p id="lbMsg" role="status"></p>
   </section>
-  <div class="acts"><button class="btn" id="rUp" style="background:var(--red)" hidden>進入後 20 關</button><button class="btn" id="rShare" disabled>分享卡片</button><button class="btn alt" id="rAgain">再擦一次</button></div>
+  <div class="acts"><button class="btn" id="rUp" style="background:var(--red)" hidden>進入後 10 關</button><button class="btn" id="rShare" disabled>分享卡片</button><button class="btn alt" id="rAgain">再擦一次</button></div>
   <section class="board" aria-label="排行榜">
     <h2>排行榜</h2>
     <div class="lbtabs" role="tablist"><button role="tab" data-p="week" aria-selected="true">本週榜</button><button role="tab" data-p="all" aria-selected="false">總榜</button></div>
@@ -213,7 +213,7 @@ const S=[
  {id:'sneeze',n:'要打噴嚏',short:'噴嚏',lose:'輸給了自己的鼻子',c:'#f06a55',W:88,T:30,B:40,bg:'#f3c9c9',T_:7,ev:[{t:2200,dx:-60,dy:118,dur:300,snd:'sneeze',say:['哈…','哈…','哈啾！']},{t:5000,dx:70,dy:-110,dur:300,snd:'sneeze',say:['哈…','哈…','哈啾！']}]},
  {id:'storm',n:'颱風天',short:'颱風',lose:'輸給了颱風',c:'#2e0813',W:84,T:28,B:36,bg:'#8f9fae',T_:8,storm:1,sway:[44,14,.0032],hair:[[1300,2300],[3500,4600],[5600,6800]],ev:[bump(3000,-70,30,520),bump(6100,84,-30,520)]}
 ];
-/* ---------- 第二階段：後 20 關（新模特兒） ---------- */
+/* ---------- 第二階段：後 10 關（新模特兒） ---------- */
 const L2=(id,n,short,lose,c,W,T,B,bg,cfg,a,b,c2,who)=>{S.push(Object.assign({id,n,short,lose,c,W:Math.round(W*.92),T:Math.round(T*.92),B:Math.round(B*.92),bg,T_:6,model:2},cfg));LINES[id]={a,b,c:c2};WHO[id]=who};
 L2('elevator','電梯擠人','電梯','輸給了電梯超載','#e8405f',104,40,50,'#d8dde2',{crowd:[[1000,2600,'#3a3f4a',1],[3000,4700,'#59414a',-1]],ev:[bump(1200,50,20),bump(3300,-56,24)]},['擠成這樣還塗得好，電梯該請妳代言。','超載鈴響了，妳的手沒響。'],['被肩膀撞了幾次，還算能看。','下一站開門，先呼吸。'],['隔壁大哥的背包，塗得比妳的嘴還滿。','這部電梯，妳以後會走樓梯。'],['大哥：不好意思。','電梯：超載。']);
 L2('kid','小孩搶口紅','小孩','輸給了三歲小孩','#ec2f8c',102,38,50,'#ffe5a8',{crowd:[[1400,2300,'#f1c3a2',1],[3500,4400,'#f1c3a2',-1]],ev:[bump(1500,-96,30,400,{warn:'給我！'}),bump(3600,92,40,400,{warn:'我要！'})]},['小孩都沒搶走，妳是帶過孩子的。','手速贏了三歲小孩。'],['被搶了兩次，還能畫成這樣。','小孩笑了，妳也只能笑。'],['小孩說阿姨好漂亮，他在騙妳。','現在她也想塗了，嘴巴在哪她也不知道。'],['小孩：嘻嘻！','小孩：再一次！']);
@@ -235,6 +235,8 @@ L2('numb','麻藥還沒退','麻藥','輸給了牙醫','#b5626a',82,30,40,'#d6ea
 L2('yawn','想打哈欠','哈欠','輸給了昨晚熬夜','#c9402b',82,28,40,'#d9cdeb',{ev:[{t:2100,dx:-40,dy:-96,dur:520,snd:'sneeze',say:['啊…','啊…','啊～']},{t:4600,dx:50,dy:96,dur:520,snd:'sneeze',say:['又…','又要…','啊～']}]},['哈欠都忍住了，下班可以早點睡。','熬夜也不影響專業。'],['哈欠那一下，手也跟著打開了。','眼淚也流出來了，一起擦掉。'],['這個妝看起來也很想睡。','先去睡覺，明天再塗。'],['枕頭：回來吧。','鬧鐘：還有五分鐘。']);
 L2('aftershock','餘震加停電','餘震','輸給了餘震','#5e0d22',80,28,38,'#d4c8a8',{quake:[800,4700,34],dark:[[2000,3100]]},['又搖又黑，妳還塗完了。','防災演習應該請妳當示範。'],['第二波有點撐不住。','燈沒亮的那段全靠運氣。'],['就地掩護，真的。','這個妝列入災損。'],['手機：國家級警報。','手電筒：終於想起我了。']);
 L2('finale','全部一起來','大魔王','輸給了全世界','#d40f3c',78,28,38,'#ff9ab8',{T_:7,quake:[900,2500,26],sway:[20,10,.004],dark:[[3000,3700]],pop:[[3900,4700,'欸妳看這個！']],flash:[[5000,6700]],fly:[[1300,1900,'#2a1610',14,4]],hair:[[2500,3000]],ev:[{t:1500,dx:-100,dy:-20,dur:500,snd:'meow',paw:1},bump(4700,90,70,350),bump(5900,-90,-70,350)]},['全世界都來了，妳還是畫好了。彩妝女神。','沒有什麼能阻止妳的手。'],['能撐到這裡的人已經不多了。','大魔王有點太多了，不怪妳。'],['這關本來就是來害妳的。','至少妳走到了最後。'],['全世界：不好意思。','貓：我也有來。']);
+/* 第二階段只留這 10 關，總共 20 關 */
+{const keep=['elevator','kiss','boba','roach','boss','fog','mountain','mom','concert','finale'];for(let i=S.length-1;i>=10;i--)if(!keep.includes(S[i].id))S.splice(i,1)}
 function fxDraw(g,sc,el){
  (sc.crowd||[]).forEach(w=>{if(el<w[0]||el>w[1])return;const u=(el-w[0])/(w[1]-w[0]),a=Math.sin(u*Math.PI),col=w[2],side=w[3];g.fillStyle=col;g.save();if(side==0){const y=500-a*330;g.beginPath();g.ellipse(200,y+190,240,210,0,0,7);g.fill();g.fillStyle='rgba(255,255,255,.08)';g.beginPath();g.ellipse(200,y+60,90,18,0,0,7);g.fill()}else{const x=side>0?450-a*240:-50+a*240;g.beginPath();g.ellipse(x,430,132,210,0,0,7);g.fill();g.beginPath();g.arc(x,205,52,0,7);g.fill();g.fillStyle='rgba(255,255,255,.1)';g.beginPath();g.ellipse(x+(side>0?-30:30),300,20,70,0,0,7);g.fill()}g.restore()});
  (sc.fly||[]).forEach(w=>{if(el<w[0]||el>w[1])return;const u=(el-w[0])/(w[1]-w[0]);for(let i=0;i<w[4];i++){const x=-30+u*460+i*34-i*i*3,y=90+i*42+Math.sin(u*14+i)*22;g.fillStyle=w[2];g.beginPath();g.ellipse(x,y,w[3],w[3]*(w[4]==1?.6:1),0,0,7);g.fill();if(w[4]==1){g.strokeStyle=w[2];g.lineWidth=2;for(let k=-1;k<=1;k++){g.beginPath();g.moveTo(x+k*8,y);g.lineTo(x+k*12,y-20);g.moveTo(x+k*8,y);g.lineTo(x+k*12,y+20);g.stroke()}g.fillStyle='rgba(255,255,255,.3)';g.beginPath();g.ellipse(x-4,y-3,w[3]*.5,3,0,0,7);g.fill()}else{g.fillStyle='rgba(255,255,255,.3)';g.beginPath();g.arc(x-w[3]*.3,y-w[3]*.3,w[3]*.25,0,7);g.fill()}}});
@@ -477,7 +479,7 @@ function applyCard(res,quiet){return makeCard(res).then(u=>{$('#shareImg').src=u
 function showResult(){
  Snd.swipe(false);const run=runShots(),n=run.length,avg=Math.round(run.reduce((a,s)=>a+s.r.score,0)/n),cover=run.reduce((a,s)=>a+s.r.cover,0)/n,spill=run.reduce((a,s)=>a+s.r.spill,0)/n,end=pickEnd(avg,cover,spill),passed=stage==0&&avg>=PASS;if(passed){unlocked=true;try{localStorage.setItem('lipStage2','1')}catch(e){}}
  $('#play').hidden=true;$('#settle').hidden=true;$('#result').hidden=false;$('#result').scrollTop=0;
- $('#rText').textContent=end.c;$('#rTot').textContent=stage==0?(passed?`前十關 ${avg}%，晉級成功！`:`前十關 ${avg}%，還差 ${PASS-avg}% 才能晉級`):`後二十關總完成度 ${avg}%`;$('#rUp').hidden=!passed;$('#rAgain').textContent=stage==0?'再擦一次':'再挑戰後二十關';
+ $('#rText').textContent=end.c;$('#rTot').textContent=stage==0?(passed?`前十關 ${avg}%，晉級成功！`:`前十關 ${avg}%，還差 ${PASS-avg}% 才能晉級`):`後十關總完成度 ${avg}%`;$('#rUp').hidden=!passed;$('#rAgain').textContent=stage==0?'再擦一次':'再挑戰後十關';
  $('#tally').innerHTML=run.map(s=>`<span>${s.sc.n}</span><span class="b"><i style="width:${s.r.score}%"></i></span><span>${s.r.score}%</span>`).join('');
  $('#shareImg').alt=`結果：${end.n}，總完成度 ${avg}%`;$('#shareImg').removeAttribute('src');$('#rShare').disabled=true;
  applyCard({avg,end});lbInit({avg,end,details:run.map(s=>s.r.score)});
