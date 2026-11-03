@@ -107,7 +107,7 @@ button{font:inherit;color:inherit;cursor:pointer}
   <p class="tagline">十關，公車、貓、颱風都想害妳。</p>
   <button class="btn" id="start">開始擦</button>
   <button class="btn alt" id="stage2" hidden>直接玩後 10 關</button>
-  <span style="font-size:11px;opacity:.6">版本 8</span>
+  <span style="font-size:11px;opacity:.6">版本 9</span>
 </div>
 <div id="play" class="screen" hidden>
   <button class="snd" aria-pressed="true"></button>
@@ -282,7 +282,7 @@ function drawFace2(x,sc){
  /* 珍珠耳環 */
  for(const ex of [70,330]){x.fillStyle='#fffaf0';x.strokeStyle='#d8c6a5';x.lineWidth=1;x.beginPath();x.arc(ex,286,9,0,7);x.fill();x.stroke();x.fillStyle='#fff';x.beginPath();x.arc(ex-3,283,3,0,7);x.fill()}
  x.restore()}
-const STAGES=[[0,10,'lipstick'],[10,S.length,'lipstick2']];let stage=0;const PASS=80;
+const STAGES=[[0,10,'lipstick'],[10,S.length,'lipstick2']];let stage=0;const PASS=75;
 let unlocked=false;try{unlocked=localStorage.getItem('lipStage2')=='1'}catch(e){}
 const runShots=()=>shots.filter(Boolean);
 function startStage(n){stage=n;shots=[];['intro','result','settle','stageUp'].forEach(id=>{$('#'+id).hidden=true});$('#play').hidden=false;startScene(STAGES[n][0])}
