@@ -1,13 +1,13 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
 <title>彩妝女王</title>
 <!--site:meta-->
-<meta name="description" content="帶 3,000 塊去寶雅，買什麼就只能畫什麼。27 種結局，這妝能出門嗎？">
+<meta name="description" content="帶 3,000 塊去寶雅，幫閨蜜化一張臉，再傳給她看。">
 <link rel="canonical" href="https://happydog.tw/makeup-queen/">
 <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="三分鐘遊樂場">
 <meta property="og:title" content="彩妝女王｜三分鐘遊樂場">
-<meta property="og:description" content="帶 3,000 塊去寶雅，買什麼就只能畫什麼。27 種結局，這妝能出門嗎？">
+<meta property="og:description" content="帶 3,000 塊去寶雅，幫閨蜜化一張臉，再傳給她看。">
 <meta property="og:url" content="https://happydog.tw/makeup-queen/">
 <meta property="og:image" content="https://happydog.tw/makeup-queen/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
@@ -125,6 +125,10 @@ h1{font:900 20px/1.1 var(--display);margin:0 auto 0 0;letter-spacing:.04em;white
 .price s{color:var(--mute);font-weight:400;font-size:11.5px;margin-right:3px}
 .saletag{position:absolute;top:22px;right:6px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:50%;width:32px;height:32px;display:grid;place-items:center;transform:rotate(10deg)}
 #occTag{margin-left:6px;color:var(--accent);font-weight:700}
+.names{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.names label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--mute)}
+.names input{font:inherit;font-size:16px;color:var(--ink);padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;background:#fff;width:100%}
+.forwho{font:900 26px/1.3 var(--display);margin:0 0 12px;text-wrap:balance}
 .ctl{display:flex;flex-direction:column;gap:8px}
 .lab{display:flex;justify-content:space-between;gap:8px;font-size:14px;font-weight:700}
 .lab span{color:var(--mute);font-weight:400}
@@ -187,17 +191,21 @@ input[type=range]{width:100%;accent-color:var(--accent);height:24px;margin:0}
   <div class="ticker" aria-hidden="true"><div>口紅　眼影　腮紅　假睫毛　瞳片　染髮劑　美妝蛋　小熊軟糖　口紅　眼影　腮紅　假睫毛　瞳片　染髮劑　美妝蛋　小熊軟糖　口紅　眼影　腮紅　假睫毛　瞳片　染髮劑　美妝蛋　小熊軟糖　</div></div>
   <div class="introbox">
     <h1 class="big">彩妝<br>女王</h1>
-    <p class="lead">今晚有約，化妝包是空的。</p>
-    <button class="budget" data-b="3000"><svg viewBox="0 0 28 24" aria-hidden="true"><path d="M3 8h22l-3 13H6z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M9 8l4-6M19 8l-4-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><b>帶 3,000 塊去寶雅</b></button>
+    <p class="lead">今晚閨蜜有約，她的臉交給妳。</p>
+    <button class="budget" data-b="3000"><svg viewBox="0 0 28 24" aria-hidden="true"><path d="M3 8h22l-3 13H6z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M9 8l4-6M19 8l-4-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><b>帶 3,000 塊幫她去寶雅</b></button>
     <button class="dexlink" id="dexBtn"></button>
     <p class="legal">非寶雅官方遊戲，商品與價格皆為虛構。</p>
   </div>
 </div>
 <div id="setup" class="screen" hidden>
   <div class="setbox">
-    <h2>選一張臉</h2>
+    <h2>幫誰化妝？</h2>
+    <div class="names"><label for="toName">她叫<input id="toName" maxlength="6" placeholder="小美" autocomplete="off"></label><label for="fromName">妳叫<input id="fromName" maxlength="6" placeholder="阿芳" autocomplete="off"></label></div>
+    <h2>她是哪種人？</h2>
+    <div id="tags" class="chips"></div>
+    <h2>她的臉</h2>
     <div id="faces"></div>
-    <h2>今晚要去哪？</h2>
+    <h2>她今晚要去哪？</h2>
     <div id="occs" class="chips"></div>
     <button class="primary" id="goRide">騎車去寶雅</button>
   </div>
@@ -403,6 +411,17 @@ const OCCS=[
  {n:'第一次約會',w:[.8,-.3,1,.2,-.3],good:['對方已經在想第二次要約哪裡。','手機裡多了一張偷拍照。'],ok:['聊得不錯，他把飲料讓給妳。','有下次，但要看他排班。'],bad:['對方突然說他明天很早要上班。','他傳訊息問朋友該怎麼脫身。']},
  {n:'姐妹夜店',w:[.8,-.2,.1,-.1,1],good:['DJ 問妳要不要上去。','姐妹把妳放在拍照的正中間。'],ok:['跟得上，但沒人會記得。','姐妹說不錯，順手幫妳補了一點。'],bad:['保全問妳是不是來接人的。','姐妹問妳要不要先回家換一套。']}
 ];
+const TAGS=[['戀愛腦',(n)=>`${n}今晚又要為誰心動，先把這張臉拍起來。`],['嘴硬心軟',(n)=>`${n}嘴上說不好看，已經偷照三次鏡子了。`],['購物狂',(n)=>`${n}看到這份明細只會說，怎麼才買這樣。`],['工作狂',(n)=>`${n}應該是畫到一半還在回主管訊息。`],['愛遲到',(n)=>`這妝畫完，${n}又要遲到四十分鐘了。`],['白目王',(n)=>`${n}等一下會大聲問大家：我今天是不是很美？`],['社恐',(n)=>`${n}會化好妝，然後決定不出門。`]];
+let names={to:'',from:''},tagI=0,recvMode=false;
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const toN=()=>names.to||'閨蜜',fromN=()=>names.from||'我';
+const SHARE_URL='https://happydog.tw/makeup-queen/',B32='abcdefghijklmnopqrstuvwxyz234567';
+function b32(bytes){let o='',v=0,n=0;for(const b of bytes){v=(v<<8)|b;n+=8;while(n>=5){o+=B32[(v>>>(n-5))&31];n-=5}v&=(1<<n)-1}if(n)o+=B32[(v<<(5-n))&31];return o}
+function unb32(s){const out=[];let v=0,n=0;for(const ch of s){const i=B32.indexOf(ch);if(i<0)throw 0;v=(v<<5)|i;n+=5;if(n>=8){out.push((v>>>(n-8))&255);n-=8;v&=(1<<n)-1}}return new Uint8Array(out)}
+function encodeGame(){const ix=id=>PRODUCTS.findIndex(x=>x.id==id);return 'g'+b32(new TextEncoder().encode(JSON.stringify([names.to,names.from,tagI,faceI,occI,basket.map(ix),Object.values(applied).map(ix),Object.entries(levels).map(e=>[ix(e[0]),e[1]]),Object.entries(choice).map(e=>[ix(e[0]),e[1]]),style.cloth,style.clothColor,style.bg])))}
+function decodeGame(code){const a=JSON.parse(new TextDecoder().decode(unb32(code)));const pid=i=>{if(!PRODUCTS[i])throw 0;return PRODUCTS[i].id},hexc=v=>/^#[0-9a-f]{6}$/i.test(v)?v:'#f3d9dc';
+ names={to:String(a[0]||'').slice(0,6),from:String(a[1]||'').slice(0,6)};tagI=TAGS[a[2]]?a[2]:0;faceI=FACES[a[3]]?a[3]:0;occI=OCCS[a[4]]?a[4]:0;basket=[...new Set(a[5].map(pid))];applied={};a[6].forEach(i=>{const x=byId[pid(i)];applied[x.slot]=x.id});levels={};a[7].forEach(e=>{const v=+e[1];if(v>=0&&v<=100)levels[pid(e[0])]=v});choice={};a[8].forEach(e=>{const x=byId[pid(e[0])];if(x.opt&&x.opt[2].some(o=>o[0]==e[1]))choice[x.id]=e[1]});style={cloth:/^[a-z]+$/.test(a[9])?a[9]:'cami',clothColor:hexc(a[10]),bg:hexc(a[11])}}
+function newGame(){basket=[];applied={};levels={};choice={};focus=null;aisle='lip';plays++;try{localStorage.setItem('plays',plays)}catch(e){}$('#toName').value=names.to;$('#fromName').value=names.from;buildSetup();show('setup')}
 let faceI=0,occI=0;try{occI=(+localStorage.getItem('occ')||0)%OCCS.length}catch(e){}
 function fitOf(r){const a=Object.values(r.ax),w=OCCS[occI].w,den=w.reduce((n,v)=>n+Math.abs(v),0),dot=w.reduce((n,v,i)=>n+v*a[i],0)/den;return Math.max(5,Math.min(99,Math.round(44+dot*1.25)))}
 /* 圖鑑 */
@@ -412,6 +431,7 @@ const dexN=()=>Object.keys(TYPES).filter(k=>dex[k]).length;
 function openDex(){$('#dexCount').textContent=`已收集 ${dexN()} / ${Object.keys(TYPES).length}`;$('#dexGrid').innerHTML=Object.keys(TYPES).map(k=>dex[k]?`<div class="dx">${TYPES[k].n}</div>`:`<div class="dx lock">？？？</div>`).join('');$('#dex').hidden=false;Snd.page()}
 function refreshDex(){$('#dexBtn').textContent=`結局圖鑑 ${dexN()} / ${Object.keys(TYPES).length}`}
 function buildSetup(){const keep=s;$('#faces').innerHTML=FACES.map((f,i)=>{s=Object.assign(clone(BASE),{bg:'#f3d9dc'},f[1]);const u=faceURL();return `<button class="face" aria-pressed="${i==faceI}" data-f="${i}"><img alt="" src="${u}">${f[0]}</button>`}).join('');s=keep;
+ $('#tags').innerHTML=TAGS.map((g,i)=>`<button class="chip" aria-pressed="${i==tagI}" data-tag="${i}">${g[0]}</button>`).join('');
  $('#occs').innerHTML=OCCS.map((o,i)=>`<button class="chip" aria-pressed="${i==occI}" data-oc="${i}">${o.n}</button>`).join('')}
 const nt=n=>'NT$'+n.toLocaleString('en-US');
 function show(id){for(const x of ['intro','setup','ride','shop','receipt','app'])document.getElementById(x).hidden=x!=id}
@@ -486,14 +506,14 @@ function playRide(done){
 }
 (function buildWall(){const n=PRODUCTS.length,rows=[];for(let r=0;r<8;r++){let h='';for(let k=0;k<16;k++){const x=PRODUCTS[(r*17+k*7+3)%n];h+=`<div class="sit">${icon(x)}<i>$${x.pr}</i></div>`}rows.push(`<div class="srow">${h}</div>`)}$('#wall').innerHTML=rows.join('')})();
 function buildShop(){
- const left=budget-spent();$('#left').textContent=nt(left);$('#occTag').textContent='今晚：'+OCCS[occI].n;
+ const left=budget-spent();$('#left').textContent=nt(left);$('#occTag').textContent=toN()+'今晚：'+OCCS[occI].n;
  $('#aisles').innerHTML=AISLES.map(a=>`<button role="tab" aria-selected="${a[0]==aisle}" data-a="${a[0]}">${a[1]}</button>`).join('');
  $('#shelf').innerHTML=(aisle=='lip'?'<div class="pop">唇彩第二件 6 折</div>':'')+PRODUCTS.filter(x=>x.a==aisle).map(x=>{const inb=basket.includes(x.id),sale=onSale(x);return `<button class="item${!inb&&costIf(x.id)>left?' nope':''}" aria-pressed="${inb}" data-p="${x.id}">${sale?'<span class="saletag">7折</span>':''}${icon(x)}<span class="iname">${x.n}</span><span class="price">${sale?`<s>$${x.pr}</s>`:''}$${priceOf(x)}</span></button>`}).join('');
  $('#pay').textContent=basket.length?`去結帳（${basket.length} 件，${nt(spent())}）`:'什麼都不買，直接回家';
 }
-$('#intro').addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(!b)return;budget=+b.dataset.b;basket=[];applied={};levels={};choice={};aisle='lip';plays++;try{localStorage.setItem('plays',plays)}catch(e){}buildSetup();show('setup');Snd.next()});
-$('#setup').addEventListener('click',e=>{const f=e.target.closest('[data-f]'),o=e.target.closest('[data-oc]');if(f){faceI=+f.dataset.f;Snd.click();buildSetup()}if(o){occI=+o.dataset.oc;try{localStorage.setItem('occ',occI)}catch(err){}Snd.click();buildSetup()}});
-$('#goRide').onclick=()=>{buildShop();playRide(()=>show('shop'))};
+$('#intro').addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(!b)return;budget=+b.dataset.b;newGame();Snd.next()});
+$('#setup').addEventListener('click',e=>{const f=e.target.closest('[data-f]'),o=e.target.closest('[data-oc]'),g=e.target.closest('[data-tag]');if(g){tagI=+g.dataset.tag;Snd.click();buildSetup()}if(f){faceI=+f.dataset.f;Snd.click();buildSetup()}if(o){occI=+o.dataset.oc;try{localStorage.setItem('occ',occI)}catch(err){}Snd.click();buildSetup()}});
+$('#goRide').onclick=()=>{names.to=$('#toName').value.trim().slice(0,6);names.from=$('#fromName').value.trim().slice(0,6);buildShop();playRide(()=>show('shop'))};
 $('#dexBtn').onclick=openDex;$('#dexClose').onclick=()=>{$('#dex').hidden=true;Snd.page()};
 $('#aisles').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){aisle=b.dataset.a;buildShop();$('#shelf').scrollTop=0;Snd.page()}});
 $('#shelf').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;const id=b.dataset.p,x=byId[id];
@@ -942,27 +962,31 @@ function wasted(){const un=basket.map(i=>byId[i]).filter(x=>applied[x.slot]!=x.i
 function openCard(u){const v=$('#cardView');v.querySelector('img').src=u;v.hidden=false;Snd.page()}
 function showResult(){
  const r=judge(),el=$('#result'),occ=OCCS[occI];r.fit=fitOf(r);r.base=r.score;r.score=Math.max(12,Math.min(99,Math.round(r.score*.75+r.fit*.25)));
- const w=writeUp(r);r.w=w;const isNew=saveDex(r.key);
+ const w=writeUp(r);r.w=w;const isNew=recvMode?false:saveDex(r.key);
  const pool=r.fit>=70?occ.good:r.fit>=45?occ.ok:occ.bad,occLine=nextLine('oc_'+occI+(r.fit>=70?'g':r.fit>=45?'o':'b'),pool,hashS());saveSeen();
  el.innerHTML=`<div class="card"><div><img id="shareImg" alt="鑑定結果：${r.type.n}，${r.score} 分"></div><div>
+  <p class="forwho">${recvMode?`${esc(fromN())}幫妳化了這張臉`:`${esc(fromN())}眼中的${esc(toN())}`}</p>
   <p class="answer">這妝能出門嗎？<b>${w.v}</b></p>
   <p class="rtext">${w.c}</p>
   <h3 class="nh">櫃姐點評</h3>
   <dl class="meta notes">${w.notes.map(n=>`<dt>${n[0]}</dt><dd>${n[1]}</dd>`).join('')}</dl>
-  <dl class="meta"><dt>今晚</dt><dd>${occ.n}，合適度 ${r.fit}。${occLine}</dd><dt>花費</dt><dd>${nt(spent())}${spentLine(r)}</dd>${wasted()?`<dt>買了沒用</dt><dd>${wasted()}</dd>`:''}<dt>適合場合</dt><dd>${w.o}</dd><dt>副作用</dt><dd>${w.r}</dd>${s.lipAmt>0?`<dt>本命唇色</dt><dd>${nameOf('lip',s.lipColor)}</dd>`:''}<dt>圖鑑</dt><dd>${isNew?'新結局！':''}已收集 ${dexN()} / ${Object.keys(TYPES).length}</dd></dl>
-  <div class="ract"><button class="pri" id="rShare" disabled>分享卡片</button><button id="rNew">再玩一次</button><button id="rDex">圖鑑</button></div>
+  <dl class="meta"><dt>${esc(TAGS[tagI][0])}</dt><dd>${esc(TAGS[tagI][1](toN()))}</dd><dt>今晚</dt><dd>${occ.n}，合適度 ${r.fit}。${occLine}</dd><dt>花費</dt><dd>${nt(spent())}${spentLine(r)}</dd>${wasted()?`<dt>買了沒用</dt><dd>${wasted()}</dd>`:''}<dt>適合場合</dt><dd>${w.o}</dd><dt>副作用</dt><dd>${w.r}</dd>${s.lipAmt>0?`<dt>本命唇色</dt><dd>${nameOf('lip',s.lipColor)}</dd>`:''}<dt>圖鑑</dt><dd>${isNew?'新結局！':''}已收集 ${dexN()} / ${Object.keys(TYPES).length}</dd></dl>
+  <div class="ract">${recvMode?'<button class="pri" id="rBackAt">換我幫她畫</button>':'<button class="pri" id="rSend">傳給她看</button>'}<button id="rShare" disabled>分享卡片</button><button id="rNew">${recvMode?'我也要畫別人':'再畫一個'}</button><button id="rDex">圖鑑</button></div>
  </div></div>`;
  el.hidden=false;el.scrollTop=0;
- $('#rNew').onclick=()=>{el.hidden=true;Snd.duck(false);refreshDex();show('intro');Snd.page()};
+ const leave=()=>{el.hidden=true;Snd.duck(false);if(recvMode){recvMode=false;try{history.replaceState(null,'',location.pathname)}catch(e){location.hash=''}}};
+ $('#rNew').onclick=()=>{const wasR=recvMode;leave();if(wasR){names={to:'',from:''};tagI=0}refreshDex();show('intro');Snd.page()};
+ if(recvMode)$('#rBackAt').onclick=()=>{names={to:names.from,from:names.to};tagI=0;leave();newGame();Snd.next()};
+ else $('#rSend').onclick=async e=>{const b=e.target,url=SHARE_URL+'#'+encodeGame(),text=`${toN()}，我幫妳化了一張臉。今晚${occ.n}，點開看妳變成什麼樣：`;try{if(navigator.share){await navigator.share({text,url});return}}catch(err){if(err.name=='AbortError')return}try{await navigator.clipboard.writeText(text+'\n'+url);b.textContent='連結已複製，貼給她'}catch(err){b.textContent='請複製下方連結';const q=document.createElement('p');q.className='rtext';q.style.wordBreak='break-all';q.textContent=url;b.parentNode.after(q)}};
  $('#rDex').onclick=openDex;
  let cardURL='',cardFile=null;
- $('#rShare').onclick=async()=>{if(!cardURL)return;const data={files:[cardFile],title:'彩妝女王',text:`去${occ.n}前，我在寶雅花了 ${nt(spent())}，畫出「${r.type.n}」。`};try{if(navigator.canShare&&navigator.canShare({files:[cardFile]})){await navigator.share(data);return}}catch(e){if(e.name=='AbortError')return}openCard(cardURL)};
+ $('#rShare').onclick=async()=>{if(!cardURL)return;const data={files:[cardFile],title:'彩妝女王',text:`${fromN()}眼中的${toN()}：「${r.type.n}」。`};try{if(navigator.canShare&&navigator.canShare({files:[cardFile]})){await navigator.share(data);return}}catch(e){if(e.name=='AbortError')return}openCard(cardURL)};
  Snd.roll();makeShare(r).then(u=>{const i=$('#shareImg');if(i){i.src=u;i.classList.add('in')}cardURL=u;const bin=atob(u.split(',')[1]),arr=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)arr[k]=bin.charCodeAt(k);cardFile=new File([arr],'彩妝女王.png',{type:'image/png'});const sb=$('#rShare');if(sb)sb.disabled=false;Snd.verdict(r.key)});
 }
 function fit(x,text,weight,fam,size,maxW){let z=size;do{x.font=`${weight} ${z}px ${fam}`;z-=4}while(x.measureText(text).width>maxW&&z>40);return z+4}
 async function makeShare(r){
  const SER='"Noto Serif TC","Songti TC",serif',SAN='"Noto Sans TC","PingFang TC",sans-serif';
- const w=r.w||writeUp(r),all=r.type.n+w.t+w.v+'今晚：'+OCCS[occI].n+'花了NT$,'+'彩妝女王彩妝櫃鑑定書媚冷甜貴野分0123456789happydog.tw';
+ const w=r.w||writeUp(r),all=r.type.n+w.t+w.v+fromN()+'眼中的'+toN()+TAGS[tagI][0]+'今晚：'+OCCS[occI].n+'花了NT$,'+'彩妝女王彩妝櫃鑑定書媚冷甜貴野分0123456789happydog.tw';
  try{await Promise.race([Promise.all([document.fonts.load(`900 100px "Noto Serif TC"`,all),document.fonts.load(`500 40px "Noto Serif TC"`,all),document.fonts.load(`500 28px "Noto Sans TC"`,all)]),new Promise(d=>setTimeout(d,2500))])}catch(e){}
  const img=new Image();await new Promise((ok,no)=>{img.onload=ok;img.onerror=no;img.src=faceURL()});
  const cv=document.createElement('canvas');cv.width=1080;cv.height=1350;const x=cv.getContext('2d');
@@ -975,8 +999,8 @@ async function makeShare(r){
  x.fillStyle=g;x.fillRect(0,850,1080,200);x.fillStyle=WINE;x.fillRect(0,1050,1080,300);
  /* 刊頭 */
  const dark=hsl(s.bg).l<.5;x.fillStyle=dark?CREAM:'#35121f';x.textBaseline='alphabetic';
- x.font=`900 38px ${SER}`;x.fillText('彩妝女王',m,92);
- x.font=`500 24px ${SAN}`;x.fillStyle=dark?'rgba(251,241,234,.72)':'rgba(53,18,31,.66)';x.fillText('今晚：'+OCCS[occI].n,m,130);
+ fit(x,`${fromN()}眼中的${toN()}`,900,SER,38,700);x.fillText(`${fromN()}眼中的${toN()}`,m,92);
+ x.font=`500 24px ${SAN}`;x.fillStyle=dark?'rgba(251,241,234,.72)':'rgba(53,18,31,.66)';x.fillText(`${TAGS[tagI][0]}・今晚：${OCCS[occI].n}`,m,130);
  /* 分數印章 */
  x.save();x.translate(932,150);x.rotate(-.14);
  x.fillStyle=RED;x.beginPath();x.arc(0,0,96,0,7);x.fill();
@@ -991,7 +1015,7 @@ async function makeShare(r){
  ent.forEach(([k,v],i)=>{const X=m+i*(cw+gap);x.font=`500 26px ${SAN}`;x.fillStyle=CREAM;x.fillText(k,X,1192);x.textAlign='right';x.fillStyle='rgba(251,241,234,.65)';x.fillText(String(v),X+cw,1192);x.textAlign='left';x.fillStyle='rgba(251,241,234,.2)';x.fillRect(X,1206,cw,6);x.fillStyle=ROSE;x.fillRect(X,1206,cw*v/100,6)});
  /* 頁尾 */
  x.font=`500 26px ${SAN}`;x.fillStyle='rgba(251,241,234,.72)';x.fillText(`花了 ${nt(spent())}・${w.v}`,m,1290);
- x.textAlign='right';x.fillText('happydog.tw',1080-m,1290);x.textAlign='left';
+ x.textAlign='right';x.fillText('彩妝女王 happydog.tw',1080-m,1290);x.textAlign='left';
  return cv.toDataURL('image/png');
 }
 /* ---------- 聲音：全部即時合成，不載入檔案 ---------- */
@@ -1102,6 +1126,7 @@ function sndLabel(){document.querySelectorAll('.sndBtn').forEach(b=>{b.textConte
 document.querySelectorAll('.sndBtn').forEach(b=>{b.onclick=()=>{Snd.toggle();sndLabel()}});sndLabel();
 /* 啟動 */
 refreshDex();show('intro');
+(function(){const h=location.hash.slice(1);if(h[0]!='g'||h.length<8)return;try{decodeGame(h.slice(1));recvMode=true;rebuild();show('app');render();showResult()}catch(e){recvMode=false;show('intro')}})();
 </script>
 
 </body></html>
