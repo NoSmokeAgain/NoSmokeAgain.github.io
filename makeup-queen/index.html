@@ -1,0 +1,1095 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<title>彩妝女王</title>
+<!--site:meta-->
+<meta name="description" content="帶 3,000 塊去寶雅，買什麼就只能畫什麼。27 種結局，這妝能出門嗎？">
+<link rel="canonical" href="https://happydog.tw/makeup-queen/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="彩妝女王｜三分鐘遊樂場">
+<meta property="og:description" content="帶 3,000 塊去寶雅，買什麼就只能畫什麼。27 種結局，這妝能出門嗎？">
+<meta property="og:url" content="https://happydog.tw/makeup-queen/">
+<meta property="og:image" content="https://happydog.tw/makeup-queen/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;900&display=swap">
+<style>
+/* 版面：彩妝櫃的試妝台，鏡面在一側，色號抽屜在另一側；手機上鏡子固定在上方 */
+:root{
+  --bg:#f4f5f3;--panel:#ffffff;--ink:#23262b;--mute:#6c7178;--line:#dfe2df;--accent:#d3123d;--on-accent:#fff;--chip:#f1f2f0;--tag:#ffd92e;--shelf:#c9ced0;
+  --display:"Noto Serif TC","Songti TC",serif;--body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#app{height:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+#mirror{display:flex;flex-direction:column;min-height:0;min-width:0;padding:12px 16px;gap:10px}
+.top{display:flex;align-items:center;gap:6px}
+h1{font:900 20px/1.1 var(--display);margin:0 auto 0 0;letter-spacing:.04em;white-space:nowrap}
+.tool{border:1px solid var(--line);background:transparent;border-radius:999px;padding:7px 13px;font-size:13.5px;white-space:nowrap}
+.tool:hover{background:var(--chip)}
+.tool:disabled{opacity:.35;cursor:default}
+.tool.done{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:700}
+#stage{flex:1;min-height:0;display:flex;justify-content:center;align-items:center}
+#stage svg{height:100%;max-width:100%;aspect-ratio:4/5;border-radius:14px;display:block}
+#stage.drawing svg{touch-action:none;cursor:crosshair}
+#drawer{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;min-width:0}
+#panel{flex:1;overflow-y:auto;padding:16px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:16px;overscroll-behavior:contain}
+#foot{flex:none;padding:10px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));border-top:1px solid var(--line)}
+#next{width:100%;background:var(--ink);color:var(--panel);border:0;border-radius:8px;padding:13px;font-weight:700;font-size:15px}
+.screen{position:fixed;inset:0;overflow-y:auto}
+#app.screen{overflow:hidden}
+#intro{background:#f7f8f6;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-block:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+#wall{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-around;overflow:hidden;background:linear-gradient(#ffffff,#f1f3f0)}
+.srow{display:flex;justify-content:center;gap:6px;border-bottom:10px solid var(--shelf);box-shadow:0 3px 0 #aab0b2,0 12px 14px -8px rgba(0,0,0,.18);padding-top:8px;flex:none}
+.sit{flex:none;width:76px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.sit svg{width:62px;height:62px;display:block}
+.sit i{font:700 12px var(--body);background:var(--tag);color:var(--accent);padding:0 6px;font-style:normal;font-variant-numeric:tabular-nums}
+.ticker{position:absolute;top:0;left:0;right:0;background:var(--accent);color:#fff;font-size:13px;font-weight:700;padding:6px 0;overflow:hidden;white-space:nowrap;padding-top:calc(6px + env(safe-area-inset-top,0px));letter-spacing:.1em}
+.ticker div{display:inline-block}
+@media (prefers-reduced-motion:no-preference){.ticker div{animation:tick 24s linear infinite}@keyframes tick{to{transform:translateX(-33.33%)}}}
+.introbox{position:relative;max-width:400px;width:100%;background:var(--tag);padding:28px 22px 18px;transform:rotate(-1.4deg);box-shadow:0 18px 40px rgba(35,38,43,.28);border-radius:3px}
+.introbox::before,.introbox::after{content:"";position:absolute;bottom:100%;width:2px;height:900px;background:#8e9396}
+.introbox::before{left:20%}.introbox::after{right:20%}
+.big{font:900 clamp(62px,19vw,92px)/1.03 var(--display);margin:0 0 12px;white-space:normal;letter-spacing:.02em;color:var(--accent)}
+.lead{font-weight:700;line-height:1.6;margin:0 0 18px;font-size:16px}
+.budget{width:100%;display:flex;justify-content:center;align-items:center;gap:10px;padding:15px 12px;border:0;background:var(--ink);color:#fff;border-radius:6px}
+.budget svg{width:24px;height:21px;flex:none}
+.budget b{font-size:18px;font-variant-numeric:tabular-nums}
+.budget:hover{background:#000}
+.legal{font-size:12px;color:#5b5a45;line-height:1.6;margin:12px 0 0}
+#ride{background:#2a2140;overflow:hidden}
+#ride[hidden]{display:none!important}
+#rideC{width:100%;height:100%;display:block}
+#skip{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:calc(16px + env(safe-area-inset-right,0px));background:rgba(255,255,255,.88);border:0;color:#23262b}
+#shop{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+#shop[hidden]{display:none!important}
+.shophead{flex:none;display:flex;justify-content:space-between;align-items:center;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:#fff;border-bottom:1px solid var(--line)}
+.wallet{display:flex;align-items:baseline;gap:8px}
+.wallet span{font-size:13px;color:var(--mute)}
+.wallet b{font:900 26px var(--display);font-variant-numeric:tabular-nums}
+#aisles{flex:none;display:flex;overflow-x:auto;background:#fff;border-bottom:1px solid var(--line);scrollbar-width:none}
+#aisles button{flex:none;background:none;border:0;padding:11px 14px 9px;border-bottom:3px solid transparent;color:var(--mute);font-weight:500}
+#aisles button[aria-selected="true"]{color:var(--ink);border-color:var(--accent);font-weight:700}
+#shelf{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));align-content:start;padding:12px max(12px,env(safe-area-inset-right,0px)) 16px max(12px,env(safe-area-inset-left,0px));row-gap:14px;max-width:1000px;width:100%;margin:0 auto}
+.item{position:relative;background:none;border:0;padding:0 4px;display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0;border-bottom:9px solid var(--shelf);box-shadow:0 2px 0 #aab0b2}
+.item svg{height:70px;width:70px;display:block}
+.iname{font-size:12.5px;line-height:1.3;min-height:33px;margin-top:3px}
+.price{background:var(--tag);font-weight:700;font-size:14px;padding:1px 7px;margin:3px 0 6px;font-variant-numeric:tabular-nums;color:var(--accent)}
+.item[aria-pressed="true"]::after{content:"已放進籃子";position:absolute;top:0;left:4px;right:4px;background:var(--accent);color:#fff;font-size:11px;padding:2px 0;border-radius:2px}
+.item.nope{opacity:.42}
+#toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 14px;border-radius:6px;font-size:13.5px;margin:0;z-index:5;white-space:nowrap}
+#toast:empty{display:none}
+.foot{flex:none;padding:10px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));background:#fff;border-top:1px solid var(--line)}
+.primary{width:100%;background:var(--accent);color:#fff;border:0;border-radius:8px;padding:13px;font-weight:700;font-size:15px;display:block;max-width:560px;margin:0 auto}
+#receipt{background:#e8eae8;padding-block:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.rcpt{max-width:360px;margin:0 auto;background:#fff;padding:22px 20px;font:13.5px/1.7 ui-monospace,"Noto Sans TC",monospace;box-shadow:0 8px 24px rgba(0,0,0,.14)}
+.rcpt h2{font:900 19px var(--display);margin:0;text-align:center}
+.rcpt .sub{text-align:center;color:var(--mute);margin:2px 0 12px;font-size:12px}
+.row{display:flex;justify-content:space-between;gap:12px}
+.row span:last-child{flex:none;font-variant-numeric:tabular-nums}
+.dash{border-top:1px dashed #999;margin:9px 0}
+.tot{font-weight:700;font-size:16px}
+#app[hidden],#receipt[hidden],#intro[hidden]{display:none!important}
+.kit{display:flex;flex-direction:column;gap:18px}
+.grp h3{font-size:13px;color:var(--mute);margin:0 0 7px;font-weight:500;letter-spacing:.08em}
+.owned{display:flex;flex-wrap:wrap;gap:7px}
+.own{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:5px 11px 5px 5px;font-size:13.5px;text-align:left}
+.own svg{width:30px;height:30px;flex:none}
+.own[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.empty{color:var(--mute);line-height:1.7;margin:0}
+.tune{margin-top:10px;display:flex;flex-direction:column;gap:9px;background:var(--chip);padding:10px 12px;border-radius:8px}
+.dexlink{display:block;width:100%;background:none;border:0;margin-top:10px;font-weight:700;text-decoration:underline;font-size:14px;padding:4px}
+#setup{background:#f7f8f6;padding-block:20px 24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.setbox{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.setbox h2{font:900 22px var(--display);margin:6px 0 0}
+#faces{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.face{background:#fff;border:2px solid var(--line);border-radius:8px;padding:0 0 5px;overflow:hidden;font-size:13px;display:flex;flex-direction:column;gap:4px}
+.face img{width:100%;aspect-ratio:4/5;display:block;background:var(--chip)}
+.face[aria-pressed="true"]{border-color:var(--accent);font-weight:700}
+#goRide{margin-top:8px}
+#dex{position:fixed;inset:0;z-index:40;background:var(--bg);overflow-y:auto;padding-block:18px 28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+#dex[hidden],#setup[hidden]{display:none!important}
+.dexbox{max-width:560px;margin:0 auto}
+.dexhead{display:flex;justify-content:space-between;align-items:center}
+.dexhead h2{font:900 24px var(--display);margin:0}
+#dexCount{color:var(--mute);margin:6px 0 14px}
+#dexGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.dx{background:#fff;border:1px solid var(--line);border-radius:6px;padding:14px 6px;text-align:center;font-weight:700;font-size:14px;min-height:56px;display:flex;align-items:center;justify-content:center}
+.dx.lock{color:var(--mute);background:var(--chip);font-weight:400}
+.pop{grid-column:1/-1;background:var(--accent);color:#fff;font-weight:900;font-size:16px;text-align:center;padding:7px;transform:rotate(-.7deg)}
+.price s{color:var(--mute);font-weight:400;font-size:11.5px;margin-right:3px}
+.saletag{position:absolute;top:22px;right:6px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:50%;width:32px;height:32px;display:grid;place-items:center;transform:rotate(10deg)}
+#occTag{margin-left:6px;color:var(--accent);font-weight:700}
+.ctl{display:flex;flex-direction:column;gap:8px}
+.lab{display:flex;justify-content:space-between;gap:8px;font-size:14px;font-weight:700}
+.lab span{color:var(--mute);font-weight:400}
+input[type=range]{width:100%;accent-color:var(--accent);height:24px;margin:0}
+.swatches{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.sw{width:34px;height:34px;border-radius:50%;border:1px solid rgba(90,60,70,.3);padding:0}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--panel),0 0 0 4px var(--accent)}
+.sw.none{background:linear-gradient(135deg,transparent 46%,var(--accent) 46%,var(--accent) 54%,transparent 54%),var(--panel)}
+.custom{width:34px;height:34px;border-radius:50%;overflow:hidden;position:relative;border:1px dashed var(--mute);display:grid;place-items:center;font-size:16px;color:var(--mute)}
+.custom input{position:absolute;inset:-4px;opacity:0;cursor:pointer;width:calc(100% + 8px);height:calc(100% + 8px)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:9px 13px;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.hint{font-size:13.5px;color:var(--mute);line-height:1.6;margin:0}
+.more{border-top:1px solid var(--line);padding-top:12px}
+.more summary{cursor:pointer;font-size:14px;color:var(--mute);padding:2px 0}
+.more[open] summary{margin-bottom:14px}
+.morebody{display:flex;flex-direction:column;gap:16px}
+
+.looks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.look{border:1px solid var(--line);background:none;border-radius:10px;padding:0 0 6px;overflow:hidden;font-size:13px;display:flex;flex-direction:column;gap:5px}
+.look img{width:100%;aspect-ratio:4/5;display:block;background:var(--chip)}
+.look:hover{border-color:var(--accent)}
+#result{position:fixed;inset:0;background:var(--bg);overflow-y:auto;z-index:20;padding-block:20px 36px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.card{max-width:900px;margin:0 auto;display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:28px;align-items:center}
+@media (prefers-reduced-motion:no-preference){#shareImg.in{animation:pop .35s cubic-bezier(.2,1.5,.4,1)}@keyframes pop{from{transform:scale(1.05)}to{transform:none}}}
+#shareImg{width:100%;aspect-ratio:4/5;display:block;border-radius:12px;background:var(--chip);box-shadow:0 12px 40px rgba(53,18,31,.25)}
+.ract button:disabled{opacity:.5}
+#cardView{position:fixed;inset:0;z-index:30;background:#120a0e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding-block:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+#cardView[hidden]{display:none!important}
+#cardView img{max-width:100%;max-height:calc(100% - 96px);min-height:0;display:block;border-radius:8px;-webkit-touch-callout:default}
+#cardView p{margin:0;color:#f4eef0;font-size:14px}
+#cardClose{color:#f4eef0;border-color:#6b5f65}
+#cardClose:hover{background:#2a2024}
+.rtext{line-height:1.8;margin:0;max-width:65ch}
+.answer{margin:0 0 12px;font:500 15px var(--body);color:var(--mute)}
+.answer b{display:block;font:900 24px/1.35 var(--display);color:var(--accent);margin-top:2px;text-wrap:balance}
+.nh{font:700 14px var(--body);margin:18px 0 -4px}
+.notes dt{font-weight:700;color:var(--ink)}
+.meta{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;font-size:14px;line-height:1.6;margin:14px 0 0}
+.meta dt{color:var(--mute)}.meta dd{margin:0}
+.ract{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.ract button{padding:11px 16px;border-radius:8px;border:1px solid var(--line);background:var(--panel)}
+.ract button.pri{background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-weight:700}
+.savehint{margin-top:10px}
+@media (max-width:760px){
+  #app{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,43%) minmax(0,1fr)}
+  #mirror{padding:8px 16px;gap:6px}
+  h1{font-size:17px}
+  .tool{padding:5px 10px;font-size:12.5px}
+  #drawer{border-left:0;border-top:1px solid var(--line)}
+  .card{grid-template-columns:minmax(0,1fr);gap:18px}
+}
+</style>
+<style>html,body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head><body>
+
+<div id="intro" class="screen">
+  <div id="wall" aria-hidden="true"></div>
+  <div class="ticker" aria-hidden="true"><div>口紅　眼影　腮紅　假睫毛　瞳片　染髮劑　美妝蛋　小熊軟糖　口紅　眼影　腮紅　假睫毛　瞳片　染髮劑　美妝蛋　小熊軟糖　口紅　眼影　腮紅　假睫毛　瞳片　染髮劑　美妝蛋　小熊軟糖　</div></div>
+  <div class="introbox">
+    <h1 class="big">彩妝<br>女王</h1>
+    <p class="lead">今晚有約，化妝包是空的。</p>
+    <button class="budget" data-b="3000"><svg viewBox="0 0 28 24" aria-hidden="true"><path d="M3 8h22l-3 13H6z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M9 8l4-6M19 8l-4-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><b>帶 3,000 塊去寶雅</b></button>
+    <button class="dexlink" id="dexBtn"></button>
+    <p class="legal">非寶雅官方遊戲，商品與價格皆為虛構。</p>
+  </div>
+</div>
+<div id="setup" class="screen" hidden>
+  <div class="setbox">
+    <h2>選一張臉</h2>
+    <div id="faces"></div>
+    <h2>今晚要去哪？</h2>
+    <div id="occs" class="chips"></div>
+    <button class="primary" id="goRide">騎車去寶雅</button>
+  </div>
+</div>
+<div id="dex" hidden><div class="dexbox"><div class="dexhead"><h2>結局圖鑑</h2><button class="tool" id="dexClose">關閉</button></div><p id="dexCount"></p><div id="dexGrid"></div></div></div>
+<div id="ride" class="screen" hidden><canvas id="rideC" aria-label="騎機車到寶雅的動畫"></canvas><button class="tool" id="skip">略過</button></div>
+<div id="shop" class="screen" hidden>
+  <header class="shophead">
+    <div class="wallet"><span>錢包剩</span><b id="left"></b><span id="occTag"></span></div>
+    <button class="tool sndBtn"></button>
+  </header>
+  <nav id="aisles" aria-label="走道"></nav>
+  <div id="shelf"></div>
+  <p id="toast" role="status"></p>
+  <div class="foot"><button id="pay" class="primary"></button></div>
+</div>
+<div id="receipt" class="screen" hidden></div>
+<div id="app" class="screen" hidden>
+  <section id="mirror">
+    <div class="top">
+      <h1>彩妝女王</h1>
+      <button class="tool sndBtn"></button>
+    </div>
+    <div id="stage"></div>
+  </section>
+  <section id="drawer">
+    <div id="panel"></div>
+    <div id="foot"><button id="next">畫好了，看鑑定</button></div>
+  </section>
+</div>
+<div id="result" hidden></div>
+<div id="cardView" hidden><img alt="鑑定結果卡片"><p>長按圖片，存下來或直接分享</p><button class="tool" id="cardClose">關閉</button></div>
+
+<script>
+/* ---------- 色號 ---------- */
+const P={
+ skin:[['#fff0e8','冷白皮'],['#fde3d3','瓷白'],['#f8d6bf','自然'],['#eebf9e','小麥'],['#d39a74','蜜糖'],['#a56a48','古銅'],['#6f4430','深棕'],['#e7e7ea','鬼白'],['#cfe3cf','殭屍綠']],
+ hair:[['#17120f','自然黑'],['#3b2419','深棕'],['#7a5136','奶茶棕'],['#c09a63','亞麻'],['#ecdcae','白金'],['#6d1a2c','酒紅'],['#e0738f','櫻花粉'],['#5d7a9c','霧藍'],['#b5b7bd','銀灰'],['#4d2c7c','葡萄紫'],['#2f8f7a','湖水綠'],['#e8552b','火橘']],
+ shadow:[['#8a5a3c','大地棕'],['#c79a7a','奶茶'],['#ef9c80','蜜桃'],['#c9667b','玫瑰'],['#7c1f35','酒紅'],['#2a2228','煙燻黑'],['#7fb4dc','冰藍'],['#6d3bd1','電光紫'],['#3c6e4f','森綠'],['#c9a24d','香檳金'],['#f05aa6','螢光粉'],['#f4eee8','珍珠白']],
+ lip:[['#b5626a','豆沙'],['#c8102e','正紅'],['#c9402b','爛番茄'],['#a43a24','楓葉'],['#b98570','奶茶'],['#e29b9b','裸粉'],['#f0888a','蜜桃'],['#f06a55','珊瑚'],['#5e0d22','酒紅'],['#2e0813','黑櫻桃'],['#141014','純黑'],['#ec2f8c','芭比粉'],['#ece4e2','死白'],['#5a3fa8','葡萄']],
+ blush:[['#f08a8a','蜜桃'],['#ec6f93','玫瑰粉'],['#f07b4f','橘杏'],['#c9605e','豆沙'],['#d6a58a','奶茶'],['#b53f6a','莓果'],['#d93232','曬傷紅']],
+ liner:[['#17110f','純黑'],['#4a2a1c','深棕'],['#6d1a2c','酒紅'],['#22407e','午夜藍'],['#6a3bd1','紫'],['#f4f0ea','白'],['#c9a24d','金']],
+ brow:[['#17120f','黑'],['#3b2a20','深棕'],['#6b4a34','灰棕'],['#a07c54','淺棕'],['#ecdcae','漂白'],['#6d1a2c','酒紅']],
+ iris:[['#2a1a12','自然黑'],['#5a3a22','巧克力'],['#a9783f','琥珀'],['#7f8a93','灰'],['#4f8cc9','冰藍'],['#3c8f6b','翡翠'],['#8a5ac9','紫'],['#c8102e','血紅'],['#e8e8e8','全白']],
+ metal:[['#d6b25e','金'],['#c9ccd2','銀'],['#d89b83','玫瑰金'],['#1c1a1d','黑']],
+ cloth:[['#17131a','黑'],['#f4efe9','白'],['#7c1f35','酒紅'],['#2d3f63','海軍藍'],['#e8a8b8','粉'],['#4a5a44','軍綠'],['#b7a48a','卡其']],
+ bg:[['#f3d9dc','粉霧'],['#d9dfe8','冷灰'],['#f0e2c6','奶油'],['#c9d9c9','鼠尾草'],['#2a1b28','夜'],['#7c1f35','絨幕紅'],['#222d4a','午夜藍'],['#ffffff','純白']],
+ pen:[['#17110f','黑'],['#c8102e','紅'],['#ec2f8c','粉'],['#2d6ad1','藍'],['#2f8f4a','綠'],['#f4c430','黃'],['#ffffff','白']]
+};
+/* ---------- 預設狀態：素顏 ---------- */
+const BASE={
+ hairStyle:'long',bangs:'center',hairLen:60,hairColor:'#17120f',hairTip:'#17120f',streak:0,streakColor:'#e0738f',
+ skin:'#f8d6bf',faceW:50,chin:45,finish:40,conceal:0,freckle:0,contour:0,highlight:0,noseShade:0,noseW:50,noseL:50,
+ tearMole:'none',lipMole:'none',faceGem:'none',
+ eyeSize:50,eyeGap:50,eyeLift:45,eyeOpen:50,aegyo:0,
+ browStyle:'natural',browColor:'#3b2a20',browThick:45,browLen:50,browLift:50,browY:50,browAmt:80,browCut:'no',
+ shadowAmt:0,shadowColor:'#c79a7a',shadowOut:'#8a5a3c',shadowOutAmt:0,shadowRange:40,shadowLow:0,shadowFin:'matte',innerGlow:0,
+ linerStyle:'none',linerColor:'#17110f',linerW:35,linerLen:50,lash:25,lashDense:45,lowLash:0,
+ irisColor:'#2a1a12',irisSize:45,
+ blushAmt:0,blushColor:'#f08a8a',blushPos:'apple',blushSize:50,
+ lipAmt:0,lipColor:'#b5626a',lipFin:'matte',lipBite:0,lipW:50,lipTop:50,lipLow:50,lipPeak:50,smile:45,lipLiner:0,
+ earring:'none',metal:'#d6b25e',glasses:'none',neck:'none',hairAcc:'none',pierce:'none',cloth:'cami',clothColor:'#17131a',bg:'#f3d9dc',
+ strokes:[]
+};
+let s=clone(BASE);
+function clone(o){return JSON.parse(JSON.stringify(o))}
+/* ---------- 面板定義 ---------- */
+/* ---------- 商品（品名、價格皆虛構）---------- */
+const FULL=[0,0,400,500],V={base:[55,90,290,362],eye:[92,150,216,270],lens:[92,150,216,270],brow:[92,130,216,270],lip:[100,205,200,250],cheek:[55,110,290,362],hair:FULL,acc:FULL,misc:FULL};
+const AISLES=[['base','底妝'],['eye','眼妝'],['lens','放大片'],['brow','眉毛'],['lip','唇彩'],['cheek','腮紅'],['hair','美髮'],['acc','飾品'],['misc','衝動區']];
+const it=(id,a,n,pr,ty,col,slot,set,amt,def,opt,roast)=>({id,a,n,pr,ty,col,slot,set,amt,def,opt,roast});
+const LINER=['linerStyle','畫法',[['thin','內眼線'],['cat','貓眼'],['wing','上揚'],['puppy','下垂'],['graphic','圖形']],'cat'];
+const BROW=['browStyle','眉型',[['natural','自然'],['flat','一字'],['willow','柳葉'],['arch','高挑'],['thin','細弧'],['wild','野生']],'natural'];
+const PRODUCTS=[
+ it('fd1','base','瓷光粉底・冷白',399,'bottle','#fff0e8','skin',{skin:'#fff0e8',conceal:50}),
+ it('fd2','base','瓷光粉底・瓷白',399,'bottle','#fde3d3','skin',{skin:'#fde3d3',conceal:50}),
+ it('fd3','base','瓷光粉底・自然',349,'bottle','#f8d6bf','skin',{skin:'#f8d6bf',conceal:50}),
+ it('fd4','base','瓷光粉底・小麥',349,'bottle','#eebf9e','skin',{skin:'#eebf9e',conceal:50}),
+ it('fd5','base','瓷光粉底・鬼白',399,'bottle','#e7e7ea','skin',{skin:'#e7e7ea',conceal:50}),
+ it('co1','base','遮瑕小金筆',129,'pencil','#f5d2b6','conceal',{},'conceal',70),
+ it('ma1','base','霧面蜜粉',199,'compact','#f1e3d8','finish',{},'finish',12),
+ it('wa1','base','水光定妝噴霧',249,'bottle','#cfe6f2','finish',{},'finish',85),
+ it('ct1','base','小臉修容盤',299,'compact','#a97a58','contour',{},'contour',55),
+ it('hl1','base','打亮棒',259,'tube','#f7e8cf','highlight',{},'highlight',55),
+ it('nz1','base','鼻影粉',149,'compact','#b98c6c','nose',{},'noseShade',50),
+ it('fr1','base','雀斑筆',99,'pencil','#8a5a3c','freckle',{},'freckle',45),
+ it('gm1','base','臉部貼鑽',59,'gem','#bfe0ff','gem',{faceGem:'tear'}),
+ it('ey1','eye','大地四色眼影',299,'palette','#8a5a3c','shadow',{shadowColor:'#8a5a3c',shadowOut:'#2a2228',shadowOutAmt:40},'shadowAmt',60),
+ it('ey2','eye','珠光奶茶眼影',249,'palette','#c79a7a','shadow',{shadowColor:'#c79a7a',shadowFin:'shimmer'},'shadowAmt',55),
+ it('ey3','eye','蜜桃眼影',249,'palette','#ef9c80','shadow',{shadowColor:'#ef9c80',shadowFin:'shimmer'},'shadowAmt',55),
+ it('ey4','eye','玫瑰眼影',269,'palette','#c9667b','shadow',{shadowColor:'#c9667b'},'shadowAmt',55),
+ it('ey5','eye','酒紅眼影',299,'palette','#7c1f35','shadow',{shadowColor:'#7c1f35',shadowOut:'#2a2228',shadowOutAmt:55},'shadowAmt',65),
+ it('ey6','eye','煙燻黑眼影',279,'palette','#2a2228','shadow',{shadowColor:'#2a2228',shadowLow:45,shadowRange:60},'shadowAmt',80),
+ it('ey7','eye','亮片電光紫',329,'palette','#6d3bd1','shadow',{shadowColor:'#6d3bd1',shadowFin:'glitter',shadowRange:60},'shadowAmt',80),
+ it('ey8','eye','螢光粉眼影',199,'palette','#f05aa6','shadow',{shadowColor:'#f05aa6',shadowFin:'glitter'},'shadowAmt',75),
+ it('ln1','eye','極細黑眼線',199,'pencil','#17110f','liner',{linerColor:'#17110f'},'linerW',35,LINER),
+ it('ln2','eye','深棕眼線',179,'pencil','#4a2a1c','liner',{linerColor:'#4a2a1c'},'linerW',30,LINER),
+ it('ms1','eye','濃長睫毛膏',279,'tube','#17110f','lash',{lashDense:70},'lash',60),
+ it('fl1','eye','濃密假睫毛',129,'lash','#17110f','lash',{lashDense:85,lowLash:30},'lash',85),
+ it('ir0','lens','自然黑放大片',299,'lens','#2a1a12','iris',{irisColor:'#2a1a12'},'irisSize',70),
+ it('ir1','lens','巧克力放大片',349,'lens','#5a3a22','iris',{irisColor:'#5a3a22'},'irisSize',70),
+ it('ir2','lens','蜜糖棕放大片',369,'lens','#8a5a2c','iris',{irisColor:'#8a5a2c'},'irisSize',70),
+ it('ir3','lens','琥珀放大片',399,'lens','#a9783f','iris',{irisColor:'#a9783f'},'irisSize',70),
+ it('ir4','lens','奶茶灰放大片',399,'lens','#9a8676','iris',{irisColor:'#9a8676'},'irisSize',70),
+ it('ir5','lens','霧灰放大片',399,'lens','#7f8a93','iris',{irisColor:'#7f8a93'},'irisSize',70),
+ it('ir6','lens','冰藍放大片',399,'lens','#4f8cc9','iris',{irisColor:'#4f8cc9'},'irisSize',70),
+ it('ir7','lens','海洋藍放大片',429,'lens','#1f5fa8','iris',{irisColor:'#1f5fa8'},'irisSize',70),
+ it('ir8','lens','湖水綠放大片',429,'lens','#2f9f9a','iris',{irisColor:'#2f9f9a'},'irisSize',70),
+ it('ir9','lens','翡翠放大片',429,'lens','#3c8f6b','iris',{irisColor:'#3c8f6b'},'irisSize',70),
+ it('ir10','lens','薄荷放大片',459,'lens','#7fcfb0','iris',{irisColor:'#7fcfb0'},'irisSize',70),
+ it('ir11','lens','薰衣草放大片',459,'lens','#a98bd8','iris',{irisColor:'#a98bd8'},'irisSize',70),
+ it('ir12','lens','葡萄紫放大片',429,'lens','#6a3bb0','iris',{irisColor:'#6a3bb0'},'irisSize',70),
+ it('ir13','lens','櫻花粉放大片',459,'lens','#e88aa8','iris',{irisColor:'#e88aa8'},'irisSize',70),
+ it('ir14','lens','香檳金放大片',489,'lens','#c9a24d','iris',{irisColor:'#c9a24d'},'irisSize',70),
+ it('ir15','lens','血紅放大片',499,'lens','#c8102e','iris',{irisColor:'#c8102e'},'irisSize',70),
+ it('ir16','lens','全白放大片',499,'lens','#e8e8e8','iris',{irisColor:'#e8e8e8'},'irisSize',70),
+ it('ir17','lens','純黑放大片',399,'lens','#0d0809','iris',{irisColor:'#0d0809'},'irisSize',70),
+ it('ag1','eye','臥蠶筆',159,'pencil','#f7e8cf','aegyo',{},'aegyo',60),
+ it('br1','brow','深棕眉筆',149,'pencil','#3b2a20','brow',{browColor:'#3b2a20'},'browThick',50,BROW),
+ it('br2','brow','灰棕眉粉',189,'compact','#6b4a34','brow',{browColor:'#6b4a34'},'browThick',50,BROW),
+ it('br3','brow','黑色眉筆',129,'pencil','#17120f','brow',{browColor:'#17120f'},'browThick',60,BROW),
+ it('li1','lip','豆沙唇膏',299,'lipstick','#b5626a','lip',{lipColor:'#b5626a',lipFin:'velvet'},'lipAmt',85),
+ it('li2','lip','正紅唇膏',349,'lipstick','#c8102e','lip',{lipColor:'#c8102e',lipFin:'velvet'},'lipAmt',95),
+ it('li3','lip','爛番茄唇膏',329,'lipstick','#c9402b','lip',{lipColor:'#c9402b',lipFin:'matte'},'lipAmt',85),
+ it('li4','lip','奶茶霧唇',289,'lipstick','#b98570','lip',{lipColor:'#b98570',lipFin:'matte'},'lipAmt',85),
+ it('li5','lip','蜜桃水光釉',259,'gloss','#f0888a','lip',{lipColor:'#f0888a',lipFin:'water',lipBite:50},'lipAmt',75),
+ it('li6','lip','珊瑚水光釉',259,'gloss','#f06a55','lip',{lipColor:'#f06a55',lipFin:'water',lipBite:60},'lipAmt',80),
+ it('li7','lip','酒紅絲絨',359,'lipstick','#5e0d22','lip',{lipColor:'#5e0d22',lipFin:'velvet'},'lipAmt',90),
+ it('li8','lip','黑櫻桃唇膏',369,'lipstick','#2e0813','lip',{lipColor:'#2e0813',lipFin:'velvet'},'lipAmt',95),
+ it('li9','lip','芭比粉漆光',279,'gloss','#ec2f8c','lip',{lipColor:'#ec2f8c',lipFin:'lacquer'},'lipAmt',90),
+ it('li_w','lip','死白唇膏',239,'lipstick','#ece4e2','lip',{lipColor:'#ece4e2',lipFin:'matte'},'lipAmt',90),
+ it('li0','lip','純黑唇膏',299,'lipstick','#141014','lip',{lipColor:'#141014',lipFin:'matte'},'lipAmt',100),
+ it('bl1','cheek','蜜桃腮紅',199,'compact','#f08a8a','blush',{blushColor:'#f08a8a'},'blushAmt',55,['blushPos','位置',[['apple','蘋果肌'],['sweep','斜掃'],['under','眼下'],['nose','鼻樑']],'apple']),
+ it('bl2','cheek','玫瑰腮紅',199,'compact','#ec6f93','blush',{blushColor:'#ec6f93'},'blushAmt',50,['blushPos','位置',[['apple','蘋果肌'],['sweep','斜掃'],['under','眼下'],['nose','鼻樑']],'apple']),
+ it('bl3','cheek','橘杏腮紅',219,'compact','#f07b4f','blush',{blushColor:'#f07b4f'},'blushAmt',45,['blushPos','位置',[['apple','蘋果肌'],['sweep','斜掃'],['under','眼下'],['nose','鼻樑']],'sweep']),
+ it('bl4','cheek','曬傷紅腮紅',229,'compact','#d93232','blush',{blushColor:'#d93232'},'blushAmt',60,['blushPos','位置',[['apple','蘋果肌'],['sweep','斜掃'],['under','眼下'],['nose','鼻樑']],'nose']),
+ it('hr1','hair','電棒捲',590,'iron','#8c8f94','style',{hairStyle:'wave'}),
+ it('hr2','hair','髮圈組',29,'tie','#23262b','style',{hairStyle:'pony',bangs:'none'},null,0,['hairStyle','綁法',[['pony','高馬尾'],['bun','丸子頭'],['twin','雙馬尾']],'pony']),
+ it('hr3','hair','假瀏海',149,'bang','#3b2419','bangs',{},null,0,['bangs','款式',[['air','空氣'],['blunt','齊瀏海'],['eight','八字'],['side','旁分']],'air']),
+ it('dy1','hair','染髮劑・奶茶棕',199,'dye','#7a5136','dye',{hairColor:'#7a5136',hairTip:'#7a5136'}),
+ it('dy2','hair','染髮劑・亞麻',199,'dye','#c09a63','dye',{hairColor:'#c09a63',hairTip:'#c09a63'}),
+ it('dy3','hair','染髮劑・櫻花粉',249,'dye','#e0738f','dye',{hairColor:'#e0738f',hairTip:'#ecdcae'}),
+ it('dy4','hair','染髮劑・酒紅',199,'dye','#6d1a2c','dye',{hairColor:'#6d1a2c',hairTip:'#6d1a2c'}),
+ it('dy5','hair','染髮劑・霧藍',249,'dye','#5d7a9c','dye',{hairColor:'#5d7a9c',hairTip:'#5d7a9c'}),
+ it('dy6','hair','染髮劑・銀灰',249,'dye','#b5b7bd','dye',{hairColor:'#b5b7bd',hairTip:'#b5b7bd'}),
+ it('ac1','acc','珍珠耳環',159,'gem','#f5efe6','ear',{earring:'pearl'}),
+ it('ac2','acc','大圈耳環',129,'hoop','#d6b25e','ear',{earring:'hoop'}),
+ it('ac3','acc','流蘇耳環',169,'gem','#d6b25e','ear',{earring:'tassel'}),
+ it('ac4','acc','蝴蝶結髮飾',59,'gem','#d3123d','hacc',{hairAcc:'bow'}),
+ it('ac5','acc','貓耳髮箍',89,'gem','#23262b','hacc',{hairAcc:'cat'}),
+ it('ac6','acc','派對皇冠',199,'gem','#d6b25e','hacc',{hairAcc:'crown'}),
+ it('ac7','acc','黑色頸圈',79,'hoop','#17131a','neck',{neck:'choker'}),
+ it('ac8','acc','珍珠項鍊',299,'hoop','#f5efe6','neck',{neck:'pearl'}),
+ it('ac9','acc','粗圓框眼鏡',249,'glass','#23262b','eyewear',{glasses:'round'}),
+ it('ac0','acc','大墨鏡',299,'glass','#111','eyewear',{glasses:'sun'}),
+ it('mi1','misc','美妝蛋',89,'gem','#f2a9b8','tool',{},null,0,null,'美妝蛋買了沒用，它會在抽屜長出新生命。'),
+ it('mi2','misc','面膜十片',199,'box','#cfe6f2','tool',{},null,0,null,'面膜十片，上次的也還沒敷完。'),
+ it('mi3','misc','指甲油',99,'bottle','#d3123d','tool',{},null,0,null,'指甲油今天沒人看得到手。'),
+ it('mi4','misc','小熊軟糖',35,'box','#f4c430','tool',{},null,0,null,'小熊軟糖已經在回家路上吃完了。'),
+ it('mi5','misc','洗衣球',159,'box','#7fb4dc','tool',{},null,0,null,'洗衣球？妳本來只是來買口紅的。'),
+ it('mi6','misc','卸妝棉',49,'box','#fff','tool',{},null,0,null,'卸妝棉買對了，今晚用得到。')
+];
+PRODUCTS.forEach(x=>{x.pr=Math.round(x.pr*1.6/10)*10-1});
+const byId=Object.fromEntries(PRODUCTS.map(x=>[x.id,x]));
+function nameOf(p,v){const f=P[p].find(x=>x[0].toLowerCase()==String(v).toLowerCase());return f?f[1]:'自訂'}
+function icon(x){const c=x.col,d=mix(c,'#000',.25),l=mix(c,'#fff',.4),dark='#2b2d31';
+ const body={
+  lipstick:`<rect x="26" y="34" width="18" height="30" rx="2" fill="${dark}"/><rect x="29" y="20" width="12" height="16" fill="#d6b25e"/><path d="M30 20V10l10-5v15z" fill="${c}"/>`,
+  gloss:`<rect x="26" y="26" width="18" height="38" rx="4" fill="${c}"/><rect x="25" y="8" width="20" height="18" rx="3" fill="${dark}"/><rect x="29" y="31" width="4" height="26" rx="2" fill="#fff" opacity=".5"/>`,
+  compact:`<circle cx="35" cy="38" r="26" fill="${dark}"/><circle cx="35" cy="38" r="20" fill="${c}"/><path d="M23 30q10-9 22-3" stroke="#fff" stroke-opacity=".45" stroke-width="3" fill="none"/>`,
+  palette:`<rect x="9" y="17" width="52" height="42" rx="4" fill="${dark}"/><rect x="14" y="22" width="20" height="15" fill="${c}"/><rect x="36" y="22" width="20" height="15" fill="${l}"/><rect x="14" y="39" width="20" height="15" fill="${d}"/><rect x="36" y="39" width="20" height="15" fill="${mix(c,'#fff',.7)}"/>`,
+  pencil:`<g transform="rotate(38 35 35)"><rect x="30" y="6" width="10" height="46" fill="${dark}"/><path d="M30 52h10l-5 13z" fill="${c}"/><rect x="30" y="6" width="10" height="7" fill="#d6b25e"/></g>`,
+  bottle:`<rect x="21" y="28" width="28" height="37" rx="5" fill="${c}" stroke="#b9bdbd"/><rect x="28" y="10" width="14" height="18" fill="${dark}"/><rect x="26" y="40" width="18" height="14" fill="#fff" opacity=".7"/>`,
+  tube:`<path d="M23 12h24l-4 38H27z" fill="${c}" stroke="#b9bdbd"/><rect x="26" y="50" width="18" height="15" rx="2" fill="${dark}"/>`,
+  lash:`<rect x="9" y="15" width="52" height="42" rx="4" fill="#fff" stroke="#b9bdbd"/><path d="M18 42q17-14 34 0M20 40l-4-9M26 36l-3-10M33 34v-11M41 36l3-10M48 40l4-9" stroke="${c}" stroke-width="2" fill="none"/>`,
+  lens:`<rect x="10" y="18" width="50" height="36" rx="5" fill="#eaf3f6" stroke="#b9bdbd"/><circle cx="25" cy="36" r="10" fill="${c}"/><circle cx="45" cy="36" r="10" fill="${c}"/><circle cx="25" cy="36" r="4" fill="#111"/><circle cx="45" cy="36" r="4" fill="#111"/>`,
+  gem:`<circle cx="35" cy="36" r="16" fill="${c}" stroke="${d}" stroke-width="2"/><circle cx="29" cy="30" r="5" fill="#fff" opacity=".6"/>`,
+  hoop:`<circle cx="35" cy="36" r="21" fill="none" stroke="${c}" stroke-width="6"/><circle cx="35" cy="36" r="21" fill="none" stroke="${d}" stroke-width="1"/>`,
+  glass:`<circle cx="20" cy="37" r="14" fill="${c=='#111'?'#111':'#fff'}" stroke="${c}" stroke-width="4"/><circle cx="50" cy="37" r="14" fill="${c=='#111'?'#111':'#fff'}" stroke="${c}" stroke-width="4"/><path d="M34 35h2" stroke="${c}" stroke-width="4"/>`,
+  iron:`<rect x="31" y="6" width="9" height="38" rx="4" fill="${c}"/><rect x="27" y="42" width="17" height="23" rx="4" fill="${dark}"/><path d="M44 12l-5 13" stroke="${dark}" stroke-width="4"/>`,
+  tie:`<circle cx="35" cy="36" r="17" fill="none" stroke="${c}" stroke-width="7"/>`,
+  bang:`<path d="M12 18h46l-3 27-5-6-5 7-5-7-5 7-5-7-5 7-5-6z" fill="${c}"/>`,
+  dye:`<rect x="12" y="12" width="46" height="52" rx="3" fill="#fff" stroke="#b9bdbd"/><rect x="12" y="12" width="46" height="24" fill="${c}"/><rect x="20" y="44" width="30" height="5" fill="#b9bdbd"/><rect x="20" y="54" width="18" height="5" fill="#b9bdbd"/>`,
+  box:`<rect x="13" y="18" width="44" height="44" rx="3" fill="${c}" stroke="#b9bdbd"/><rect x="20" y="30" width="30" height="16" fill="#fff" opacity=".7"/>`
+ }[x.ty];return `<svg viewBox="0 0 70 70" aria-hidden="true">${body}</svg>`}
+const $=q=>document.querySelector(q);
+let budget=1000,basket=[],aisle='base',applied={},levels={},choice={},style={cloth:'cami',clothColor:'#17131a',bg:'#f3d9dc'},focus=null,toastT=0;
+/* 今晚特價：每局按順序輪替；唇彩第二件 6 折 */
+let plays=0;try{plays=+localStorage.getItem('plays')||0}catch(e){}
+const onSale=x=>(PRODUCTS.indexOf(x)+plays*5)%9==0;
+const priceOf=x=>onSale(x)?Math.round(x.pr*.7):x.pr;
+function lipOff(list){const l=list.map(i=>byId[i]).filter(x=>x.a=='lip').map(priceOf).sort((a,b)=>b-a);return l.reduce((n,v,i)=>n+(i%2?Math.round(v*.4):0),0)}
+const totalOf=list=>list.reduce((n,i)=>n+priceOf(byId[i]),0)-lipOff(list);
+const spent=()=>totalOf(basket);
+const costIf=id=>totalOf(basket.concat(id))-spent();
+/* 臉型與場合 */
+const FACES=[['鵝蛋臉',{}],['瓜子臉',{faceW:34,chin:15,eyeLift:55}],['圓臉',{faceW:72,chin:85,eyeSize:66,eyeLift:35}],['鳳眼',{faceW:44,chin:35,eyeSize:40,eyeOpen:38,eyeLift:88}]];
+const OCCS=[
+ {n:'見男友爸媽',w:[-.8,-.4,1,.8,-1],good:['媽媽已經在看喜餅了。','爸爸多夾了一塊肉給妳。'],ok:['長輩客氣地說妳很有想法。','氣氛還行，只是沒人敢問妳的職業。'],bad:['爸爸沉默地喝了三杯茶。','媽媽私下問男友，妳是不是在夜店上班。']},
+ {n:'前任婚禮',w:[1,.6,-.3,.8,.1],good:['新娘今天很緊張，因為妳來了。','前任在台上看錯了方向。'],ok:['禮數到了，但沒人多看。','贏不了新娘，但輸得很體面。'],bad:['妳的朋友問妳今天怎麼這麼憔悴。','前任鬆了一口氣。']},
+ {n:'公司尾牙',w:[.6,-.3,.3,.1,1],good:['老闆把頭獎抽給妳的機率變高了。','今晚的主角不是總經理。'],ok:['拍照有被放進公司相簿。','主管說妳今天不一樣，就只有這樣。'],bad:['同事以為妳下班直接過來。','妳跟桌巾融為一體。']},
+ {n:'正職面試',w:[-.6,.6,.1,1,-1],good:['面試官開始介紹公司福利了。','對方問妳可以什麼時候上班。'],ok:['面試官點點頭，表情看不出來。','至少沒有被問「妳是不是走錯了」。'],bad:['面試官把妳的履歷放到最下面。','HR 說之後再通知妳，然後沒有之後。']},
+ {n:'第一次約會',w:[.8,-.3,1,.2,-.3],good:['對方已經在想第二次要約哪裡。','手機裡多了一張偷拍照。'],ok:['聊得不錯，他把飲料讓給妳。','有下次，但要看他排班。'],bad:['對方突然說他明天很早要上班。','他傳訊息問朋友該怎麼脫身。']},
+ {n:'姐妹夜店',w:[.8,-.2,.1,-.1,1],good:['DJ 問妳要不要上去。','姐妹把妳放在拍照的正中間。'],ok:['跟得上，但沒人會記得。','姐妹說不錯，順手幫妳補了一點。'],bad:['保全問妳是不是來接人的。','姐妹問妳要不要先回家換一套。']}
+];
+let faceI=0,occI=0;try{occI=(+localStorage.getItem('occ')||0)%OCCS.length}catch(e){}
+function fitOf(r){const a=Object.values(r.ax),w=OCCS[occI].w,den=w.reduce((n,v)=>n+Math.abs(v),0),dot=w.reduce((n,v,i)=>n+v*a[i],0)/den;return Math.max(5,Math.min(99,Math.round(44+dot*1.25)))}
+/* 圖鑑 */
+let dex={};try{dex=JSON.parse(localStorage.getItem('dex')||'{}')}catch(e){}
+function saveDex(k){const isNew=!dex[k];dex[k]=1;try{localStorage.setItem('dex',JSON.stringify(dex))}catch(e){}return isNew}
+const dexN=()=>Object.keys(TYPES).filter(k=>dex[k]).length;
+function openDex(){$('#dexCount').textContent=`已收集 ${dexN()} / ${Object.keys(TYPES).length}`;$('#dexGrid').innerHTML=Object.keys(TYPES).map(k=>dex[k]?`<div class="dx">${TYPES[k].n}</div>`:`<div class="dx lock">？？？</div>`).join('');$('#dex').hidden=false;Snd.page()}
+function refreshDex(){$('#dexBtn').textContent=`結局圖鑑 ${dexN()} / ${Object.keys(TYPES).length}`}
+function buildSetup(){const keep=s;$('#faces').innerHTML=FACES.map((f,i)=>{s=Object.assign(clone(BASE),{bg:'#f3d9dc'},f[1]);const u=faceURL();return `<button class="face" aria-pressed="${i==faceI}" data-f="${i}"><img alt="" src="${u}">${f[0]}</button>`}).join('');s=keep;
+ $('#occs').innerHTML=OCCS.map((o,i)=>`<button class="chip" aria-pressed="${i==occI}" data-oc="${i}">${o.n}</button>`).join('')}
+const nt=n=>'NT$'+n.toLocaleString('en-US');
+function show(id){for(const x of ['intro','setup','ride','shop','receipt','app'])document.getElementById(x).hidden=x!=id}
+function toast(m){$('#toast').textContent=m;clearTimeout(toastT);toastT=setTimeout(()=>{$('#toast').textContent=''},1800)}
+/* ---------- 開場動畫：騎機車到寶雅 ---------- */
+function playRide(done){
+ const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+ show('ride');const cv=$('#rideC'),x=cv.getContext('2d');
+ const T1=2.5,T2=3.9,T3=4.4,T4=4.8,GY=420,GROUND=330,SPEED=430,FONT='"Noto Sans TC","PingFang TC",sans-serif';
+ const END=SPEED*T1+SPEED*(T2-T1)/2,SIGNS=[['雞排','#d3123d'],['手搖飲','#1f8a70'],['鍋貼','#e07a1f'],['自助餐','#2d5fa8'],['機車行','#7a3fa0'],['藥局','#1f8a70'],['便當','#d3123d'],['麵攤','#e07a1f']];
+ let raf=0,ended=false,t0=performance.now();
+ const pos=t=>t<=T1?SPEED*t:t>=T2?END:SPEED*T1+SPEED*(t-T1)*(1-(t-T1)/(2*(T2-T1)));
+ const finish=()=>{if(ended)return;ended=true;cancelAnimationFrame(raf);Snd.rideStop();Snd.chime();done()};
+ $('#skip').onclick=finish;
+ function shop(i,sx){const w=140,c=SIGNS[i%SIGNS.length],h=170+((i*37)%70),top=GROUND-h;
+  x.fillStyle=['#3c3350','#453a56','#393048'][i%3];x.fillRect(sx,top,w-4,h);
+  for(let r=0;r<2;r++)for(let k=0;k<3;k++){x.fillStyle=(i+r+k)%3?'#ffd98a':'#544a66';x.fillRect(sx+16+k*38,top+16+r*36,22,22)}
+  x.fillStyle='#ffe9b8';x.fillRect(sx+6,GROUND-64,w-16,64);x.fillStyle='#b98f55';x.fillRect(sx+6,GROUND-64,w-16,6);
+  x.fillStyle='#6d5a48';x.fillRect(sx+50,GROUND-54,34,54);
+  x.fillStyle=c[1];const sh=c[0].length*28+12;x.fillRect(sx+w-30,top+12,26,sh);x.fillStyle='#fff';x.font=`700 20px ${FONT}`;x.textAlign='center';[...c[0]].forEach((ch,j)=>x.fillText(ch,sx+w-17,top+34+j*28));x.textAlign='left'}
+ function store(cx,w){const sw=Math.max(w*.92,300),l=cx-sw/2;
+  x.fillStyle='#ececea';x.fillRect(l,GROUND-225,sw,225);
+  x.fillStyle='#fff';x.fillRect(l,GROUND-225,sw,58);x.fillStyle='#23262b';x.font=`900 38px ${FONT}`;x.textAlign='center';x.fillText('寶雅',cx,GROUND-182);x.textAlign='left';
+  x.fillStyle='#fff6d8';x.fillRect(l+10,GROUND-155,sw-20,155);
+  const n=Math.floor((sw-20)/42);for(let i=0;i<n;i++)for(let r=0;r<3;r++){const col=['#d3123d','#ec6f93','#f4c430','#7fb4dc','#8a5a3c'][(i*2+r)%5];x.fillStyle=col;x.fillRect(l+18+i*42,GROUND-142+r*40,30,20);x.fillStyle='#c9ced0';x.fillRect(l+14+i*42,GROUND-121+r*40,40,3)}
+  x.fillStyle='rgba(255,255,255,.55)';x.fillRect(cx-40,GROUND-110,80,110);x.strokeStyle='#8e9396';x.lineWidth=2;x.strokeRect(cx-40,GROUND-110,80,110);x.beginPath();x.moveTo(cx,GROUND-110);x.lineTo(cx,GROUND);x.stroke()}
+ function scooter(sx,moving,t,p){const bob=moving?Math.sin(t*24)*1.3:0,k=1.12;x.save();x.translate(sx,GY+bob);x.scale(k,k);
+  if(moving)for(let i=0;i<4;i++){const u=((t*2.2+i/4)%1);x.fillStyle=`rgba(255,255,255,${(1-u)*.3})`;x.beginPath();x.arc(-66-u*70,-24-u*12,4+u*9,0,7);x.fill()}
+  for(const wx of [-44,46]){x.fillStyle='#17151c';x.beginPath();x.arc(wx,-17,17,0,7);x.fill();x.fillStyle='#b8bcc0';x.beginPath();x.arc(wx,-17,8,0,7);x.fill();x.strokeStyle='#17151c';x.lineWidth=2;const a=p/19;for(let s=0;s<3;s++){const b=a+s*2.09;x.beginPath();x.moveTo(wx,-17);x.lineTo(wx+Math.cos(b)*8,-17+Math.sin(b)*8);x.stroke()}}
+  /* 騎士腿在車體後 */
+  x.strokeStyle='#39507c';x.lineWidth=12;x.lineCap='round';x.beginPath();x.moveTo(-22,-74);x.lineTo(14,-68);x.lineTo(12,-42);x.stroke();
+  x.fillStyle='#f4f1ea';x.beginPath();x.moveTo(-62,-30);x.quadraticCurveTo(-66,-62,-30,-66);x.lineTo(-6,-66);x.lineTo(-2,-40);x.lineTo(26,-40);x.lineTo(32,-88);x.lineTo(44,-90);x.lineTo(54,-42);x.quadraticCurveTo(55,-24,40,-22);x.lineTo(-48,-22);x.quadraticCurveTo(-60,-22,-62,-30);x.fill();
+  x.fillStyle='#d3123d';x.fillRect(-52,-44,40,5);
+  x.fillStyle='#fff';x.fillRect(4,-42,18,5);x.fillStyle='#23262b';x.fillRect(4,-46,20,4);
+  x.fillStyle='#2b2830';x.beginPath();x.roundRect(-54,-78,52,13,5);x.fill();
+  x.fillStyle='#ffe58a';x.beginPath();x.arc(46,-80,6,0,7);x.fill();
+  if(moving){const g=x.createLinearGradient(50,0,150,0);g.addColorStop(0,'rgba(255,229,138,.42)');g.addColorStop(1,'rgba(255,229,138,0)');x.fillStyle=g;x.beginPath();x.moveTo(50,-80);x.lineTo(150,-92);x.lineTo(150,-38);x.fill()}
+  x.strokeStyle='#2b2830';x.lineWidth=5;x.beginPath();x.moveTo(38,-88);x.lineTo(32,-108);x.lineTo(22,-110);x.stroke();
+  /* 馬尾 */
+  x.strokeStyle='#3b2419';x.lineWidth=7;x.beginPath();x.moveTo(-18,-146);const w1=moving?Math.sin(t*14)*4:0;x.quadraticCurveTo(-34,-146+w1,-46,-132-w1);x.stroke();
+  /* 身體 */
+  x.strokeStyle='#e8a8b8';x.lineWidth=20;x.beginPath();x.moveTo(-20,-84);x.lineTo(-10,-124);x.stroke();
+  x.fillStyle='#c98f5e';x.fillRect(-30,-118,9,28);
+  x.strokeStyle='#e8a8b8';x.lineWidth=8;x.beginPath();x.moveTo(-9,-124);x.lineTo(20,-108);x.stroke();
+  x.fillStyle='#f6d3b8';x.beginPath();x.arc(22,-108,5,0,7);x.fill();
+  /* 頭與安全帽 */
+  x.fillStyle='#f6d3b8';x.beginPath();x.arc(-5,-148,14,0,7);x.fill();
+  x.fillStyle='#2b2830';x.beginPath();x.arc(4,-149,1.6,0,7);x.fill();
+  x.fillStyle='#d3123d';x.beginPath();x.arc(-7,-153,17,Math.PI,0);x.lineTo(11,-150);x.lineTo(-24,-150);x.fill();
+  x.fillStyle='rgba(255,255,255,.5)';x.fillRect(-18,-164,10,3);
+  x.strokeStyle='#2b2830';x.lineWidth=1.5;x.beginPath();x.moveTo(-14,-150);x.lineTo(-3,-136);x.stroke();
+  x.restore()}
+ function frame(n){if(ended)return;let t=(n-t0)/1000;if(still)t=Math.max(t,T2);
+  const W=cv.clientWidth,H=cv.clientHeight,dpr=Math.min(devicePixelRatio||1,2);if(cv.width!=W*dpr||cv.height!=H*dpr){cv.width=W*dpr;cv.height=H*dpr}
+  const sc=H/500,w=W/sc,p=pos(t),moving=t<T2;x.setTransform(sc*dpr,0,0,sc*dpr,0,0);
+  const sky=x.createLinearGradient(0,0,0,GROUND);sky.addColorStop(0,'#2a2140');sky.addColorStop(.6,'#7a3f70');sky.addColorStop(1,'#f0935f');x.fillStyle=sky;x.fillRect(0,0,w,500);
+  /* 遠景 */
+  x.fillStyle='#352a4c';const off=(p*.2)%90;for(let i=-1;i<w/90+2;i++){const id=i+Math.floor(p*.2/90),h=120+((id*53%90+90)%90);x.fillRect(i*90-off,GROUND-h-60,84,h+60)}
+  /* 招牌街景與店面 */
+  const storeX=END+w/2,sw=Math.max(w*.92,300),L=storeX-sw/2;
+  const first=Math.floor((p-160)/140);for(let i=first;i*140-p<w+10;i++){if(i*140+140>L&&i*140<L+sw)continue;shop(Math.abs(i),i*140-p)}
+  store(storeX-p,w);
+  x.fillStyle='#7c7880';x.fillRect(0,GROUND,w,24);x.fillStyle='#a19da3';x.fillRect(0,GROUND,w,4);
+  x.fillStyle='#34313d';x.fillRect(0,GROUND+24,w,500);
+  x.fillStyle='#e8e4d8';const dash=p%110;for(let i=-1;i<w/110+2;i++)x.fillRect(i*110-dash,GY+24,60,5);
+  scooter(w*.4,moving,t,p);
+  x.globalAlpha=t<1.4?Math.min(1,Math.min(t*3,(1.4-t)*3)):0;x.fillStyle='#fff';x.font=`900 34px "Noto Serif TC",serif`;x.textAlign='center';x.fillText('下班了',w/2,110);x.textAlign='left';x.globalAlpha=1;
+  if(t>T3){x.fillStyle=`rgba(255,255,255,${Math.min(1,(t-T3)/(T4-T3))})`;x.fillRect(0,0,w,500)}
+  if(t>=T4){finish();return}
+  raf=requestAnimationFrame(frame)}
+ Snd.ride(T1,T2);raf=requestAnimationFrame(frame);
+}
+(function buildWall(){const n=PRODUCTS.length,rows=[];for(let r=0;r<8;r++){let h='';for(let k=0;k<16;k++){const x=PRODUCTS[(r*17+k*7+3)%n];h+=`<div class="sit">${icon(x)}<i>$${x.pr}</i></div>`}rows.push(`<div class="srow">${h}</div>`)}$('#wall').innerHTML=rows.join('')})();
+function buildShop(){
+ const left=budget-spent();$('#left').textContent=nt(left);$('#occTag').textContent='今晚：'+OCCS[occI].n;
+ $('#aisles').innerHTML=AISLES.map(a=>`<button role="tab" aria-selected="${a[0]==aisle}" data-a="${a[0]}">${a[1]}</button>`).join('');
+ $('#shelf').innerHTML=(aisle=='lip'?'<div class="pop">唇彩第二件 6 折</div>':'')+PRODUCTS.filter(x=>x.a==aisle).map(x=>{const inb=basket.includes(x.id),sale=onSale(x);return `<button class="item${!inb&&costIf(x.id)>left?' nope':''}" aria-pressed="${inb}" data-p="${x.id}">${sale?'<span class="saletag">7折</span>':''}${icon(x)}<span class="iname">${x.n}</span><span class="price">${sale?`<s>$${x.pr}</s>`:''}$${priceOf(x)}</span></button>`}).join('');
+ $('#pay').textContent=basket.length?`去結帳（${basket.length} 件，${nt(spent())}）`:'什麼都不買，直接回家';
+}
+$('#intro').addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(!b)return;budget=+b.dataset.b;basket=[];applied={};levels={};choice={};aisle='lip';plays++;try{localStorage.setItem('plays',plays)}catch(e){}buildSetup();show('setup');Snd.next()});
+$('#setup').addEventListener('click',e=>{const f=e.target.closest('[data-f]'),o=e.target.closest('[data-oc]');if(f){faceI=+f.dataset.f;Snd.click();buildSetup()}if(o){occI=+o.dataset.oc;try{localStorage.setItem('occ',occI)}catch(err){}Snd.click();buildSetup()}});
+$('#goRide').onclick=()=>{buildShop();playRide(()=>show('shop'))};
+$('#dexBtn').onclick=openDex;$('#dexClose').onclick=()=>{$('#dex').hidden=true;Snd.page()};
+$('#aisles').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){aisle=b.dataset.a;buildShop();$('#shelf').scrollTop=0;Snd.page()}});
+$('#shelf').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;const id=b.dataset.p,x=byId[id];
+ if(basket.includes(id)){basket=basket.filter(v=>v!=id);Snd.off()}
+ else if(costIf(id)>budget-spent()){toast(`還差 ${nt(costIf(id)-(budget-spent()))}，先放回別的東西`);Snd.off();return}
+ else{basket.push(id);Snd.scan()}
+ const y=$('#shelf').scrollTop;buildShop();$('#shelf').scrollTop=y});
+$('#pay').onclick=()=>{if(!basket.length){startKit();return}
+ const list=basket.map(byId_=>byId[byId_]);
+ $('#receipt').innerHTML=`<div class="rcpt"><h2>購物明細</h2><p class="sub">遊戲畫面，非真實交易</p>${list.map(x=>`<div class="row"><span>${x.n}${onSale(x)?'（7折）':''}</span><span>${priceOf(x)}</span></div>`).join('')}${lipOff(basket)?`<div class="row"><span>唇彩第二件 6 折</span><span>-${lipOff(basket)}</span></div>`:''}<div class="dash"></div><div class="row tot"><span>合計 ${list.length} 件</span><span>${nt(spent())}</span></div><div class="row"><span>錢包剩</span><span>${nt(budget-spent())}</span></div><div class="dash"></div><p class="hint">${spent()>budget*.9?'錢包見底了。今晚的妝最好值得。':spent()<budget*.4?'居然還有剩，這種自制力很少見。':'花得還算有計畫。'}</p></div><div class="foot" style="background:none;border:0;max-width:360px;margin:12px auto 0;padding-inline:0"><button class="primary" id="goHome">回家化妝</button><button class="tool" id="goBack" style="width:100%;margin-top:8px;background:#fff">回去再逛</button></div>`;
+ show('receipt');Snd.till();
+ $('#goHome').onclick=startKit;$('#goBack').onclick=()=>{show('shop');Snd.page()}};
+function startKit(){show('app');rebuild();buildKit();render();Snd.next()}
+function rebuild(){const base=Object.assign(clone(BASE),style,FACES[faceI][1]);
+ for(const slot in applied){const x=byId[applied[slot]];Object.assign(base,x.set);if(x.amt)base[x.amt]=levels[x.id]??x.def;if(x.opt)base[x.opt[0]]=choice[x.id]??x.opt[3]}
+ s=base}
+function buildKit(){
+ const groups=AISLES.map(a=>[a,basket.map(i=>byId[i]).filter(x=>x.a==a[0])]).filter(g=>g[1].length);
+ const y=$('#panel').scrollTop;
+ const own=x=>`<button class="own" aria-pressed="${applied[x.slot]==x.id}" data-u="${x.id}">${icon(x)}${x.n}</button>`;
+ let tune='';const f=focus&&byId[focus];
+ if(f&&applied[f.slot]==f.id&&(f.amt||f.opt))tune=`<div class="tune">${f.amt?`<div class="ctl"><label class="lab" for="lv">${f.n}・${f.a=='lens'?'直徑':'用量'}</label><input id="lv" type="range" min="5" max="100" value="${levels[f.id]??f.def}"></div>`:''}${f.opt?`<div class="ctl"><div class="lab">${f.opt[1]}</div><div class="chips">${f.opt[2].map(o=>`<button class="chip" aria-pressed="${(choice[f.id]??f.opt[3])==o[0]}" data-o="${o[0]}">${o[1]}</button>`).join('')}</div></div>`:''}</div>`;
+ $('#panel').innerHTML=`<div class="kit">${groups.length?groups.map(g=>`<div class="grp"><h3>${g[0][1]}</h3><div class="owned">${g[1].map(own).join('')}</div>${g[1].some(x=>x.id==focus)?tune:''}</div>`).join(''):'<p class="empty">化妝包是空的。可以直接素顏鑑定，或回寶雅買點東西。</p>'}
+ <div class="grp"><h3>今天穿什麼（不用錢）</h3><div class="chips">${[['cami','細肩帶'],['bandeau','平口'],['turtle','高領'],['suit','西裝'],['collar','白領']].map(o=>`<button class="chip" aria-pressed="${style.cloth==o[0]}" data-c="${o[0]}">${o[1]}</button>`).join('')}</div>
+ <div class="swatches" style="margin-top:10px">${P.cloth.map(c=>`<button class="sw" style="background:${c[0]}" aria-label="${c[1]}" aria-pressed="${style.clothColor==c[0]}" data-cc="${c[0]}"></button>`).join('')}</div></div>
+ <div class="grp"><h3>拍照背景</h3><div class="swatches">${P.bg.map(c=>`<button class="sw" style="background:${c[0]}" aria-label="${c[1]}" aria-pressed="${style.bg==c[0]}" data-bg="${c[0]}"></button>`).join('')}</div></div>
+ <button class="tool" id="reshop">回寶雅再買</button></div>`;
+ $('#panel').scrollTop=y;
+}
+$('#panel').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.u){const x=byId[b.dataset.u];
+  if(applied[x.slot]==x.id){delete applied[x.slot];focus=null;Snd.off();camera(FULL)}
+  else{applied[x.slot]=x.id;focus=x.id;Snd[SFX[x.a]||'click']();camera(V[x.a])}
+ }else if(b.dataset.o){choice[focus]=b.dataset.o;Snd.click()}
+ else if(b.dataset.c){style.cloth=b.dataset.c;Snd.click()}
+ else if(b.dataset.cc){style.clothColor=b.dataset.cc;Snd.click()}
+ else if(b.dataset.bg){style.bg=b.dataset.bg;Snd.click()}
+ else if(b.id=='reshop'){show('shop');buildShop();Snd.page();return}
+ else return;
+ rebuild();render();buildKit()});
+$('#panel').addEventListener('input',e=>{if(e.target.id=='lv'){levels[focus]=+e.target.value;rebuild();queue();Snd.slide(+e.target.value)}});
+$('#cardClose').onclick=()=>{$('#cardView').hidden=true;Snd.page()};
+$('#next').onclick=()=>{camera(FULL);showResult()};
+/* ---------- 工具 ---------- */
+function hex(c){c=c.replace('#','');if(c.length==3)c=c.split('').map(x=>x+x).join('');return [0,2,4].map(i=>parseInt(c.substr(i,2),16))}
+function mix(a,b,t){const A=hex(a),B=hex(b);return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')}
+function hsl(c){let[r,g,b]=hex(c).map(v=>v/255),M=Math.max(r,g,b),m=Math.min(r,g,b),l=(M+m)/2,d=M-m,h=0,S=0;if(d){S=d/(1-Math.abs(2*l-1));h=M==r?((g-b)/d+6)%6:M==g?(b-r)/d+2:(r-g)/d+4;h*=60}return{h,s:S,l}}
+function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const lerp=(a,b,v)=>a+(b-a)*v/100,f=n=>+n.toFixed(1);
+function smooth(p){let d='';const n=p.length;for(let i=0;i<n;i++){const a=p[i],b=p[(i+1)%n],m=[(a[0]+b[0])/2,(a[1]+b[1])/2];d+=i==0?`M${f((p[n-1][0]+a[0])/2)} ${f((p[n-1][1]+a[1])/2)}Q${f(a[0])} ${f(a[1])} ${f(m[0])} ${f(m[1])}`:`Q${f(a[0])} ${f(a[1])} ${f(m[0])} ${f(m[1])}`}return d+'Z'}
+function symm(r){return smooth(r.map(p=>[200+p[0],p[1]]).concat(r.slice().reverse().filter(p=>p[0]!=0).map(p=>[200-p[0],p[1]])))}
+const mirror=x=>`<g transform="translate(400 0) scale(-1 1)">${x}</g>`;
+function bz(p0,c1,c2,p1,t){const u=1-t;return[0,1].map(i=>u*u*u*p0[i]+3*u*u*t*c1[i]+3*u*t*t*c2[i]+t*t*t*p1[i])}
+/* ---------- 繪製 ---------- */
+function geom(){const hw=lerp(84,102,s.faceW),rd=s.chin/100;return{hw,jx:hw*(.6+.22*rd),cw:hw*(.14+.32*rd),chinY:376+rd*-2}}
+function hairBack(g,tip){
+ const H=g.hw,L=lerp(330,520,s.hairLen);let d='';
+ if(s.hairStyle=='bald')return '';
+ const crown=[[0,84],[66,90],[H+6,140],[H+18,205]];
+ if(['pony','bun','twin','pixie'].includes(s.hairStyle)){
+  let out=`<path d="${symm([[0,84],[66,90],[H+6,140],[H+12,205],[H+2,262],[60,300],[0,300]])}" fill="url(#hairG)"/>`;
+  if(s.hairStyle=='pony'){const e=lerp(300,470,s.hairLen);out=`<path d="M250 100C330 40 372 100 356 190C348 260 346 ${e-60} 322 ${e}C300 ${e-30} 290 ${e-110} 300 200C304 150 280 130 240 130Z" fill="url(#hairG)"/><path d="M270 96C330 60 356 120 340 200C332 270 332 ${e-70} 322 ${e-30}" stroke="${mix(s.hairColor,'#fff',.2)}" stroke-opacity=".35" fill="none" stroke-width="2"/>`+out}
+  if(s.hairStyle=='bun')out=`<circle cx="200" cy="66" r="38" fill="url(#hairG)"/><path d="M174 56C186 40 214 40 226 56" stroke="${mix(s.hairColor,'#fff',.25)}" stroke-opacity=".4" fill="none" stroke-width="2.5"/>`+out;
+  if(s.hairStyle=='twin'){const e=lerp(300,480,s.hairLen);const t=`<path d="M${200+H-2} 150C${200+H+60} 140 ${200+H+66} 240 ${200+H+56} ${e-70}C${200+H+50} ${e-30} ${200+H+34} ${e} ${200+H+26} ${e}C${200+H+18} ${e-50} ${200+H+10} 250 ${200+H-6} 190Z" fill="url(#hairG)"/>`;out=t+mirror(t)+out}
+  return out}
+ let r;
+ if(s.hairStyle=='bob'){const e=lerp(315,385,s.hairLen);r=crown.concat([[H+26,270],[H+24,e-20],[H+6,e],[50,e+2],[0,e]])}
+ else{const wav=s.hairStyle=='wave'?16:0,pts=[];for(let y=250;y<L-20;y+=(wav?34:60)){pts.push([H+24+(y-250)*.05+(wav?Math.sin(y/17)*wav:0),y])}
+  r=crown.concat(pts,[[H+14,L],[60,L+8],[0,L]])}
+ d=`<path d="${symm(r)}" fill="url(#hairG)"/>`;
+ for(const[x,a] of [[H+6,.3],[H-16,.2]]){const l=`<path d="M${200+x} 230C${200+x+14} 300 ${200+x+6} 380 ${200+x+10} ${Math.min(L-20,500)}" stroke="${mix(s.hairColor,'#fff',.18)}" stroke-opacity="${a}" fill="none" stroke-width="2"/>`;d+=l+mirror(l)}
+ return d}
+function hairFront(g){
+ const hw=g.hw,H=hw+7,st=s.hairStyle;if(st=='bald')return '';
+ const tied=['pony','bun','twin','pixie'].includes(st),e=tied?(st=='pixie'?258:228):252;
+ const top=`M${f(200-H-6)} ${e}C${f(200-H-14)} 150 ${200-72} 82 200 82C${200+72} 82 ${f(200+H+14)} 150 ${f(200+H+6)} ${e}`;
+ const close=`${f(200-H-6)} ${e}Z`;let path,extra='';
+ const b=s.bangs;
+ if(b=='none'||b=='air')path=top+`C${f(200+H-8)} 200 ${200+80} 142 200 130C${200-80} 142 ${f(200-H+8)} 200 `+close;
+ else if(b=='center')path=top+`C${f(200+H-6)} 212 ${200+72} 172 ${200+36} 140Q${200+16} 126 200 126Q${200-16} 126 ${200-36} 140C${200-72} 172 ${f(200-H+6)} 212 `+close;
+ else if(b=='side')path=top+`C${f(200+H-2)} 226 ${200+78} 196 ${200+8} 136Q176 120 150 134C122 152 ${f(200-H+8)} 192 `+close;
+ else if(b=='eight')path=top+`C${f(200+H)} 240 ${200+64} 208 ${200+12} 136L${200-12} 136C${200-64} 208 ${f(200-H)} 240 `+close;
+ else path=top+`C${f(200+H)} 232 ${f(200+H-6)} 208 ${f(200+H-16)} 200Q200 212 ${f(200-H+16)} 200C${f(200-H+6)} 208 ${f(200-H)} 232 `+close;
+ let out=`<path d="${path}" fill="url(#hairG)"/>`;
+ if(b=='air'){const R=rng(3);let w='';for(let x=-56;x<=56;x+=8){const sgn=x<0?-1:1,y=192+R()*12-Math.abs(x)*.05,top=132+Math.abs(x)*.14;w+=`<path d="M${f(200+x)} ${f(top)}Q${f(200+x+sgn*4)} ${f(top+34)} ${f(200+x+sgn*(1+R()*5))} ${f(y)}" stroke="${s.hairColor}" stroke-width="${f(1.1+R()*1.3)}" stroke-opacity=".62" fill="none" stroke-linecap="round"/>`}out+=w}
+ if(b=='blunt'){for(let x=-H+24;x<H-20;x+=16)out+=`<path d="M${f(200+x)} 150L${f(200+x+2)} 204" stroke="${mix(s.hairColor,'#000',.35)}" stroke-opacity=".35" stroke-width="1.2"/>`}
+ if(st=='long'||st=='wave'||st=='bob'){const low=st=='bob'?Math.min(350,lerp(310,370,s.hairLen)):360,lock=`<path d="M${f(200+H+7)} 215C${f(200+H+14)} 280 ${f(200+H+10)} 330 ${f(200+H+2)} ${low}C${f(200+hw-12)} 320 ${f(200+hw-6)} 270 ${f(200+hw-2)} 215Z" fill="url(#hairG)"/>`;extra+=lock+mirror(lock)}
+ if(st=='hime'){const lock=`<path d="M${f(200+H+7)} 195L${f(200+H+7)} 312L${f(200+hw-24)} 312L${f(200+hw-20)} 195Z" fill="url(#hairG)"/>`;extra+=lock+mirror(lock)}
+ out=extra+out;
+ out+=`<path d="M${200-66} 122Q200 92 ${200+66} 122" stroke="#fff" stroke-opacity=".13" stroke-width="11" fill="none" stroke-linecap="round" filter="url(#b3)"/>`;
+ const n=Math.round(s.streak/9);if(n){const R=rng(77);for(let i=0;i<n;i++){const sx=(R()<.5?-1:1),x=40+R()*(H-30),l=`<path d="M${f(200+sx*x*.5)} 96Q${f(200+sx*x*1.05)} 150 ${f(200+sx*(x+8))} ${tied?225:lerp(250,350,R()*100)}" stroke="${s.streakColor}" stroke-width="${f(2+R()*3)}" fill="none" stroke-linecap="round" stroke-opacity=".9"/>`;out+=l}}
+ return out}
+function eyeSide(g){
+ const k=lerp(.88,1.32,s.eyeSize),cx=200+lerp(36,54,s.eyeGap),cy=238,w=25*k,h=12.5*k*lerp(.65,1.3,s.eyeOpen),lift=lerp(-6,10,s.eyeLift);
+ const I=[cx-w,cy+3],O=[cx+w,cy-lift],c1=[cx-w*.55,cy-h*1.28],c2=[cx+w*.45,cy-h*1.32-lift*.4],c3=[cx+w*.55,cy+h*.8-lift*.2],c4=[cx-w*.5,cy+h*.74];
+ const lid=`M${I}C${c1} ${c2} ${O}`,eye=`${lid}C${c3} ${c4} ${I}Z`,skinD=mix(s.skin,'#6b3227',.42);
+ let out='';
+ /* 眼影 */
+ const rg=lerp(9,34,s.shadowRange),sa=s.shadowAmt/100;
+ if(sa>0){out+=`<path d="M${I[0]-4} ${I[1]}C${cx-w*.6} ${cy-h-rg} ${cx+w*.5} ${cy-h-rg*1.05} ${O[0]+rg*.55} ${O[1]-rg*.25}C${O[0]} ${cy} ${cx} ${cy} ${I}Z" fill="${s.shadowColor}" opacity="${f(sa*.92)}" filter="url(#b5)"/>`;
+  if(s.shadowFin=='shimmer')out+=`<ellipse cx="${cx}" cy="${cy-h-5}" rx="${w*.55}" ry="5" fill="#fff" opacity="${f(sa*.6)}" filter="url(#b3)"/>`;
+  if(s.shadowFin=='glitter'){const R=rng(9);for(let i=0;i<46;i++){const x=cx-w+R()*(w*2+6),y=cy-h-3-R()*rg*.8+Math.abs(x-cx)*.18;out+=`<circle cx="${f(x)}" cy="${f(y)}" r="${f(.5+R()*1.2)}" fill="${R()<.5?'#fff':mix(s.shadowColor,'#fff',.6)}" opacity="${f(.4+R()*.6)}"/>`}}}
+ if(s.shadowOutAmt>0)out+=`<ellipse cx="${O[0]-3}" cy="${O[1]-5}" rx="${15+rg*.35}" ry="${9+rg*.32}" fill="${s.shadowOut}" opacity="${f(s.shadowOutAmt/100)}" filter="url(#b5)" transform="rotate(${-14-lift} ${O[0]} ${O[1]})"/>`;
+ if(s.shadowLow>0)out+=`<path d="M${I[0]+6} ${cy+h*.7}Q${cx} ${cy+h+7} ${O[0]+4} ${O[1]+2}" stroke="${s.shadowOutAmt>0?s.shadowOut:s.shadowColor}" stroke-width="7" fill="none" opacity="${f(s.shadowLow/110)}" filter="url(#b3)"/>`;
+ if(s.aegyo>0)out+=`<path d="M${I[0]+3} ${cy+h*.8}Q${cx} ${cy+h+9} ${O[0]-1} ${O[1]+h*.7}" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" opacity="${f(s.aegyo/170)}" filter="url(#b1)"/><path d="M${I[0]+6} ${cy+h+6}Q${cx} ${cy+h+14} ${O[0]-4} ${O[1]+h+5}" stroke="${skinD}" stroke-width="1.2" fill="none" opacity="${f(s.aegyo/170)}"/>`;
+ /* 雙眼皮 */
+ out+=`<path d="M${I[0]+4} ${I[1]-6}C${cx-w*.5} ${cy-h*1.28-6} ${cx+w*.5} ${cy-h*1.32-lift*.4-6} ${O[0]-1} ${O[1]-5}" stroke="${skinD}" stroke-width="1.3" fill="none" opacity=".6"/>`;
+ /* 眼球 */
+ const ir=lerp(11.5,17,s.irisSize)*Math.min(k,1.15),ic=[cx+1,cy-h*.12];
+ out+=`<path d="${eye}" fill="#fbf7f4"/><g clip-path="url(#eyeClip)"><circle cx="${ic[0]}" cy="${ic[1]}" r="${ir}" fill="url(#irisG)"/><circle cx="${ic[0]}" cy="${ic[1]}" r="${ir*.46}" fill="#0d0809"/><circle cx="${ic[0]}" cy="${ic[1]}" r="${ir}" fill="none" stroke="${mix(s.irisColor,'#000',.55)}" stroke-width="1.2"/><path d="${lid}L${O[0]} ${O[1]-30}L${I[0]} ${I[1]-30}Z" fill="#000" opacity="0"/><path d="${lid}" stroke="#3a2520" stroke-width="7" fill="none" opacity=".2" transform="translate(0 3)"/></g>`;
+ out=`<clipPath id="eyeClip"><path d="${eye}"/></clipPath>`+out;
+ out+=`<path d="M${c4[0]+2} ${c4[1]}Q${cx+4} ${cy+h*.92} ${O[0]-3} ${O[1]+h*.42}" stroke="${skinD}" stroke-width=".9" fill="none" opacity=".55"/>`;
+ /* 下睫毛 */
+ if(s.lowLash>0){const n=Math.round(lerp(4,12,s.lashDense)),len=lerp(3,9,s.lowLash);for(let i=0;i<n;i++){const t=.1+i/(n-1)*.8,p=bz(O,c3,c4,I,1-t);out+=`<path d="M${f(p[0])} ${f(p[1])}l${f((t-.4)*4)} ${f(len*(.6+t*.4))}" stroke="#1d1412" stroke-width=".9" stroke-linecap="round"/>`}}
+ /* 眼線 */
+ const lc=s.linerColor,lw=lerp(1.2,5.6,s.linerW),ll=lerp(6,30,s.linerLen),st=s.linerStyle;
+ out+=`<path d="${lid}" stroke="${st=='none'?'#2a1a14':lc}" stroke-width="${st=='none'?1.8:lw}" fill="none" stroke-linecap="round"/>`;
+ const wing=(dx,dy)=>`<path d="M${O[0]-w*.75} ${O[1]-h*.72}Q${O[0]-2} ${O[1]-3} ${O[0]+dx} ${O[1]+dy}Q${O[0]+dx*.3} ${O[1]+Math.max(dy*.1,1)+1} ${O[0]-3} ${O[1]+2}Z" fill="${lc}"/>`;
+ if(st=='cat')out+=wing(ll*.8,-ll*.4);
+ if(st=='wing')out+=wing(ll*1.15,-ll*.72);
+ if(st=='puppy')out+=wing(ll*.8,ll*.38);
+ if(st=='graphic'){out+=wing(ll*1.1,-ll*.8)+`<path d="M${I[0]+6} ${cy-h-11}Q${cx} ${cy-h-20} ${O[0]+ll*.7} ${O[1]-ll*.72}" stroke="${lc}" stroke-width="${f(lw*.55)}" fill="none" stroke-linecap="round"/><path d="M${I[0]} ${I[1]}l-7 4" stroke="${lc}" stroke-width="${f(lw*.7)}" stroke-linecap="round"/>`}
+ /* 上睫毛 */
+ const n=Math.round(lerp(6,17,s.lashDense)),len=lerp(4,16,s.lash);
+ for(let i=0;i<n;i++){const t=.14+i/(n-1)*.86,p=bz(I,c1,c2,O,t),dx=(t-.38)*len*1.05,dy=-len*(.55+t*.5);out+=`<path d="M${f(p[0])} ${f(p[1])}q${f(dx*.1)} ${f(dy*.7)} ${f(dx)} ${f(dy)}" stroke="#120b0a" stroke-width=".95" fill="none" stroke-linecap="round"/>`}
+ if(s.innerGlow>0)out+=`<circle cx="${I[0]+1}" cy="${I[1]}" r="5" fill="#fff" opacity="${f(s.innerGlow/110)}" filter="url(#b1)"/>`;
+ return{out,ic,ir,cx};
+}
+function browSide(){
+ const k=s.browStyle,cfg={natural:[7,.62,6,1],flat:[1.5,.62,2,1],willow:[9,.55,11,.72],arch:[14,.68,8,.92],thin:[8,.56,8,.42],wild:[6,.62,4,1.3]}[k];
+ const T=lerp(4.5,12.5,s.browThick)*cfg[3],L=lerp(48,70,s.browLen),cx=200+lerp(36,54,s.eyeGap),x0=cx-lerp(22,27,s.browLen),y0=lerp(214,190,s.browY),A=cfg[0],ap=cfg[1],lft=lerp(-7,9,s.browLift);
+ const ax=x0+L*ap,ay=y0-A-lft*ap,tx=x0+L,ty=y0-A-lft+cfg[2]+A*.45;
+ let d=`M${f(x0)} ${f(y0-T*.5)}C${f(x0+L*ap*.4)} ${f(y0-T*.6-A*.7)} ${f(x0+L*ap*.8)} ${f(ay-T*.52)} ${f(ax)} ${f(ay-T*.52)}C${f(ax+L*.12)} ${f(ay-T*.45)} ${f(tx-L*.1)} ${f(ty-2)} ${f(tx)} ${f(ty)}C${f(tx-L*.14)} ${f(ty+T*.25)} ${f(ax+L*.1)} ${f(ay+T*.5)} ${f(ax)} ${f(ay+T*.5)}C${f(x0+L*ap*.6)} ${f(ay+T*.55+A*.2)} ${f(x0+L*.1)} ${f(y0+T*.5)} ${f(x0)} ${f(y0+T*.5)}Z`;
+ let o=`<g opacity="${f(lerp(.25,1,s.browAmt))}"><path d="${d}" fill="${s.browColor}" filter="url(#b05)"/>`;
+ if(k=='wild'||k=='natural'){const R=rng(5),n=k=='wild'?26:12;for(let i=0;i<n;i++){const t=i/n,x=x0+L*t*.86,y=y0+(ay-y0)*Math.min(t/ap,1)+(t>ap?(ty-ay)*(t-ap)/(1-ap):0);o+=`<path d="M${f(x)} ${f(y+T*.42)}l${f(1+R()*3)} ${f(-T*(.8+R()*.5))}" stroke="${s.browColor}" stroke-width=".8" opacity=".75"/>`}}
+ o+='</g>';
+ if(s.browCut=='yes')o+=`<path d="M${f(tx-L*.2)} ${f(ty-11)}l-3 22" stroke="${s.skin}" stroke-width="3.2"/>`;
+ return o}
+function lipsMarkup(){
+ const W=lerp(25,42,s.lipW),T=lerp(6,14,s.lipTop),B=lerp(7,17,s.lipLow),my=322,sm=lerp(-4,7,s.smile),pk=lerp(.82,.55,s.lipPeak),cY=my-sm,P0=x=>f(200+x);
+ const up=`M${P0(-W)} ${f(cY)}C${P0(-W*.6)} ${f(my-T*.55)} ${P0(-W*.38)} ${f(my-T*1.02)} ${P0(-W*.2)} ${f(my-T)}C${P0(-W*.1)} ${f(my-T*.98)} ${P0(-W*.05)} ${f(my-T*pk)} 200 ${f(my-T*pk)}C${P0(W*.05)} ${f(my-T*pk)} ${P0(W*.1)} ${f(my-T*.98)} ${P0(W*.2)} ${f(my-T)}C${P0(W*.38)} ${f(my-T*1.02)} ${P0(W*.6)} ${f(my-T*.55)} ${P0(W)} ${f(cY)}`;
+ const lipD=up+`C${P0(W*.6)} ${f(my+B*.95)} ${P0(W*.3)} ${f(my+B*1.08)} 200 ${f(my+B*1.08)}C${P0(-W*.3)} ${f(my+B*1.08)} ${P0(-W*.6)} ${f(my+B*.95)} ${P0(-W)} ${f(cY)}Z`;
+ const mouth=`M${P0(-W)} ${f(cY)}C${P0(-W*.5)} ${f(my+2)} ${P0(-W*.15)} ${f(my+.5)} 200 ${f(my+1.5)}C${P0(W*.15)} ${f(my+.5)} ${P0(W*.5)} ${f(my+2)} ${P0(W)} ${f(cY)}`;
+ const base=mix(s.skin,'#b9535f',.58),a=s.lipAmt/100,edge=a*(1-s.lipBite/100);
+ let o=`<defs><radialGradient id="lipG" gradientUnits="userSpaceOnUse" cx="200" cy="${my}" r="${W}" gradientTransform="translate(200 ${my}) scale(1 .5) translate(-200 -${my})"><stop offset=".3" stop-color="${s.lipColor}" stop-opacity="${f(a)}"/><stop offset="1" stop-color="${s.lipColor}" stop-opacity="${f(edge)}"/></radialGradient></defs>`;
+ o+=`<path d="${lipD}" fill="${base}"/><path d="${lipD}" fill="url(#lipG)"/><path d="${mouth}" stroke="${mix(a>.3?s.lipColor:base,'#1c0508',.65)}" stroke-width="1.5" fill="none" stroke-linecap="round"/>`;
+ if(s.lipLiner>0)o+=`<path d="${lipD}" fill="none" stroke="${mix(s.lipColor,'#000',.3)}" stroke-width="1.4" opacity="${f(s.lipLiner/100)}"/>`;
+ const gl={matte:.06,velvet:.14,water:.5,lacquer:.85}[s.lipFin];
+ o+=`<ellipse cx="200" cy="${f(my+B*.55)}" rx="${f(W*.42)}" ry="${f(B*.2)}" fill="#fff" opacity="${gl}" filter="url(#b1)"/>`;
+ if(s.lipFin=='lacquer')o+=`<ellipse cx="${f(200-W*.3)}" cy="${f(my-T*.55)}" rx="${f(W*.14)}" ry="2" fill="#fff" opacity=".6" filter="url(#b05)"/>`;
+ return{o,my,W,B,cY}}
+function clothes(){
+ const c=s.clothColor,d=mix(c,'#000',.25);
+ switch(s.cloth){
+  case 'bandeau':return `<path d="M60 500L66 462Q200 482 334 462L340 500Z" fill="${c}"/>`;
+  case 'turtle':return `<path d="M36 500C50 445 120 425 160 412L164 362Q200 376 236 362L240 412C280 425 350 445 364 500Z" fill="${c}"/><path d="M164 362Q200 376 236 362M164 380Q200 394 236 380" stroke="${d}" stroke-width="1.2" fill="none"/>`;
+  case 'suit':return `<path d="M36 500C50 445 120 425 165 408L200 500Z" fill="${c}"/><path d="M364 500C350 445 280 425 235 408L200 500Z" fill="${c}"/><path d="M165 408L150 452L176 448L200 500M235 408L250 452L224 448L200 500" stroke="${d}" stroke-width="1.6" fill="none"/>`;
+  case 'collar':return `<path d="M36 500C50 445 120 425 165 408L235 408C280 425 350 445 364 500Z" fill="${c}"/><path d="M165 408L200 436L235 408L252 442L200 450L148 442Z" fill="${mix(c,'#fff',.4)}" stroke="${d}" stroke-width="1"/>`;
+  default:return `<path d="M56 500Q200 456 344 500Z" fill="${c}"/><path d="M60 500Q120 462 142 420M340 500Q280 462 258 420" stroke="${c}" stroke-width="4" fill="none" opacity="0"/><path d="M116 482L126 420M284 482L274 420" stroke="${c}" stroke-width="3"/><path d="M88 500Q112 462 200 476Q288 462 312 500Z" fill="${c}"/>`;
+ }}
+function neckAcc(){
+ const m=s.metal;
+ if(s.neck=='choker')return `<path d="M168 378Q200 392 232 378" stroke="#141014" stroke-width="9" fill="none"/><circle cx="200" cy="392" r="3.5" fill="${m}"/>`;
+ if(s.neck=='chain')return `<path d="M163 400Q200 452 237 400" stroke="${m}" stroke-width="1.6" fill="none"/><circle cx="200" cy="427" r="4" fill="${m}"/>`;
+ if(s.neck=='pearl'){let o='';for(let t=0;t<=16;t++){const u=t/16,x=160+u*80,y=398+Math.sin(u*Math.PI)*36;o+=`<circle cx="${f(x)}" cy="${f(y)}" r="3.6" fill="#faf5ee" stroke="#c9bdaf" stroke-width=".5"/>`}return o}
+ return ''}
+function earMark(g,sx){
+ const x=200+sx*(g.hw+1),y=280,m=s.metal;
+ switch(s.earring){
+  case 'pearl':return `<circle cx="${x}" cy="${y}" r="7" fill="#faf5ee" stroke="#c9bdaf"/><circle cx="${x-2}" cy="${y-2}" r="2" fill="#fff"/>`;
+  case 'hoop':return `<circle cx="${x}" cy="${y+18}" r="20" fill="none" stroke="${m}" stroke-width="3"/>`;
+  case 'tassel':return `<circle cx="${x}" cy="${y}" r="3" fill="${m}"/><path d="M${x} ${y}V${y+14}" stroke="${m}" stroke-width="1.4"/><path d="M${x} ${y+14}L${x-7} ${y+64}M${x} ${y+14}L${x-3.5} ${y+70}M${x} ${y+14}V${y+74}M${x} ${y+14}L${x+3.5} ${y+70}M${x} ${y+14}L${x+7} ${y+64}" stroke="${m}" stroke-width="1.2" stroke-linecap="round"/><circle cx="${x}" cy="${y+15}" r="3.4" fill="${m}"/>`;
+  case 'star':return `<path d="M${x} ${y-3}l4 10 11 1-8 7 3 11-10-6-10 6 3-11-8-7 11-1z" fill="${m}"/>`;
+ }return ''}
+function hairAccMark(g){
+ const c=s.clothColor=='#17131a'?'#c8102e':s.clothColor,m=s.metal;
+ switch(s.hairAcc){
+  case 'bow':return `<g transform="translate(${200+58} 104) rotate(14)"><path d="M0 0C-26 -22 -40 -16 -38 0C-40 16 -26 22 0 0C26 22 40 16 38 0C40 -16 26 -22 0 0Z" fill="${c}"/><circle r="6" fill="${mix(c,'#000',.2)}"/></g>`;
+  case 'band':return `<path d="M${f(200-g.hw-6)} 170C${200-60} 72 ${200+60} 72 ${f(200+g.hw+6)} 170" stroke="${c}" stroke-width="10" fill="none"/>`;
+  case 'crown':return `<path d="M152 92L148 46L176 72L200 32L224 72L252 46L248 92Q200 80 152 92Z" fill="${m}" stroke="${mix(m,'#000',.25)}"/><circle cx="200" cy="58" r="4" fill="#c8102e"/>`;
+  case 'cat':return `<path d="M124 112L126 44L176 84ZM276 112L274 44L224 84Z" fill="${s.hairColor}"/><path d="M134 92L136 62L160 84ZM266 92L264 62L240 84Z" fill="#f2a9b8"/>`;
+  case 'clip':return `<rect x="108" y="146" width="46" height="8" rx="4" transform="rotate(-24 130 150)" fill="${m}"/><rect x="114" y="162" width="46" height="8" rx="4" transform="rotate(-24 136 166)" fill="${m}"/>`;
+ }return ''}
+function glassesMark(){
+ const dx=lerp(36,54,s.eyeGap),L=200-dx,Rr=200+dx,y=240;
+ const m=s.glasses=='thin'?s.metal:'#17131a';
+ if(s.glasses=='none')return '';
+ if(s.glasses=='sun')return `<rect x="${L-40}" y="${y-22}" width="76" height="46" rx="16" fill="#120d10" opacity=".92"/><rect x="${Rr-36}" y="${y-22}" width="76" height="46" rx="16" fill="#120d10" opacity=".92"/><path d="M${L+36} ${y-8}H${Rr-36}" stroke="#120d10" stroke-width="4"/><path d="M${L-30} ${y-14}l18 26" stroke="#fff" stroke-opacity=".18" stroke-width="5"/>`;
+ const sw=s.glasses=='thin'?1.8:5,r=s.glasses=='thin'?36:37;
+ return `<circle cx="${L}" cy="${y}" r="${r}" fill="#fff" fill-opacity=".06" stroke="${m}" stroke-width="${sw}"/><circle cx="${Rr}" cy="${y}" r="${r}" fill="#fff" fill-opacity=".06" stroke="${m}" stroke-width="${sw}"/><path d="M${L+r} ${y-6}Q200 ${y-14} ${Rr-r} ${y-6}" stroke="${m}" stroke-width="${sw}" fill="none"/>`}
+function svgMarkup(){
+ const g=geom(),hw=g.hw,skin=s.skin,sD=mix(skin,'#7a3b2e',.22),sDD=mix(skin,'#5a2a20',.4);
+ const faceD=`M${f(200-hw)} 230C${f(200-hw)} 160 ${f(200-hw*.7)} 112 200 112C${f(200+hw*.7)} 112 ${f(200+hw)} 160 ${f(200+hw)} 230C${f(200+hw)} 285 ${f(200+g.jx)} 330 ${f(200+g.cw)} 362Q200 ${f(g.chinY+12)} ${f(200-g.cw)} 362C${f(200-g.jx)} 330 ${f(200-hw)} 285 ${f(200-hw)} 230Z`;
+ const E=eyeSide(g),lp=lipsMarkup();
+ const catch1=(sd)=>`<circle cx="${f(E.ic[0]+sd*E.ir*.34)}" cy="${f(E.ic[1]-E.ir*.4)}" r="${f(E.ir*.24)}" fill="#fff"/><circle cx="${f(E.ic[0]-sd*E.ir*.3)}" cy="${f(E.ic[1]+E.ir*.42)}" r="${f(E.ir*.11)}" fill="#fff" opacity=".8"/>`;
+ /* 腮紅 */
+ const bs=lerp(.7,1.4,s.blushSize),ba=s.blushAmt/100,bx=lerp(36,54,s.eyeGap);
+ let blush='';
+ if(ba>0){const c=s.blushColor;
+  if(s.blushPos=='apple'){const e=`<ellipse cx="${f(200+bx+10)}" cy="282" rx="${f(32*bs)}" ry="${f(21*bs)}" fill="${c}" opacity="${f(ba*.85)}" filter="url(#b10)"/>`;blush=e+mirror(e)}
+  if(s.blushPos=='sweep'){const e=`<ellipse cx="${f(200+hw-30)}" cy="268" rx="${f(38*bs)}" ry="${f(14*bs)}" fill="${c}" opacity="${f(ba*.85)}" filter="url(#b10)" transform="rotate(-24 ${f(200+hw-30)} 268)"/>`;blush=e+mirror(e)}
+  if(s.blushPos=='under'){const e=`<ellipse cx="${f(200+bx+2)}" cy="263" rx="${f(34*bs)}" ry="${f(12*bs)}" fill="${c}" opacity="${f(ba*.9)}" filter="url(#b5)"/>`;blush=e+mirror(e)}
+  if(s.blushPos=='nose')blush=`<ellipse cx="200" cy="268" rx="${f(78*bs)}" ry="${f(14*bs)}" fill="${c}" opacity="${f(ba*.85)}" filter="url(#b10)"/>`;}
+ /* 修容、高光、光澤 */
+ let con='';
+ if(s.contour>0){const a=s.contour/100,e=`<path d="M${f(200+hw+6)} 232C${f(200+hw-8)} 278 ${f(200+g.jx-6)} 332 ${f(200+g.cw+6)} 370L${f(200+hw+14)} 372Z" fill="${mix(skin,'#6b3a24',.5)}" opacity="${f(a*.75)}" filter="url(#b5)"/><ellipse cx="${f(200+hw-8)}" cy="150" rx="26" ry="42" fill="${sDD}" opacity="${f(a*.35)}" filter="url(#b10)"/>`;con=e+mirror(e)}
+ let hi='';
+ const sh=s.finish/100*.55+s.highlight/100*.7;
+ if(sh>0){hi+=`<ellipse cx="200" cy="170" rx="30" ry="24" fill="#fff" opacity="${f(sh*.4)}" filter="url(#b10)"/><rect x="195" y="210" width="10" height="64" rx="5" fill="#fff" opacity="${f(sh*.3)}" filter="url(#b3)"/><ellipse cx="200" cy="360" rx="12" ry="6" fill="#fff" opacity="${f(sh*.35)}" filter="url(#b3)"/>`;
+  const e=`<ellipse cx="${f(200+hw-32)}" cy="256" rx="24" ry="9" fill="#fff" opacity="${f(sh*.5)}" filter="url(#b5)" transform="rotate(-16 ${f(200+hw-32)} 256)"/>`;hi+=e+mirror(e)}
+ /* 鼻 */
+ const nl=lerp(278,300,s.noseL),nw=lerp(9,17,s.noseW);
+ let nose=`<path d="M${f(200-nw)} ${f(nl-3)}Q${f(200-nw-3)} ${f(nl+5)} ${f(200-nw+5)} ${f(nl+6)}Q200 ${f(nl+12)} ${f(200+nw-5)} ${f(nl+6)}Q${f(200+nw+3)} ${f(nl+5)} ${f(200+nw)} ${f(nl-3)}" stroke="${sDD}" stroke-width="1.4" fill="none" opacity=".62" stroke-linecap="round"/><ellipse cx="200" cy="${f(nl+12)}" rx="${f(nw*.8)}" ry="4" fill="${sDD}" opacity=".18" filter="url(#b3)"/>`;
+ if(s.noseShade>0){const e=`<path d="M${200+15} 214Q${200+11} 250 ${f(200+nw+2)} ${f(nl-4)}" stroke="${sDD}" stroke-width="8" fill="none" opacity="${f(s.noseShade/190)}" filter="url(#b5)"/>`;nose=e+mirror(e)+nose}
+ /* 雀斑 */
+ let fr='';const fn=Math.round(s.freckle*.55);if(fn){const R=rng(21);for(let i=0;i<fn;i++){const x=200+(R()*2-1)*88,y=250+R()*40-Math.abs(x-200)*.05;fr+=`<circle cx="${f(x)}" cy="${f(y)}" r="${f(.7+R()*.8)}" fill="${sDD}" opacity="${f(.4+R()*.35)}"/>`}}
+ /* 痣與貼鑽 */
+ let marks='',bXX=lerp(36,54,s.eyeGap)+16;
+ const mole=(x,y)=>`<circle cx="${f(x)}" cy="${y}" r="1.9" fill="#2a1712"/>`;
+ if(s.tearMole=='right'||s.tearMole=='both')marks+=mole(200+bXX,262);
+ if(s.tearMole=='left'||s.tearMole=='both')marks+=mole(200-bXX,262);
+ if(s.lipMole=='right')marks+=mole(232,304);if(s.lipMole=='left')marks+=mole(168,304);
+ const gem=(x,y,r)=>`<path d="M${x} ${y-r}L${x+r} ${y}L${x} ${y+r}L${x-r} ${y}Z" fill="#fff" stroke="#b8d8ff" stroke-width=".7"/>`;
+ if(s.faceGem=='mid')marks+=gem(200,196,5);
+ if(s.faceGem=='tear'){const d=lerp(36,54,s.eyeGap);[[d-8,262,3],[d+4,266,4],[d+16,262,3],[d+27,254,2.5]].forEach(p=>{marks+=gem(f(200+p[0]),p[1],p[2])+gem(f(200-p[0]),p[1],p[2])})}
+ if(s.faceGem=='heart'){const x=200+bXX+6;marks+=`<path d="M${x} 274c-7-6-11-9-9-14 2-4 7-3 9 1 2-4 7-5 9-1 2 5-2 8-9 14z" fill="#d81e4d"/>`}
+ if(s.faceGem=='star'){const x=200+bXX+6;marks+=`<path d="M${x} 254l3 8 8 .6-6 5 2 8-7-4-7 4 2-8-6-5 8-.6z" fill="#17131a"/>`}
+ let pierceM='';
+ if(s.pierce=='nose')pierceM=`<path d="M${f(200+nw-1)} ${f(nl+5)}a4.5 4.5 0 1 1-5 5" stroke="${s.metal}" stroke-width="1.8" fill="none"/>`;
+ if(s.pierce=='lip')pierceM=`<path d="M${f(200+lp.W*.34)} ${f(lp.my+lp.B*1.05)}a4.5 4.5 0 1 0 6 3" stroke="${s.metal}" stroke-width="1.8" fill="none"/>`;
+ const browR=browSide();
+ if(s.pierce=='brow')pierceM+=`<circle cx="${f(200+lerp(36,54,s.eyeGap)+26)}" cy="${f(lerp(214,190,s.browY)-8)}" r="2" fill="${s.metal}"/><circle cx="${f(200+lerp(36,54,s.eyeGap)+30)}" cy="${f(lerp(214,190,s.browY)+6)}" r="2" fill="${s.metal}"/>`;
+ const concealSkin=s.conceal>0?`<rect x="90" y="110" width="220" height="280" fill="${mix(skin,'#fff',.25)}" opacity="${f(s.conceal/360)}"/>`:'';
+ const under=s.conceal<60?(()=>{const a=(60-s.conceal)/60*.14,e=`<ellipse cx="${f(200+lerp(36,54,s.eyeGap))}" cy="258" rx="24" ry="7" fill="#7a5a6a" opacity="${f(a)}" filter="url(#b5)"/>`;return e+mirror(e)})():'';
+ const draw=s.strokes.map(st=>`<path d="${st.d}" stroke="${st.c}" stroke-width="${st.w}" stroke-opacity="${st.a}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
+ const tip=s.hairTip;
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" role="img" aria-label="試妝中的臉">
+ <defs>
+  <filter id="b05" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation=".45"/></filter>
+  <filter id="b1" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.3"/></filter>
+  <filter id="b3" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="b5" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5.5"/></filter>
+  <filter id="b10" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="11"/></filter>
+  <linearGradient id="hairG" gradientUnits="userSpaceOnUse" x1="0" y1="90" x2="0" y2="470"><stop offset="0" stop-color="${s.hairColor}"/><stop offset=".45" stop-color="${s.hairColor}"/><stop offset="1" stop-color="${tip}"/></linearGradient>
+  <radialGradient id="skinG" cx=".5" cy=".42" r=".65"><stop offset=".55" stop-color="${skin}"/><stop offset="1" stop-color="${sD}"/></radialGradient>
+  <radialGradient id="irisG" cx=".5" cy=".62" r=".6"><stop offset="0" stop-color="${mix(s.irisColor,'#fff',.42)}"/><stop offset=".6" stop-color="${s.irisColor}"/><stop offset="1" stop-color="${mix(s.irisColor,'#000',.45)}"/></radialGradient>
+  <clipPath id="faceClip"><path d="${faceD}"/></clipPath>
+  <clipPath id="neckClip"><path d="M171 340L170 412L230 412L229 340Z"/></clipPath>
+ </defs>
+ <rect width="400" height="500" fill="${s.bg}"/>
+ ${hairBack(g,tip)}
+ <path d="M171 340L170 398C146 418 82 432 60 500L340 500C318 432 254 418 230 398L229 340Z" fill="${skin}"/>
+ <g clip-path="url(#neckClip)"><ellipse cx="200" cy="372" rx="48" ry="22" fill="${sDD}" opacity=".42" filter="url(#b5)"/></g>
+ ${clothes()}${neckAcc()}
+ <ellipse cx="${f(200-hw-1)}" cy="256" rx="9" ry="20" fill="${sD}"/><ellipse cx="${f(200+hw+1)}" cy="256" rx="9" ry="20" fill="${sD}"/>
+ <path d="${faceD}" fill="url(#skinG)"/>
+ <g clip-path="url(#faceClip)">${concealSkin}${under}${con}${blush}${hi}${fr}</g>
+ ${nose}
+ ${lp.o}
+ ${E.out}${catch1(-1)}
+ ${mirror(E.out.replace('id="eyeClip"','id="eyeClipL"').replace('url(#eyeClip)','url(#eyeClipL)')+catch1(1))}
+ ${browR}${mirror(browR)}
+ ${marks}${pierceM}
+ ${hairFront(g)}
+ ${earMark(g,1)}${earMark(g,-1)}
+ ${hairAccMark(g)}
+ ${glassesMark()}
+ <g id="drawLayer">${draw}</g>
+ </svg>`;
+}
+let vb=FULL.slice(),vbAnim=0;
+function render(){$('#stage').innerHTML=svgMarkup();$('#stage svg').setAttribute('viewBox',vb.join(' '));}
+function camera(to){cancelAnimationFrame(vbAnim);const from=vb.slice(),t0=performance.now(),still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+ const step=n=>{const u=still?1:Math.min(1,(n-t0)/320),e=1-Math.pow(1-u,3);vb=from.map((v,i)=>v+(to[i]-v)*e);const el=$('#stage svg');if(el)el.setAttribute('viewBox',vb.join(' '));if(u<1)vbAnim=requestAnimationFrame(step)};vbAnim=requestAnimationFrame(step)}
+let raf=0;function queue(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;render()})}
+/* ---------- 互動 ---------- */
+/* ---------- 鑑定 ---------- */
+const TYPES={
+ snake:{n:'蛇蠍美人',t:'她笑一下，對方的存款少一半。',c:'眼尾往上走，唇色往深走，整張臉都在說「你先動心，我再考慮」。攻擊性很高，但畫得很準，姐妹看了會想拜師。',o:'前任的婚禮、需要對方簽字的場合',r:'前任開始後悔'},
+ cold:{n:'冷豔型',t:'不用說話，空氣自己降三度。',c:'顏色收得乾淨，線條鋒利，沒有一處在討好人。旁人會先退半步，再偷看第二眼。',o:'高級訂製、精品櫃、不想被搭訕的捷運',r:'店員不敢推銷，同事不敢揪團'},
+ cute:{n:'可愛型',t:'犯錯時，大家會先問妳累不累。',c:'圓、粉、亮，每一筆都在降低別人的戒心。這張臉去夜市殺價，老闆會多送一杯。',o:'夜市、畢業旅行、需要別人幫忙搬東西的時候',r:'開會講話沒人當真'},
+ sweet:{n:'純欲型',t:'看起來無辜，但不是真的無辜。',c:'水光唇加眼下那點紅，看起來像剛哭完，又像什麼都沒發生。男生會說「妳今天沒化妝吧」，只有姐妹知道這花了一小時。',o:'第一次約會、宵夜、限時動態',r:'姐妹會私訊問妳用哪一支'},
+ queen:{n:'御姐型',t:'今天的會議，由她決定幾點結束。',c:'輪廓有立體感，顏色成熟，氣場比職稱還大。走進會議室，大家會自動把位置讓出來。',o:'簡報、談判、拒絕加班',r:'年下自動靠近，妳還嫌煩'},
+ fairy:{n:'清冷仙女',t:'不吃人間煙火，至少看起來不吃。',c:'顏色很淡，存在感很高。妝是有化，但只有認真的人才看得出來。',o:'美術館、雨天、窗邊的位置',r:'沒人敢約妳吃鹹酥雞，雖然妳很想'},
+ heiress:{n:'富家千金',t:'她不知道捷運要刷卡。',c:'柔和、整齊、一絲不亂，妝容的預算感比實際預算高。這是用保養費堆出來的輕鬆。',o:'下午茶、家族聚餐、看房',r:'朋友不好意思約妳吃路邊攤'},
+ retro:{n:'港風美人',t:'下一幕，雨會開始下。',c:'濃眉紅唇加上有份量的髮型，自帶膠片顆粒。站在霓虹招牌底下，可以不用講台詞。',o:'復古酒吧、茶餐廳、電影院外抽菸的那段',r:'有人想請妳跳舞'},
+ goth:{n:'暗黑哥德',t:'教堂的管風琴自動響起。',c:'黑色用得毫不客氣，整張臉拒絕陽光。走在白天的街上，連 Ubike 都會讓路。',o:'音樂祭、午夜場、公司尾牙的反抗',r:'家人問妳最近是不是心情不好'},
+ hot:{n:'辣妹型',t:'今晚的 DJ 會認得她。',c:'高飽和、高光澤、高調。這個妝不考慮隔天，也不考慮妳媽的感受。',o:'夜店、演唱會、墾丁',r:'手機電量撐不到回家'},
+ idol:{n:'女團主舞',t:'鏡頭切到她，大家開始應援。',c:'顏色大膽但收得住，舞台燈打下來剛好。素人畫成這樣需要勇氣，妳有。',o:'舞台、應援場、拍照打卡',r:'路人想問妳是不是練習生'},
+ yandere:{n:'病嬌型',t:'她說會一直陪你，字面上的。',c:'蒼白底色配上眼下的紅，脆弱和危險各半。讓人想保護，然後想報警。',o:'深夜傳訊息、已讀之後',r:'前任開始換門鎖'},
+ korean:{n:'韓系水光肌',t:'妳的肌膚比妳的人生還有光澤。',c:'底妝透、眉毛平、嘴唇有漸層，每一步都在假裝沒花力氣。這種輕鬆感其實最花時間。',o:'咖啡廳、聖水洞、發自拍的那個下午',r:'洗臉前會猶豫三分鐘'},
+ japan:{n:'日系下垂眼',t:'看起來剛睡醒，也剛被原諒。',c:'眼尾往下，腮紅貼著眼睛，整張臉軟綿綿的。姐妹看了想捏，主管看了不忍心退件。',o:'逛藥妝、拍貼機、週末的便利商店',r:'每次都被問要不要幫忙'},
+ western:{n:'歐美濃顏',t:'光影打得比妳的人生規劃還清楚。',c:'修容、高光、裸唇全部到位，換個燈光就是另一張臉。這個妝不是畫上去的，是雕出來的。',o:'夜拍、畢業舞會、卸妝前再多拍十張',r:'卸完妝，貓認不出妳'},
+ nomake:{n:'素顏天使',t:'什麼都沒畫，皮膚科醫師會很欣慰。',c:'妳把鑑定按下去的時候，這張臉什麼都沒發生。遊戲的意思是可以畫，不是一定要畫。',o:'全部，因為妳本來就這樣',r:'在場沒有人知道這是遊戲'},
+ fake:{n:'偽素顏',t:'直男：「妳今天沒化妝吧？」',c:'畫了，而且畫得很好，所以看不出來。花四十分鐘換來一句「妳今天氣色不錯」，這就是專業。',o:'見家長、男朋友說喜歡自然的時候',r:'沒人知道這張臉多少錢'},
+ ghost:{n:'七月女鬼',t:'中元節，請不要這樣出門。',c:'白到沒血色，眼周黑成一片。若是刻意的，技術很好；若不是，建議換個粉底色號。',o:'鬼屋打工、萬聖節、嚇前任',r:'電梯裡的人會先出去'},
+ clown:{n:'小丑本人',t:'全場都笑了，但妳沒有。',c:'腮紅和嘴巴都超出正常範圍，這已經是表演藝術。氣球可以自備。',o:'兒童生日派對、馬戲團面試',r:'小孩會哭'},
+ wreck:{n:'車禍現場',t:'每個部分都很努力，合在一起出事了。',c:'妳把所有東西都開到最大。鑑定師看完需要先喝口水。這張臉不是沒有才華，是才華沒有協調。',o:'分手後第三天的凌晨兩點',r:'朋友不敢告訴妳實話'},
+ doodle:{n:'人體塗鴉家',t:'妳把臉當成白板在用。',c:'化妝品已經攔不住妳了，直接動手畫。這不是妝容，這是一種表態。',o:'手機殼、課本、同學睡著的時候',r:'洗臉要洗很久'}
+};
+/* ---------- 評語庫：同一結果按順序輪替，不靠亂數 ---------- */
+Object.assign(TYPES,{
+ shades:{n:'墨鏡遮全臉',t:'畫了四十分鐘，戴上墨鏡。',c:'鑑定師努力看了，但什麼都看不到。妳可能畫得很好，也可能根本沒畫，這就是墨鏡的價值。',o:'宿醉的早上、機場、不想打招呼的路上',r:'室內也不敢拿下來'},
+ lipOnly:{n:'只擦口紅派',t:'一支口紅，解決所有出門問題。',c:'底妝可以省，眼妝可以省，口紅不能省。這是上班族早上只剩三分鐘時的最高智慧。',o:'早八、臨時被約、電梯裡補妝',r:'喝完飲料，杯子比臉還有妝'},
+ cabin:{n:'空姐標準妝',t:'請問您要雞肉還是牛肉？',c:'頭髮一根不亂，妝面一絲不苟，乘客看了會自動把椅背豎直。整齊本身就是一種氣場。',o:'面試、國際線、需要被信任的場合',r:'朋友會想問妳行李限重'},
+ madame:{n:'信義區貴婦',t:'她的包包有自己的衣櫃。',c:'珍珠、絲絨、波浪，全部都用得很穩。這張臉不用開口，櫃姐就會先端水出來。',o:'百貨 VIP 室、慈善晚宴、孩子的家長會',r:'路人默認妳有司機'},
+ artsy:{n:'文青厭世臉',t:'她正在看一本沒有人看過的書。',c:'眼鏡比妝更有存在感，表情比妝更有態度。這種乾淨很難學，因為看起來毫不在乎。',o:'獨立書店、老宅咖啡、小劇場',r:'有人會跟妳聊侯麥，妳得聽完'},
+ influencer:{n:'網美打卡臉',t:'開飯前請讓手機先吃。',c:'水光、大瞳、長睫毛，一切都為鏡頭服務。真人和濾鏡之間，已經沒有差距了。',o:'新開幕甜點店、海邊 Villa、任何有鏡子的電梯',r:'拍了兩百張，只留一張'},
+ thai:{n:'泰妝濃顏',t:'眼尾一抬，曼谷就到了。',c:'小麥肌配上利落眼線，五官深得很有戲。這個妝防曬、防汗，也防人靠太近。',o:'海島、潑水節、熱到快融化的戶外音樂祭',r:'朋友會問妳是不是混血'}
+});
+const MORE={
+ snake:{t:['她沒有在追誰，是大家自己跌倒。','她記得你說過的每句話，包括準備拿來用的。'],c:['深色嘴唇配上揚眼尾，是不打算跟任何人客氣的組合。妳還沒開口，對方已經想好怎麼道歉了。','這個妝看起來很貴，也看起來很難搞。兩件事都是優點。'],o:['跟主管談加薪、同學會','收到前任訊息的那天晚上'],r:['聊天室的訊息都變得很有禮貌','有人開始用敬語跟妳說話']},
+ cold:{t:['她已讀，然後沒有然後。','笑一下算妳今天的年度額度。'],c:['線條乾淨，色彩克制，每個地方都剛好停在不討好的位置。距離感是這張臉最貴的配件。','這張臉不需要任何人喜歡，所以大家都會多看一眼。冷，但是很有禮貌的那種冷。'],o:['藝廊開幕、談合約','時裝週，就算只是去看展覽的路上'],r:['聚餐時沒人敢坐妳對面','客服聽到妳的聲音都會站起來']},
+ cute:{t:['全世界都想把她裝進口袋。','她說不會開瓶蓋，大家真的相信了。'],c:['腮紅和嘴唇把這張臉的年紀調小了好幾歲。姐妹看了也會想摸摸頭。','這個妝沒有攻擊性，但殺傷力不低。超商店員都會多跟妳說一句謝謝。'],o:['遊樂園、拍貼機','跟長輩吃飯，紅包會變厚'],r:['去夜店會被查證件','每個人都想介紹對象給妳']},
+ sweet:{t:['她什麼都沒做，只是眨了一下眼。','素素的，但妳就是移不開眼。'],c:['氣色好得很可疑，嘴唇亮得很故意。乍看清純，多看兩秒就知道沒有那麼簡單。','這是最難畫的那種妝：要好看，又要看起來沒有想好看。妳做到了。'],o:['微醺的小酒館','週末的早午餐、限時動態第一張'],r:['姐妹會傳訊息問妳用了什麼','沒化妝的那天，會被問是不是生病']},
+ queen:{t:['她不趕時間，是時間等她。','妳可以叫她姐，但要先預約。'],c:['成熟的顏色配上俐落輪廓，看起來會處理事情，也會處理人。','這個妝的重點不是漂亮，是「不要惹我，但可以請我喝一杯」。'],o:['跨部門會議、尾牙上台','單獨旅行的高級飯店 Lounge'],r:['新同事不敢叫妳名字','大家開始問妳要怎麼辦']},
+ fairy:{t:['走路不出聲，發文沒有表情符號。','她好像只喝溫水。'],c:['顏色淡得剛剛好，留白比下筆更多。這種妝靠的是克制，不是技術，當然也要技術。','整張臉像下過雨的早晨。安靜，乾淨，有一點不想理人。'],o:['茶席、古典音樂會','一個人的京都'],r:['被問「妳是不是不開心」','買飲料時店員不敢推薦全糖']},
+ heiress:{t:['她以為機票都是平躺的。','零用錢這個詞，對她來說有點小。'],c:['整齊溫柔、毫不費力，只有很會保養的人才畫得出這種輕鬆。','沒有哪裡特別用力，但每一處都很有家教。長輩會很喜歡這張臉。'],o:['長輩的壽宴、馬術俱樂部','米其林的午間套餐'],r:['被問住哪一區','朋友突然把鹽酥雞藏起來']},
+ retro:{t:['她點了根菸，沒有抽。','這張臉該有電影配樂。'],c:['濃眉和紅唇都不打算退讓，九〇年代的底氣全在這裡。現在的濾鏡做不出這種味道。','這種妝不追流行，流行每二十年會自己回來找它。'],o:['老戲院、爵士酒吧','西門町的舊招牌底下'],r:['長輩會說「我年輕時也這樣」','拍照自動變底片顆粒']},
+ goth:{t:['她的 Spotify 沒有大調。','月亮出來她才起床。'],c:['黑色需要勇氣，妳給得很足。這張臉跟白天的台灣完全不熟。','暗得有條理，亂得有章法。不是每個人都能把黑色畫出層次。'],o:['地下樂團的場子、萬聖節','週一早上的通勤，當作一種抗議'],r:['被問要不要去廟裡拜拜','貓會多看妳一眼']},
+ hot:{t:['她的週五晚上會延長到週日。','音樂再大聲，也蓋不過這個妝。'],c:['亮面、高彩、高調，沒有一處想低調。這個妝很清楚自己今晚要去哪裡。','顏色堆得很滿，但妳撐得住。有自信就不算畫太濃。'],o:['跨年、電音派對','生日趴的主角位置'],r:['隔天早上枕頭會很精彩','卸妝要分三次']},
+ idol:{t:['下一秒她要開始跳了。','手幅和燈牌已經在路上了。'],c:['這個配色上舞台剛好，上捷運會有點醒目。不過有粉絲的人不用在意這些。','顏色敢用，也用得有章法。這是會被存進手機相簿、拿給設計師看的那種造型。'],o:['演唱會、畢業公演','音樂節的主舞台前排'],r:['路人會偷拍','素顏時，粉絲會認不出來']},
+ yandere:{t:['她幫你把封鎖名單整理好了。','「你今天跟誰吃飯？」她笑著問。'],c:['眼下那抹紅很危險，像剛哭完又像準備動手。漂亮，但建議你回訊息。','蒼白和紅色都是警告色，只是她用起來特別溫柔。'],o:['確認關係的那一晚','一起看恐怖片'],r:['對方開始主動報備','手機定位自動打開了']},
+ nomake:{t:['化妝台今天放假。','所有產品都還在抽屜裡。'],c:['什麼都沒動就按完成，算一種態度。鑑定師無話可說，只能給妳基本分。','本遊戲有八十多個選項，妳一個都沒用。這比全部用完還少見。'],o:['倒垃圾、去全聯','遠距會議，順便關鏡頭'],r:['省了一筆卸妝油','櫃姐有點失落']},
+ fake:{t:['裸妝比濃妝貴，只是沒人知道。','畫了七層，看起來一層都沒有。'],c:['妝感低到看不出來，是這種妝的最高稱讚。可惜全世界只有姐妹懂。','這個妝連媽媽都說「妳今天臉色很好」，沒有人懷疑。任務完成。'],o:['第一次見對方家人','補習班、圖書館、想讓人覺得妳天生就這樣'],r:['男朋友以為妳起床就這樣','所有化妝品都被說成沒必要']},
+ ghost:{t:['她不走路，是飄的。','半夜的廁所鏡子，請不要照。'],c:['血色全部被妳收走了。這個底妝有專業水準，只是專業領域比較特殊。','眼周這麼深，臉這麼白，今晚的電梯應該只有妳一個人。'],o:['萬聖節、劇場','值大夜班想嚇同事的時候'],r:['家人會幫妳收驚','寵物不太敢靠近']},
+ clown:{t:['她笑了，全場安靜。','氣球和彩帶在後車廂。'],c:['腮紅和嘴巴都很有抱負。這張臉很難被忽略，也很難被原諒。','比例已經超出化妝的範圍，進入馬戲團的管轄了。掌聲還是要給。'],o:['萬聖節、公司整人活動','想讓前任一輩子記得妳的場合'],r:['擦不乾淨的紅色會跟妳三天','收到氣球訂單']},
+ wreck:{t:['妳有努力，這張臉也有。','櫃姐默默把卸妝棉遞過來。'],c:['每一樣單看都合理，全部放在一起就不太合理。下次先選一個主角，其他的當配角。','顏色打成一團，部位互相搶戲。不過敢這樣畫，代表妳的手已經解放了。'],o:['深夜跟姐妹視訊，讓她笑到不行','限時動態，二十四小時後自動消失'],r:['姐妹截圖了','卸妝棉用掉半包']},
+ doodle:{t:['這不是臉，這是創作。','美術老師看了會沉默。'],c:['妳已經跳過化妝品，直接進入當代藝術。作品的名字就叫《週一》好了。','筆觸很有想法，就是不太像化妝。可以考慮投稿美術館，不建議出門。'],o:['美術課、派對遊戲','姐妹睡著的時候'],r:['化妝品全部失業','手機相簿多一張不能給人看的圖']}
+};
+for(const k in TYPES)for(const f of ['t','c','o','r']){const v=TYPES[k][f];TYPES[k][f]=[v].concat((MORE[k]&&MORE[k][f])||[])}
+/* 回答標題：彩妝女王 */
+delete TYPES.doodle;
+const VERDICT={A:['能。而且應該收門票。','能，請走正門。','能。路人該讓路。'],B:['能，準備好被問色號。','能，今天很適合多拍幾張。','能，記得帶補妝的那支。'],C:['能，光線好一點更好。','能，去超商完全沒問題。','能，不用見太重要的人。'],D:['可以，但先別見家長。','可以，走路快一點就好。','可以，戴個口罩更穩。'],E:['建議走後門。','等天黑再出門。','先傳給姐妹確認一下。'],F:['不能。先卸掉。','不行，門先鎖上。','卸妝油在左手邊。']};
+const VERDICT_KEY={nomake:['能，妳本來就能。'],ghost:['能，只限午夜之後。','能，別搭電梯。'],clown:['能，馬戲團在等妳。','能，但要先報備。'],wreck:['不能。姐妹會攔妳。','不行，先把門關上。'],doodle:['能，當行動藝術。'],shades:['能，反正也看不到。']};
+const NOTES={
+ lip:{豆沙:['豆沙色不會出錯，所以沒有人會罵妳。','最安全的選擇，適合不想被討論嘴唇的日子。'],正紅:['正紅不挑人，只挑膽子。','一抹正紅，整張臉都有了立場。'],爛番茄:['爛番茄色顯白又有精神，今年還在流行。','這個顏色讓人想問妳在哪裡買的。'],楓葉:['楓葉色很秋天，也很有主見。','暖色偏深，黃皮很吃這一支。'],奶茶:['奶茶唇很溫柔，但要底妝夠好才撐得住。','低飽和的選擇，看得出妳懂顏色。'],裸粉:['裸粉很乾淨，但氣色不好時會像生病。','淡得恰到好處，適合說謊說自己沒化妝。'],蜜桃:['蜜桃色很討喜，連嘴巴都有好心情。','擦了這支，連發脾氣都沒人相信。'],珊瑚:['珊瑚色很夏天，適合曬過的皮膚。','有活力，不用開口就顯得很開朗。'],酒紅:['酒紅把氣場直接拉滿，建議隨身帶補妝的鏡子。','顏色深但有質感，很有夜晚的味道。'],黑櫻桃:['黑櫻桃不是每個人都敢用，妳敢。','暗得很有故事，吃東西前請三思。'],純黑:['黑唇一擦，沒人敢問妳午餐吃什麼。','這不是口紅，這是立場。'],芭比粉:['芭比粉的存在感比妳本人還高。','敢用這支，今天不打算低調了。'],死白:['這個唇色看起來很冷，大家會問妳要不要熱水。','白唇很前衛，需要非常確定自己在幹嘛。'],葡萄:['葡萄色很有個性，上班可能要多解釋一次。','紫色系不好駕馭，妳算是撐住了。'],自訂:['這個色號櫃上沒有，是妳自己調出來的。','自己調的唇色，品牌應該來找妳談。']},
+ lipFin:{water:['水光質地讓嘴唇看起來很好親，也很容易沾到頭髮。'],lacquer:['漆光亮到可以當鏡子，喝飲料請用吸管。'],velvet:['絲絨質地很高級，只是要記得補水。']},
+ liner:{none:['沒有畫眼線，眼睛靠自己撐住了。','眼線省了，手不會抖，這是好決定。'],thin:['內眼線藏得很好，只覺得眼睛變深，看不出來畫過。'],cat:['貓眼上得俐落，左右如果一樣高，妳已經贏了多數人。','這條貓眼線很有主見，別人很難拒絕妳。'],wing:['這條上揚線長到可以劃開信封。','上揚眼線拉這麼長，手非常穩。'],puppy:['下垂線畫得無辜，實際上妳花了十五分鐘。','眼尾往下一點，整個人都顯得很好拜託。'],graphic:['圖形眼線這麼畫，已經不是日常，是作品了。','這種線條只有兩種結果，今天是好的那種。']},
+ shadow:{大地棕:['大地色是眼妝的白飯，吃不膩。'],奶茶:['奶茶眼影很溫柔，適合每天。'],蜜桃:['蜜桃眼影一上，像剛哭過，但是好看的那種。'],玫瑰:['玫瑰色有點浮腫風險，妳壓住了。'],酒紅:['酒紅眼影上得大膽，電眼不用眨就有。'],煙燻黑:['煙燻妝量得很有勇氣，卸的時候會更有勇氣。'],冰藍:['冰藍眼影很難用，上一次流行是千禧年，現在又回來了。'],電光紫:['電光紫這麼亮，三條街外都看得到。'],森綠:['森綠眼影很少人敢碰，看起來很懂。'],香檳金:['香檳金一閃一閃，適合有燈光的場合。'],螢光粉:['螢光粉沒有在客氣，適合舞台，不適合會議。'],珍珠白:['珍珠白很透，眼皮亮得像剛做完保養。'],自訂:['這個眼影色是妳自己調的，盤子裡找不到。']},
+ brow:{natural:['自然眉最耐看，也最難修。'],flat:['一字眉讓人變得年輕又無辜，韓劇女主都這樣。','平眉顯得很溫和，就算妳其實不是。'],willow:['柳葉眉很古典，再穿旗袍就可以進宮了。','細長的眉尾很有氣質，也有一點心機。'],arch:['高挑眉一抬，大家都開始解釋自己為什麼遲到。','這個眉峰是在質問別人。'],thin:['細眉很有復古感，畫錯一邊就沒救了，妳沒畫錯。','這麼細的眉，手要很穩。'],wild:['野生眉很有生命力，修眉刀今天可以休息。','毛流感這麼足，看起來很有主見。'],cut:['斷眉一刀，整個人的氣氛就不同了。','這一刀值得，連媽媽都想問怎麼了。']},
+ blush:{apple:['蘋果肌的腮紅很討喜，笑起來會更明顯。','氣色好到讓人覺得妳昨天睡滿八小時。'],sweep:['斜掃腮紅把臉拉出線條，大人的做法。','從顴骨往上帶，輪廓馬上清楚。'],under:['眼下腮紅是最近的流行，看起來像剛被風吹過。','貼著眼睛的紅，很容易惹人心疼。'],nose:['鼻樑曬傷妝很像剛從海邊回來，其實只有去頂樓收衣服。','這一抹紅橫過鼻子，好像剛滑完雪。'],none:['沒有腮紅，氣色全靠本人。','腮紅省了，整張臉更冷一點。']},
+ hair:{long:['長直髮很穩，配什麼妝都不會出事。','頭髮這麼長，洗頭要算進行程。'],wave:['大波浪很有份量，每天早上要多抓二十分鐘。','捲度很有女人味，電捲棒辛苦了。'],bob:['鮑伯頭很俐落，看得出是個會做決定的人。','短一點反而更有個性，頸線全出來了。'],hime:['公主切需要很大的勇氣，還要固定去修。','這個髮型很難剪，但好看的時候特別好看。'],pony:['高馬尾一綁，戰鬥力直接提升。','馬尾綁這麼高，頭皮應該有點緊。'],bun:['丸子頭要亂得剛好，比看起來難多了。','露出整張臉，對自己很有信心。'],twin:['雙馬尾有年齡風險，但妳今天不在乎。','雙馬尾一綁，公車上會有人讓位。'],pixie:['超短髮很考驗臉，妳過了。','這麼短，很省洗髮精。'],bald:['光頭是最高段的造型，沒有之一。','連髮型師都失業了。']},
+ acc:{pearl:['珍珠耳環一戴，整張臉都有家教了。'],hoop:['大圈耳環有態度，只是要小心勾到頭髮。'],tassel:['流蘇耳環會跟著轉頭晃，很會搶戲。'],star:['星星耳環很俏皮，今天可以任性一點。'],crown:['皇冠都戴上了，不用再解釋什麼。'],cat:['貓耳戴出門要有心理準備，也要有粉絲。'],bow:['蝴蝶結的甜度滿分，適合想被原諒的日子。'],choker:['頸圈一戴，氣質偏移了三十度。'],round:['粗圓框增加了書卷氣，也擋住了一半的眼妝。'],thin:['細框眼鏡很斯文，配這個妝反差很好。'],nose:['鼻環很酷，感冒時要小心。'],lip:['唇環一戴，家長會要先想好說詞。']},
+ base:{glow:['水光肌打得很亮，走到陽光下要戴墨鏡的是別人。'],matte:['霧面底妝乾淨到沒有毛孔，夏天請帶吸油面紙。'],contour:['修容下得很重，側面比正面更有戲。'],freckle:['雀斑留著很有味道，歐美感一下就出來了。'],mole:['這顆痣點得很準，妳知道大家會看哪裡。']}
+};
+let seen={};try{seen=JSON.parse(localStorage.getItem('seenLines')||'{}')}catch(e){}
+function nextLine(id,list,salt){if(!list||!list.length)return '';const n=seen[id]||0;seen[id]=n+1;return list[(n+salt)%list.length]}
+function saveSeen(){try{localStorage.setItem('seenLines',JSON.stringify(seen))}catch(e){}}
+function writeUp(r){
+ const h=hashS(),T=r.type,k=r.key,tier=r.score>=90?'A':r.score>=78?'B':r.score>=65?'C':r.score>=50?'D':r.score>=30?'E':'F';
+ const notes=[],add=(lab,id,list)=>{if(list&&list.length)notes.push([lab,nextLine('n_'+id,list,h)])};
+ if(s.lipAmt>0){add('嘴唇','lip'+nameOf('lip',s.lipColor),NOTES.lip[nameOf('lip',s.lipColor)]);}
+ if(s.linerStyle!='none')add('眼線','l'+s.linerStyle,NOTES.liner[s.linerStyle]);else if(s.shadowAmt==0)add('眼線','lnone',NOTES.liner.none);
+ if(s.shadowAmt>0)add('眼影','s'+nameOf('shadow',s.shadowColor),NOTES.shadow[nameOf('shadow',s.shadowColor)]);
+ if(s.browCut=='yes')add('眉毛','bcut',NOTES.brow.cut);else add('眉毛','b'+s.browStyle,NOTES.brow[s.browStyle]);
+ add('腮紅','bl'+(s.blushAmt>0?s.blushPos:'none'),NOTES.blush[s.blushAmt>0?s.blushPos:'none']);
+ add('頭髮','h'+s.hairStyle,NOTES.hair[s.hairStyle]);
+ if(applied.iris)add('放大片','i'+applied.iris,[`${byId[applied.iris].n}一戴，眼神直接換了一個人。`,`${byId[applied.iris].n}很顯眼，第一眼就會被看到。`,`戴上${byId[applied.iris].n}，鏡子裡的人開始有點陌生。`]);
+ const acc=[s.pierce,s.earring,s.hairAcc,s.neck,s.glasses].find(v=>v!='none'&&NOTES.acc[v]);if(acc)add('配件','a'+acc,NOTES.acc[acc]);
+ const base=s.freckle>25?'freckle':(s.tearMole!='none'||s.lipMole!='none')?'mole':s.contour>60?'contour':s.finish>70?'glow':s.finish<15?'matte':null;if(base)add('底妝','d'+base,NOTES.base[base]);
+ if(s.lipAmt>0&&NOTES.lipFin[s.lipFin]&&(h%2==0))add('質地','f'+s.lipFin,NOTES.lipFin[s.lipFin]);
+ /* 最多五則，從不同部位輪替開始，下次看到不同組合 */
+ const start=(seen.round||0)+h;seen.round=(seen.round||0)+1;const pick=[];for(let i=0;i<notes.length&&pick.length<5;i++)pick.push(notes[(i+start)%notes.length]);
+ const out={t:nextLine('t_'+k,T.t,h),c:nextLine('c_'+k,T.c,h),o:nextLine('o_'+k,T.o,h),r:nextLine('r_'+k,T.r,h),v:nextLine('v_'+(VERDICT_KEY[k]?k:tier),VERDICT_KEY[k]||VERDICT[tier],h),notes:pick};
+ saveSeen();return out;
+}
+function judge(){
+ const c=k=>hsl(s[k]),clamp=v=>Math.max(0,Math.min(100,Math.round(v)));
+ const L=c('lipColor'),Sh=c('shadowColor'),Sk=c('skin'),H=c('hairColor'),a=s.lipAmt/100,sa=Math.max(s.shadowAmt,s.shadowOutAmt*.8)/100,ba=s.blushAmt/100;
+ const warmRed=(L.h<=18||L.h>=338);
+ const lipRed=warmRed&&L.s>.45&&L.l<.52,lipDeep=L.l<.3,lipBlack=L.l<.17,lipPink=(L.h>=320||L.h<=22)&&L.l>=.5,lipPale=L.l>.82;
+ const up=['cat','wing','graphic'].includes(s.linerStyle),wingLen=(s.linerStyle=='none'||s.linerStyle=='thin')?0:s.linerLen/100,puppy=s.linerStyle=='puppy';
+ const shDark=Sh.l<.3||hsl(s.shadowOut).l<.3&&s.shadowOutAmt>40,shLoud=Sh.s>.5&&Sh.h>=170&&Sh.h<=330;
+ const glitter=s.shadowFin=='glitter',gloss=s.lipFin=='lacquer'||s.lipFin=='water';
+ const hairLoud=H.s>.3&&H.l>.35&&H.l<.85&&(H.h>160||H.h<12||s.streak>30),pale=Sk.l>.88,eyeUp=(s.eyeLift-45)/55;
+ const longHair=['wave','long','hime'].includes(s.hairStyle);
+ const makeup=s.lipAmt+s.shadowAmt+s.shadowOutAmt*.6+s.blushAmt+s.contour+s.highlight*.5+s.noseShade*.4+(s.linerStyle!='none'?35:0)+s.conceal*.25+s.lash*.25;
+ let mei=a*(lipRed?38:lipDeep?32:lipPink?16:10)+(up?14+wingLen*14:0)+Math.max(0,eyeUp)*16+sa*(shDark?20:10)+(gloss?10*a:0)+(s.hairStyle=='wave'?10:0)+(s.tearMole!='none'||s.lipMole!='none'?8:0)+s.lash*.05+(s.neck=='choker'?6:0);
+ let cold=Math.max(0,eyeUp)*26+(s.contour*.16)+(pale?12:0)+(s.browStyle=='flat'||s.browStyle=='thin'?12:0)+(s.smile<40?12:0)+(ba<.25?14:0)+(s.finish<35?10:0)+(s.hairStyle=='long'||s.hairStyle=='hime'?10:0)+(L.s<.45?6:0)+(s.cloth=='turtle'?5:0)+(s.earring=='hoop'&&s.metal=='#c9ccd2'?4:0)-(ba>.5?22:0)-(s.aegyo*.1);
+ let sweet=ba*(s.blushPos=='apple'?32:s.blushPos=='nose'?26:16)+(a*(lipPink?22:0))+(s.chin*.13)+(s.eyeSize*.1)+(puppy?16:0)+(s.aegyo*.14)+(s.irisSize*.07)+(['twin','bun'].includes(s.hairStyle)?14:0)+(s.bangs=='air'||s.bangs=='blunt'?8:0)+(['bow','cat','band'].includes(s.hairAcc)?10:0)+(s.smile>55?10:0)+(gloss?5:0)+(s.freckle*.06)-Math.max(0,eyeUp)*12-(lipDeep?a*20:0);
+ let lux=(s.conceal*.1)+(s.contour*.12)+(s.highlight*.05)+(s.lipFin=='velvet'?12:0)+(['pearl','tassel'].includes(s.earring)?14:0)+(s.neck=='pearl'?12:0)+(s.neck=='chain'?5:0)+(s.hairAcc=='crown'?8:0)+(['wave','bun'].includes(s.hairStyle)?12:0)+(s.cloth=='suit'?14:0)+(Sh.s<.5&&sa>0?10:0)+(H.l<.25?6:0)+(s.browStyle=='arch'||s.browStyle=='willow'?5:0)-(glitter?12:0)-(hairLoud?12:0);
+ let wild=(glitter?24:0)+(shLoud?sa*24:0)+(hairLoud?22:0)+(s.pierce!='none'?18:0)+(s.browCut=='yes'?12:0)+(s.linerStyle=='graphic'?18:0)+(lipBlack?a*26:0)+(s.lipFin=='lacquer'?7:0)+(s.streak*.1)+(s.faceGem!='none'?10:0)+(s.glasses=='sun'?10:0)+(s.earring=='hoop'?6:0)+(s.shadowFin=='shimmer'?3:0)+(s.strokes.length*1.5);
+ const ax={媚:clamp(mei),冷:clamp(cold),甜:clamp(sweet),貴:clamp(lux),野:clamp(wild)};
+ /* 和諧度 */
+ const hues=[];if(a>.3)hues.push(L);if(sa>.3)hues.push(Sh);if(ba>.3)hues.push(c('blushColor'));
+ let clash=0;for(let i=0;i<hues.length;i++)for(let j=i+1;j<hues.length;j++){if(hues[i].s<.25||hues[j].s<.25)continue;let d=Math.abs(hues[i].h-hues[j].h);d=Math.min(d,360-d);if(d>70)clash+=(d-70)/40}
+ const heavy=[s.lipAmt>80,s.shadowAmt>80,s.shadowOutAmt>70,s.blushAmt>70,s.contour>70,s.highlight>70,s.lash>75,s.linerW>70&&s.linerStyle!='none',glitter,s.faceGem!='none',s.freckle>60,s.browThick>80].filter(Boolean).length;
+ /* 特殊結局 */
+ let key=null;
+ const strokeLen=s.strokes.reduce((n,x)=>n+x.d.length,0);
+ if(s.glasses=='sun')key='shades';
+ else if(makeup<14&&!s.strokes.length)key='nomake';
+ else if(pale&&Sk.s<.2&&(lipPale||lipBlack&&s.hairStyle!='hime')&&a>.5&&sa>.5)key='ghost';
+ else if(pale&&Sk.s<.2&&sa>.5&&shDark&&s.shadowLow>50&&lipPale)key='ghost';
+ else if(s.blushAmt>=85&&s.lipAmt>=90&&s.blushPos=='apple'&&(lipRed||L.s>.6)&&sa<.3)key='clown';
+ else if(heavy>=6||(clash>=2&&heavy>=3))key='wreck';
+ else if(a>=.7&&sa==0&&s.linerStyle=='none'&&ba<.2&&s.contour<20)key='lipOnly';
+ else if(makeup<100&&s.linerStyle!='graphic'&&s.lipAmt<60&&!glitter&&s.shadowAmt<40)key='fake';
+ else if(s.blushPos=='under'&&s.blushAmt>45&&(pale||s.skin=='#fde3d3')&&(lipDeep||lipRed))key='yandere';
+ else if(lipRed&&a>.7&&s.browThick>55&&(s.browStyle=='wild'||s.browStyle=='natural'||s.browStyle=='flat')&&(s.hairStyle=='wave'||s.hairStyle=='bob')&&!shLoud&&!glitter)key='retro';
+ else{
+  if(key===null&&s.hairStyle=='bun'&&(lipRed||lipPink)&&s.conceal>=40&&!glitter&&!shLoud&&!hairLoud&&s.hairAcc=='none')key='cabin';
+  else if(key===null&&s.neck=='pearl'&&s.earring=='pearl'&&(s.lipFin=='velvet'||s.lipFin=='matte')&&s.hairAcc=='none')key='madame';
+  else if(key===null&&(s.glasses=='thin'||s.glasses=='round')&&ba<.4&&!up&&a<.8&&!glitter)key='artsy';
+  else if(key===null&&s.finish>=60&&s.highlight>=30&&s.lash>=45&&s.irisSize>=55)key='influencer';
+  else if(key===null&&(s.skin=='#eebf9e'||s.skin=='#d39a74')&&s.contour>=30&&s.linerStyle=='wing'&&!shLoud)key='thai';
+  if(key===null&&ba<.55&&s.hairStyle!='twin'&&s.finish>=60&&a>.4&&(lipPink||L.h<30)&&L.l>.4&&(s.browStyle=='flat'||s.browStyle=='natural')&&(s.lipBite>=30||gloss)&&s.shadowAmt<60&&!glitter&&!shLoud)key='korean';
+  else if(key===null&&s.hairStyle!='twin'&&puppy&&s.aegyo>=30&&ba>.3)key='japan';
+  else if(key===null&&s.contour>=45&&s.highlight>=30&&sa>.4&&!shLoud&&!glitter&&L.s<.5&&!lipDeep)key='western';
+  if(key)return finish(key);
+  const V={snake:[95,60,5,50,25],cold:[45,90,0,55,10],cute:[8,0,90,12,15],sweet:[62,10,62,20,8],queen:[60,40,10,85,8],fairy:[12,70,30,35,0],heiress:[20,15,48,80,0],goth:[35,55,0,12,90],hot:[62,5,18,8,80],idol:[25,8,42,12,72]};
+  const v=[ax.媚,ax.冷,ax.甜,ax.貴,ax.野],mx=Math.max(...v,1),sc=Math.max(1,75/mx),n=v.map(x=>x*sc);
+  let best=1e9;for(const k in V){const d=Math.hypot(...V[k].map((x,i)=>x-n[i]));if(d<best){best=d;key=k}}
+  if(lipBlack&&a>.6&&sa>.5&&shDark)key='goth';
+  if(key=='fairy'&&makeup>210)key='cold';
+ }
+ return finish(key);
+ function finish(key){
+ const special=['ghost','clown','wreck','doodle','nomake'].includes(key);
+ const coverage=Math.min(1,makeup/170),detail=[s.lash>30,s.conceal>30,s.contour>15,s.highlight>15,s.browStyle!='natural',s.linerStyle!='none',s.shadowOutAmt>15,s.lipBite>15||s.lipLiner>15,s.earring!='none',s.bangs!='center'].filter(Boolean).length;
+ let score=58+coverage*14+detail*2.2-clash*7-Math.max(0,heavy-3)*4;
+ if(key=='nomake')score=60; if(key=='wreck')score=Math.min(score,38); if(key=='clown')score=Math.min(score,44); if(key=='doodle')score=Math.min(score,70);
+ if(key=='ghost')score=Math.min(score+6,88);
+ score=Math.max(12,Math.min(99,Math.round(score+(hashS()%7)-3)));
+ return{key,type:TYPES[key],ax,score,clash,heavy,special};
+ }
+}
+function hashS(){const t=JSON.stringify(s);let h=7;for(let i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))|0;return Math.abs(h)}
+function grade(n){return n>=90?'可以開班授課':n>=78?'出門會被問色號':n>=65?'合格，能見人':n>=50?'有想法，手還沒跟上':n>=30?'光線暗一點會好一些':'建議卸掉重來'}
+function faceURL(){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgMarkup())}
+function spentLine(r){const n=spent(),c=n?r.score/n*100:0;if(!n)return '，一毛沒花。';return c>=8?'，這個 CP 值可以開課。':c>=5?'，花得值得。':c>=3.2?'，算是有買到東西。':'，錢包替妳難過。'}
+function wasted(){const un=basket.map(i=>byId[i]).filter(x=>applied[x.slot]!=x.id);if(!un.length)return '';const x=un[0];return (x.roast||`${x.n}買了沒用，先放抽屜三年。`)+(un.length>1?` 另外還有 ${un.length-1} 件也沒拆。`:'')}
+function openCard(u){const v=$('#cardView');v.querySelector('img').src=u;v.hidden=false;Snd.page()}
+function showResult(){
+ const r=judge(),el=$('#result'),occ=OCCS[occI];r.fit=fitOf(r);r.base=r.score;r.score=Math.max(12,Math.min(99,Math.round(r.score*.75+r.fit*.25)));
+ const w=writeUp(r);r.w=w;const isNew=saveDex(r.key);
+ const pool=r.fit>=70?occ.good:r.fit>=45?occ.ok:occ.bad,occLine=nextLine('oc_'+occI+(r.fit>=70?'g':r.fit>=45?'o':'b'),pool,hashS());saveSeen();
+ el.innerHTML=`<div class="card"><div><img id="shareImg" alt="鑑定結果：${r.type.n}，${r.score} 分"></div><div>
+  <p class="answer">這妝能出門嗎？<b>${w.v}</b></p>
+  <p class="rtext">${w.c}</p>
+  <h3 class="nh">櫃姐點評</h3>
+  <dl class="meta notes">${w.notes.map(n=>`<dt>${n[0]}</dt><dd>${n[1]}</dd>`).join('')}</dl>
+  <dl class="meta"><dt>今晚</dt><dd>${occ.n}，合適度 ${r.fit}。${occLine}</dd><dt>花費</dt><dd>${nt(spent())}${spentLine(r)}</dd>${wasted()?`<dt>買了沒用</dt><dd>${wasted()}</dd>`:''}<dt>適合場合</dt><dd>${w.o}</dd><dt>副作用</dt><dd>${w.r}</dd>${s.lipAmt>0?`<dt>本命唇色</dt><dd>${nameOf('lip',s.lipColor)}</dd>`:''}<dt>圖鑑</dt><dd>${isNew?'新結局！':''}已收集 ${dexN()} / ${Object.keys(TYPES).length}</dd></dl>
+  <div class="ract"><button class="pri" id="rShare" disabled>分享卡片</button><button id="rNew">再玩一次</button><button id="rDex">圖鑑</button></div>
+ </div></div>`;
+ el.hidden=false;el.scrollTop=0;
+ $('#rNew').onclick=()=>{el.hidden=true;Snd.duck(false);refreshDex();show('intro');Snd.page()};
+ $('#rDex').onclick=openDex;
+ let cardURL='',cardFile=null;
+ $('#rShare').onclick=async()=>{if(!cardURL)return;const data={files:[cardFile],title:'彩妝女王',text:`去${occ.n}前，我在寶雅花了 ${nt(spent())}，畫出「${r.type.n}」。`};try{if(navigator.canShare&&navigator.canShare({files:[cardFile]})){await navigator.share(data);return}}catch(e){if(e.name=='AbortError')return}openCard(cardURL)};
+ Snd.roll();makeShare(r).then(u=>{const i=$('#shareImg');if(i){i.src=u;i.classList.add('in')}cardURL=u;const bin=atob(u.split(',')[1]),arr=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)arr[k]=bin.charCodeAt(k);cardFile=new File([arr],'彩妝女王.png',{type:'image/png'});const sb=$('#rShare');if(sb)sb.disabled=false;Snd.verdict(r.key)});
+}
+function fit(x,text,weight,fam,size,maxW){let z=size;do{x.font=`${weight} ${z}px ${fam}`;z-=4}while(x.measureText(text).width>maxW&&z>40);return z+4}
+async function makeShare(r){
+ const SER='"Noto Serif TC","Songti TC",serif',SAN='"Noto Sans TC","PingFang TC",sans-serif';
+ const w=r.w||writeUp(r),all=r.type.n+w.t+w.v+'今晚：'+OCCS[occI].n+'花了NT$,'+'彩妝女王彩妝櫃鑑定書媚冷甜貴野分0123456789happydog.tw';
+ try{await Promise.race([Promise.all([document.fonts.load(`900 100px "Noto Serif TC"`,all),document.fonts.load(`500 40px "Noto Serif TC"`,all),document.fonts.load(`500 28px "Noto Sans TC"`,all)]),new Promise(d=>setTimeout(d,2500))])}catch(e){}
+ const img=new Image();await new Promise((ok,no)=>{img.onload=ok;img.onerror=no;img.src=faceURL()});
+ const cv=document.createElement('canvas');cv.width=1080;cv.height=1350;const x=cv.getContext('2d');
+ const CREAM='#fbf1ea',WINE='#1a0710',ROSE='#f0486f',RED='#b5123b',m=64;
+ /* 全版人像：背景延伸到邊 */
+ x.fillStyle=s.bg;x.fillRect(0,0,1080,1350);
+ x.drawImage(img,50,-44,980,1225);
+ /* 下方酒紅漸層，放標題 */
+ const g=x.createLinearGradient(0,850,0,1050);g.addColorStop(0,'rgba(26,7,16,0)');g.addColorStop(.55,'rgba(26,7,16,.86)');g.addColorStop(1,WINE);
+ x.fillStyle=g;x.fillRect(0,850,1080,200);x.fillStyle=WINE;x.fillRect(0,1050,1080,300);
+ /* 刊頭 */
+ const dark=hsl(s.bg).l<.5;x.fillStyle=dark?CREAM:'#35121f';x.textBaseline='alphabetic';
+ x.font=`900 38px ${SER}`;x.fillText('彩妝女王',m,92);
+ x.font=`500 24px ${SAN}`;x.fillStyle=dark?'rgba(251,241,234,.72)':'rgba(53,18,31,.66)';x.fillText('今晚：'+OCCS[occI].n,m,130);
+ /* 分數印章 */
+ x.save();x.translate(932,150);x.rotate(-.14);
+ x.fillStyle=RED;x.beginPath();x.arc(0,0,96,0,7);x.fill();
+ x.strokeStyle=CREAM;x.lineWidth=3;x.beginPath();x.arc(0,0,84,0,7);x.stroke();
+ x.fillStyle=CREAM;x.textAlign='center';x.font=`900 88px ${SER}`;x.fillText(String(r.score),0,22);
+ x.font=`500 24px ${SAN}`;x.fillText('分',0,56);x.restore();x.textAlign='left';
+ /* 標題 */
+ fit(x,r.type.n,900,SER,176,1080-m*2);x.fillStyle=CREAM;x.fillText(r.type.n,m,1062);
+ x.font=`500 38px ${SER}`;x.fillStyle='rgba(251,241,234,.9)';fit(x,w.t,500,SER,38,1080-m*2);x.fillText(w.t,m,1124);
+ /* 五維 */
+ const ent=Object.entries(r.ax),gap=24,cw=(1080-m*2-gap*4)/5;
+ ent.forEach(([k,v],i)=>{const X=m+i*(cw+gap);x.font=`500 26px ${SAN}`;x.fillStyle=CREAM;x.fillText(k,X,1192);x.textAlign='right';x.fillStyle='rgba(251,241,234,.65)';x.fillText(String(v),X+cw,1192);x.textAlign='left';x.fillStyle='rgba(251,241,234,.2)';x.fillRect(X,1206,cw,6);x.fillStyle=ROSE;x.fillRect(X,1206,cw*v/100,6)});
+ /* 頁尾 */
+ x.font=`500 26px ${SAN}`;x.fillStyle='rgba(251,241,234,.72)';x.fillText(`花了 ${nt(spent())}・${w.v}`,m,1290);
+ x.textAlign='right';x.fillText('happydog.tw',1080-m,1290);x.textAlign='left';
+ return cv.toDataURL('image/png');
+}
+/* ---------- 聲音：全部即時合成，不載入檔案 ---------- */
+const Snd=(()=>{
+ let c,master,mus,fx,wet,nb,on=true,timer=0,bar=0,step=0,next=0,scr=null,lastTick=0,lastV=-1;
+ try{on=localStorage.getItem('sound')!=='off'}catch(e){}
+ const BPM=76,E8=60/BPM/2;
+ /* 溫柔的 lounge 和弦進行，每小節 8 個八分音符 */
+ const CH=[[174.61,220,261.63,329.63],[164.81,196,246.94,293.66],[146.83,174.61,220,261.63],[196,246.94,293.66,349.23],[174.61,220,261.63,329.63],[220,261.63,329.63,392],[233.08,293.66,349.23,440],[196,261.63,329.63,392]];
+ const BASS=[87.31,82.41,73.42,98,87.31,110,116.54,98];
+ /* 旋律：[小節, 第幾個八分音符, 頻率, 長度] */
+ const MEL=[[0,2,659.25,2],[0,4,587.33,1],[0,5,523.25,3],[1,3,493.88,2],[1,5,587.33,3],[2,2,523.25,2],[2,4,440,1],[2,5,349.23,3],[3,4,392,1],[3,5,440,1],[3,6,493.88,2],[4,2,659.25,2],[4,4,698.46,1],[4,5,659.25,3],[5,3,523.25,2],[5,5,587.33,3],[6,2,698.46,2],[6,4,587.33,1],[6,5,523.25,3],[7,3,587.33,1],[7,4,523.25,4]];
+ /* iPhone 靜音鍵會擋 Web Audio：宣告為播放型音訊，並用無聲音軌把音訊模式切成媒體播放 */
+ let silent=null;
+ function unlockIOS(){
+  try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+  if(silent)return;
+  try{const n=8000,b=new Uint8Array(44+n),v=new DataView(b.buffer),w=(o,s)=>{for(let i=0;i<s.length;i++)b[o+i]=s.charCodeAt(i)};
+   w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,'data');v.setUint32(40,n,true);b.fill(128,44);
+   silent=new Audio(URL.createObjectURL(new Blob([b],{type:'audio/wav'})));silent.loop=true;silent.setAttribute('playsinline','');silent.play().catch(()=>{silent=null})}catch(e){silent=null}
+ }
+ function init(){
+  unlockIOS();
+  if(c){if(c.state!='running')c.resume().catch(()=>{});return}
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+  c=new AC();
+  const comp=c.createDynamicsCompressor();comp.threshold.value=-16;comp.ratio.value=4;comp.connect(c.destination);
+  master=c.createGain();master.gain.value=on?1:0;master.connect(comp);
+  mus=c.createGain();mus.gain.value=.34;mus.connect(master);
+  fx=c.createGain();fx.gain.value=.75;fx.connect(master);
+  const d=c.createDelay(1);d.delayTime.value=E8*1.5;const fb=c.createGain();fb.gain.value=.28;const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1800;
+  wet=c.createGain();wet.gain.value=.3;wet.connect(d);d.connect(lp);lp.connect(fb);fb.connect(d);lp.connect(mus);
+  nb=c.createBuffer(1,c.sampleRate,c.sampleRate);const a=nb.getChannelData(0);let x=12345;for(let i=0;i<a.length;i++){x=(x*1103515245+12345)&0x7fffffff;a[i]=x/0x3fffffff-1}
+  next=c.currentTime+.1;if(on)start();
+ }
+ function env(t,a,d,v,dest){const g=c.createGain();g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d);g.connect(dest);return g}
+ function tone(f,t,d,v,type,dest,a=.005,bend){const o=c.createOscillator();o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(bend)o.frequency.exponentialRampToValueAtTime(bend,t+d);o.connect(env(t,a,d,v,dest||fx));o.start(t);o.stop(t+a+d+.05)}
+ function noise(t,d,v,ft,freq,dest,a=.005,Q=1,to){const s=c.createBufferSource();s.buffer=nb;s.loop=true;const f=c.createBiquadFilter();f.type=ft;f.frequency.setValueAtTime(freq,t);if(to)f.frequency.exponentialRampToValueAtTime(to,t+d);f.Q.value=Q;s.connect(f);f.connect(env(t,a,d,v,dest||fx));s.start(t,(t*7.3)%.9);s.stop(t+a+d+.05)}
+ function keys(f,t,d,v){tone(f,t,d,v,'sine',mus,.012);tone(f*2,t,d*.5,v*.22,'sine',mus,.006);const g=c.createGain();g.gain.value=.5;tone(f,t,d,v*.5,'triangle',wet,.012)}
+ function playStep(t){
+  const b=bar%8,ch=CH[b];
+  if(step==0||step==3||step==6&&b%2==1)ch.forEach((f,i)=>keys(f,t+i*.012,step==0?1.5:.8,.075));
+  if(step==0)tone(BASS[b],t,.75,.28,'sine',mus,.012);
+  if(step==4)tone(BASS[b]*1.5,t,.5,.17,'sine',mus,.012);
+  noise(t+(step%2?E8*.16:0),.05,step%4==2?.05:.022,'highpass',6500,mus);
+  if(step==2||step==6)noise(t,.09,.03,'bandpass',2200,mus,.004,.8);
+  if(bar>=4)MEL.forEach(m=>{if(m[0]==b&&m[1]==step){tone(m[2],t,E8*m[3]*1.3,.075,'sine',mus,.012);tone(m[2],t,E8*m[3]*1.2,.05,'triangle',wet,.012)}});
+ }
+ function tick(){if(!c||c.state!='running')return;while(next<c.currentTime+.3){playStep(next);next+=E8;if(++step==8){step=0;bar++}}}
+ function start(){if(!timer){next=Math.max(next,c.currentTime+.05);timer=setInterval(tick,90)}}
+ function stop(){clearInterval(timer);timer=0}
+ let rid=null;const still=()=>matchMedia('(prefers-reduced-motion:reduce)').matches;const now=()=>c.currentTime,ok=()=>c&&on;
+ const S={
+  init,
+  isOn:()=>on,
+  toggle(){init();on=!on;try{localStorage.setItem('sound',on?'on':'off')}catch(e){}if(c){master.gain.setTargetAtTime(on?1:0,now(),.03);on?start():stop()}return on},
+  hide(h){if(!c)return;if(h){stop();c.suspend();if(silent)silent.pause()}else{c.resume().then(()=>{if(on)start()}).catch(()=>{});if(silent)silent.play().catch(()=>{})}},
+  duck(d){if(c)mus.gain.setTargetAtTime(d?.14:.34,now(),.2)},
+  ride(T1,T2){if(!ok()||still())return;const t=now(),o=c.createOscillator(),o2=c.createOscillator(),f=c.createBiquadFilter(),g=c.createGain();o.type='sawtooth';o2.type='square';f.type='lowpass';f.frequency.value=520;
+   for(const[v,m] of [[o,1],[o2,1.5]]){v.frequency.setValueAtTime(48*m,t);v.frequency.linearRampToValueAtTime(82*m,t+.55);v.frequency.setValueAtTime(82*m,t+T1);v.frequency.linearRampToValueAtTime(36*m,t+T2);v.connect(f);v.start(t)}
+   f.connect(g);g.connect(fx);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.055,t+.2);g.gain.setValueAtTime(.055,t+T1);g.gain.linearRampToValueAtTime(.03,t+T2);g.gain.linearRampToValueAtTime(.0001,t+T2+.25);mus.gain.setTargetAtTime(.015,t,.08);
+   /* 騎車配樂：原創輕快 city pop 小段，132 BPM */
+   const bus=c.createGain();bus.gain.value=.95;bus.connect(master);const B=60/132,st=t+.05;
+   const chords=[[174.61,220,261.63,329.63],[196,246.94,293.66,349.23],[164.81,196,246.94,293.66],[220,261.63,329.63,392]],roots=[87.31,98,82.41,110];
+   for(let bar=0;bar<4;bar++){const b0=st+bar*2*B,ch=chords[bar],r=roots[bar];
+    [0,1.5].forEach(o=>ch.forEach(f=>{tone(f,b0+o*B,.28,.05,'triangle',bus,.005);tone(f*2,b0+o*B,.16,.014,'sine',bus,.003)}));
+    [0,.5,1,1.5].forEach((o,i)=>tone(i%2?r*2:r,b0+o*B,.17,.2,'sawtooth',bus,.004));
+    for(let k=0;k<4;k++){const h=b0+k*.5*B;noise(h,.035,k%2?.07:.04,'highpass',7500,bus,.001)}
+    tone(120,b0,.11,.34,'sine',bus,.002,50);tone(120,b0+B,.11,.34,'sine',bus,.002,50);
+    noise(b0+B,.1,.18,'bandpass',1900,bus,.002,.8)}
+   [[0,659.25,.5],[.5,783.99,.5],[1,880,.75],[2,783.99,.5],[2.5,880,.5],[3,987.77,.75],[4,1046.5,.5],[4.5,987.77,.5],[5,880,.5],[5.5,783.99,.5],[6,880,.5],[6.5,987.77,.5],[7,1046.5,.75]].forEach(n=>{tone(n[1],st+n[0]*B,n[2]*B,.075,'square',bus,.006);tone(n[1]/2,st+n[0]*B,n[2]*B,.035,'sine',bus,.006)});
+   const end=st+8*B;[174.61,220,261.63,329.63,523.25,659.25].forEach(f=>tone(f,end,1,.075,'triangle',bus,.006));tone(87.31,end,.8,.22,'sine',bus,.004);noise(end,.45,.1,'highpass',6000,bus,.002);
+   S.duck(true);mus.gain.cancelScheduledValues(t);mus.gain.setTargetAtTime(.015,t,.08);rid={o,o2,g,bus};
+   noise(t+T2-.25,.3,.05,'highpass',3500,fx,.05)},
+  rideStop(){if(!c)return;if(rid){const t=now();rid.g.gain.cancelScheduledValues(t);rid.g.gain.setTargetAtTime(.0001,t,.03);rid.bus.gain.cancelScheduledValues(t);rid.bus.gain.setTargetAtTime(.0001,t,.06);rid.o.stop(t+.2);rid.o2.stop(t+.2);rid=null}S.duck(false)},
+  chime(){if(ok()){const t=now();tone(1046.5,t,.45,.14,'sine');tone(830.61,t+.28,.65,.14,'sine')}},
+  scan(){if(ok()){const t=now();tone(1760,t,.07,.13,'square',fx,.001);tone(2093,t+.07,.09,.1,'square',fx,.001)}},
+  till(){if(ok()){const t=now();basket.forEach((_,i)=>{if(i<8)tone(1760,t+i*.09,.05,.08,'square',fx,.001)});const e=t+Math.min(basket.length,8)*.09;tone(2093,e,.5,.12,'sine');tone(2637,e+.08,.6,.1,'sine');noise(e,.05,.2,'bandpass',3000,fx,.001,1)}},
+  click(){if(ok())tone(1250,now(),.035,.16,'triangle',fx,.002,850)},
+  off(){if(ok())tone(420,now(),.11,.2,'sine',fx,.003,210)},
+  page(){if(ok())noise(now(),.09,.2,'bandpass',1500,fx,.012,.7,3200)},
+  next(){if(ok()){const t=now();tone(523.25,t,.14,.17,'sine');tone(783.99,t+.08,.22,.17,'sine')}},
+  undo(){if(ok()){const t=now();tone(620,t,.09,.15,'triangle',fx,.003);tone(440,t+.07,.13,.15,'triangle',fx,.003)}},
+  cap(){if(ok()){const t=now();noise(t,.02,.42,'bandpass',3400,fx,.001,2);tone(170,t,.07,.3,'sine',fx,.002,95);noise(t+.07,.015,.18,'bandpass',4600,fx,.001,3)}},
+  brush(){if(ok()){const t=now();noise(t,.2,.26,'bandpass',1700,fx,.05,.6,4700)}},
+  snip(){if(ok()){const t=now();noise(t,.03,.42,'highpass',4200,fx,.001);noise(t+.09,.04,.5,'highpass',3200,fx,.001);tone(2400,t+.09,.03,.08,'square',fx,.001)}},
+  spray(){if(ok())noise(now(),.3,.17,'highpass',5200,fx,.015)},
+  ting(){if(ok()){const t=now();tone(1760,t,.45,.1,'sine',fx,.002);tone(2637,t,.3,.07,'sine',fx,.002);tone(4186,t+.01,.14,.035,'sine',fx,.002)}},
+  pencil(){if(ok()){const t=now();noise(t,.07,.2,'bandpass',3000,fx,.004,1.5);noise(t+.09,.09,.17,'bandpass',3500,fx,.004,1.5)}},
+  shimmer(){if(ok()){const t=now();[659.25,783.99,987.77,1318.51].forEach((f,i)=>tone(f,t+i*.06,.32,.11,'sine'))}},
+  slide(v){if(!ok())return;const n=performance.now(),q=Math.round(v/4);if(q==lastV||n-lastTick<35)return;lastV=q;lastTick=n;tone(420+v*7,now(),.022,.1,'triangle',fx,.001)},
+  scratch(b){if(!ok())return;if(b&&!scr){const s=c.createBufferSource();s.buffer=nb;s.loop=true;const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=3600;f.Q.value=1.1;const g=c.createGain();g.gain.value=0;g.gain.setTargetAtTime(.13,now(),.015);s.connect(f);f.connect(g);g.connect(fx);s.start();scr={s,g}}else if(!b&&scr){scr.g.gain.setTargetAtTime(0,now(),.02);scr.s.stop(now()+.1);scr=null}},
+  roll(){if(!ok())return;S.duck(true);const t=now();for(let i=0;i<9;i++)noise(t+i*.055,.03,.08+i*.018,'bandpass',900+i*170,fx,.002,1.5)},
+  verdict(k){if(!ok())return;const t=now()+.03;
+   tone(120,t,.26,.55,'sine',fx,.002,48);noise(t,.07,.42,'lowpass',1500,fx,.001);
+   const sad=['wreck','clown'].includes(k),eerie=k=='ghost'||k=='goth'||k=='yandere';
+   if(sad){[[293.66,277.18],[277.18,261.63],[261.63,246.94],[246.94,196]].forEach((n,i)=>tone(n[0],t+.3+i*.3,i==3?.75:.25,.13,'sawtooth',fx,.02,n[1]))}
+   else if(eerie){[220,233.08,329.63].forEach(f=>tone(f,t+.28,1.5,.09,'triangle',fx,.15));tone(1318.51,t+.5,1.2,.035,'sine',fx,.2,1244.51)}
+   else{[523.25,659.25,783.99,1046.5].forEach((f,i)=>{tone(f,t+.26+i*.075,.75,.12,'sine');tone(f*2,t+.26+i*.075,.3,.03,'sine')})}
+  }
+ };
+ return S;
+})();
+for(const ev of ['touchend','click','keydown'])document.addEventListener(ev,()=>Snd.init(),true);
+document.addEventListener('visibilitychange',()=>Snd.hide(document.hidden));
+const SFX={lip:'cap',eye:'pencil',lens:'click',brow:'pencil',cheek:'brush',base:'brush',hair:'spray',acc:'ting',misc:'click'};
+function sndLabel(){document.querySelectorAll('.sndBtn').forEach(b=>{b.textContent=Snd.isOn()?'聲音 開':'聲音 關';b.setAttribute('aria-pressed',Snd.isOn())})}
+document.querySelectorAll('.sndBtn').forEach(b=>{b.onclick=()=>{Snd.toggle();sndLabel()}});sndLabel();
+/* 啟動 */
+refreshDex();show('intro');
+</script>
+
+</body></html>
