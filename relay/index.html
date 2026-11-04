@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
-<meta name="description" content="六棒 900 公尺，一場定勝負。手速多快就跑多快，交棒別掉，跟全部人比時間。">
+<meta name="description" content="四棒 400 公尺，一場定勝負。手速多快就跑多快，交棒別掉，跟全部人比時間。">
 <link rel="canonical" href="https://happydog.tw/relay/">
 <style>[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0}:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}</style>
 <title>大隊接力</title>
@@ -92,7 +92,7 @@ td:nth-child(2){text-align:right}td:nth-child(3){text-align:right;font-weight:90
           </ul>
         </div>
         <button class="cta" id="go">站上起跑線</button>
-        <div class="note"><b>總排行榜　六棒 900 公尺</b><ol class="lb" id="lbHome"></ol></div>
+        <div class="note"><b>總排行榜　四棒 400 公尺</b><ol class="lb" id="lbHome"></ol></div>
       </div>
     </div>
 
@@ -121,14 +121,12 @@ td:nth-child(2){text-align:right}td:nth-child(3){text-align:right;font-weight:90
 (()=>{
 const $=id=>document.getElementById(id);
 const cv=$('c'),g=cv.getContext('2d');
-const PX=16,LEG=150,LEGS=6,FINISH=LEG*LEGS,ZONE=10,MARK=9,NEED=10,CATCH=7.2;
+const PX=16,LEG=100,LEGS=4,FINISH=LEG*LEGS,ZONE=10,MARK=9,NEED=10,CATCH=7.2;
 const REDUCED=matchMedia('(prefers-reduced-motion:reduce)').matches;
 const ROSTER=[
  {n:'阿翔',r:'體育股長',top:9.1,hair:'spike',hc:'#1b1b1f',sk:'#e9b78e'},
  {n:'小婷',r:'排球隊',top:8.5,hair:'pony',hc:'#2a1a14',sk:'#f2c7a4'},
  {n:'阿豪',r:'午餐吃兩個便當',top:7.6,hair:'short',hc:'#222',sk:'#e7b48a',wide:1},
- {n:'眼鏡仔',r:'學藝股長',top:8.0,hair:'short',hc:'#34241c',sk:'#f4d0b2',glasses:1},
- {n:'佳穎',r:'風紀股長',top:8.4,hair:'bob',hc:'#1d1512',sk:'#f0c6a2'},
  {n:'阿凱',r:'校隊，最後一棒',top:9.5,hair:'spike',hc:'#3a2415',sk:'#d9a073',band:1},
 ];
 const ROUNDS=[
@@ -315,8 +313,8 @@ function endScreen(){
   const hasNext=win&&G.round<ROUNDS.length-1;
   if(G.drops>=2){title='稱號：掉棒戰犯';say=win?'掉了還贏，對手也不太行。':'導師：「回去全班練交棒，今天不用午休。」'}
   else if(win&&G.round===ROUNDS.length-1){title=G.drops?'稱號：全校冠軍':'稱號：零掉棒全校冠軍';say='導師：「這禮拜飲料我請，週考還是要考。」'}
-  else if(G.perfect>=4){title='稱號：交棒之神';say=win?'導師：「這才叫練過。」':'交棒沒輸人，輸在腿。按快一點。'}
-  else if(G.over>=4){title='稱號：超車王';say=win?'隔壁班導師臉色不太好。':'超了很多次，也被超了很多次。'}
+  else if(G.perfect>=3){title='稱號：交棒之神';say=win?'導師：「這才叫練過。」':'交棒沒輸人，輸在腿。按快一點。'}
+  else if(G.over>=3){title='稱號：超車王';say=win?'隔壁班導師臉色不太好。':'超了很多次，也被超了很多次。'}
   else if(win){title='稱號：班級之光';say='導師：「下一場對手會更快，別太開心。」'}
   else if(G.place===4){title='稱號：全班交互蹲';say='導師：「最後一名，今天放學全班留下來練。」'}
   else{title='稱號：差一點';say='導師：「差一點就是輸。再來一次。」'}
@@ -611,13 +609,13 @@ function drawPeople(){
   /* 其他班的等待者與跑者 */
   if(!G.P){
     ROSTER.slice(0,2).forEach((c,i)=>person(X(i?4:0),LANES[3].y,1,c,'#fbfaf3',{pose:i?'stand':'wait',baton:!i}));
-    LANES.slice(0,3).forEach((l,i)=>person(X(1+i),l.y,l.s,ROSTER[(i+2)%6],RIVALC[i],{pose:'stand'}));
+    LANES.slice(0,3).forEach((l,i)=>person(X(1+i),l.y,l.s,ROSTER[(i+2)%ROSTER.length],RIVALC[i],{pose:'stand'}));
     return;
   }
   const P=G.P;
   G.rivals.forEach(r=>{
-    const l=LANES[r.lane],cfg=ROSTER[(r.leg+r.lane*2)%6];
-    for(let k=r.leg+1;k<LEGS;k++){const wx=k*LEG-ZONE,px=X(wx);if(px>-40&&px<W+40)person(px,l.y,l.s,ROSTER[(k+r.lane*2)%6],r.c,{pose:'wait'})}
+    const l=LANES[r.lane],cfg=ROSTER[(r.leg+r.lane*2)%ROSTER.length];
+    for(let k=r.leg+1;k<LEGS;k++){const wx=k*LEG-ZONE,px=X(wx);if(px>-40&&px<W+40)person(px,l.y,l.s,ROSTER[(k+r.lane*2)%ROSTER.length],r.c,{pose:'wait'})}
     const px=X(r.x);
     if(px>-40&&px<W+50){
       if(r.hold>0){rect(X(r.fallen+.8),l.y-3,14*l.s,4,'#f4c430')}
@@ -726,7 +724,7 @@ $('mute').addEventListener('click',()=>{muted=!muted;try{localStorage.setItem('r
 syncMute();
 /* ---------- 排行榜：happydog.tw 共用的 Supabase。分數越高越前面，所以存 100000 減百分之一秒 ---------- */
 function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
-const LB={url:'https://jcqjuxdfauoogggvmvsb.supabase.co/rest/v1/rpc/',key:'sb_publishable_lxibDGz3bN4P5lnKFNeraA_9PXimKhn',game:'relay'};
+const LB={url:'https://jcqjuxdfauoogggvmvsb.supabase.co/rest/v1/rpc/',key:'sb_publishable_lxibDGz3bN4P5lnKFNeraA_9PXimKhn',game:'relay-400'};
 const lbOnline=/(^|\.)happydog\.tw$|^nosmokeagain\.github\.io$/i.test(location.hostname);
 function lbPlayer(){let id=store('hd_player')||'';if(!/^[0-9a-f-]{36}$/.test(id)){id=crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g,()=>(crypto.getRandomValues(new Uint8Array(1))[0]&15).toString(16));store('hd_player',id)}return id}
 async function lbCall(fn,body){const c=new AbortController(),to=setTimeout(()=>c.abort(),8000);try{const r=await fetch(LB.url+fn,{method:'POST',headers:{apikey:LB.key,'Content-Type':'application/json'},body:JSON.stringify(body),signal:c.signal});if(!r.ok)throw new Error(r.status);return await r.json()}finally{clearTimeout(to)}}
