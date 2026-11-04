@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:meta-->
+<meta name="description" content="六個人一句話，有一個人拿到不同的詞。你可能就是那個人。">
+<link rel="canonical" href="https://happydog.tw/undercover/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; rx=&quot;32&quot; fill=&quot;#111&quot;/&gt;&lt;text x=&quot;32&quot; y=&quot;45&quot; font-size=&quot;36&quot; text-anchor=&quot;middle&quot; fill=&quot;#fff&quot; font-family=&quot;sans-serif&quot; font-weight=&quot;900&quot;&gt;3&lt;/text&gt;&lt;/svg&gt;">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="三分鐘遊樂場">
+<meta property="og:title" content="誰是臥底｜三分鐘遊樂場">
+<meta property="og:description" content="六個人一句話，有一個人拿到不同的詞。你可能就是那個人。">
+<meta property="og:url" content="https://happydog.tw/undercover/">
+<meta property="og:image" content="https://happydog.tw/undercover/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/site:meta-->
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>誰是臥底</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&family=Noto+Sans+TC:wght@500;700;900&display=swap">
+<style>
+/* Layout: a redacted case file. Your word sits under a censor bar, suspects are rows you can mark, and the stamp comes down last. */
+:root{
+  --ground:#0F4A47; --ground-soft:#A9D2C8; --paper:#FBE9E1; --line:#E8CBBE; --hover:#F6DDD2;
+  --ink:#10201F; --ink-soft:#5D6664; --stamp:#D8321F; --marker:#FFD84D; --white:#FFFFFF;
+  --display:"Noto Serif TC","Songti TC",serif;
+  --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--ground);color:var(--ink);font:500 16px/1.55 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 28px}
+main{max-width:480px;margin:0 auto;display:grid;gap:14px;min-width:0}
+main>*{min-width:0}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;color:var(--paper)}
+h1{margin:0;font:900 clamp(36px,11vw,50px)/1 var(--display)}
+.meta{font-size:13px;font-weight:700;color:var(--ground-soft);text-align:right;font-variant-numeric:tabular-nums}
+.modes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px}
+select,.mini{min-height:44px;border:1.5px solid var(--ground-soft);background:transparent;color:var(--paper);font:700 14px var(--body);padding:0 8px;cursor:pointer;width:100%;min-width:0}
+select option{color:var(--ink);background:var(--white)}
+.mini:disabled{opacity:.55;cursor:default}
+.file{background:var(--paper);padding:16px;display:grid;gap:10px;min-width:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--ground)}
+.wordcard{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;grid-template-columns:auto minmax(0,1fr);align-items:center;padding:8px 12px;border-bottom:3px solid var(--ink)}
+.wordcard .word{font-size:clamp(20px,6vw,24px);padding:6px 10px;min-height:46px}
+#table,#comeback{scroll-margin-top:76px}
+.votebar{position:sticky;bottom:env(safe-area-inset-bottom,0px);display:grid;gap:8px;background:var(--paper);z-index:5}
+.label{font-size:12px;font-weight:700;color:var(--ink-soft);letter-spacing:.08em}
+.word{appearance:none;border:0;background:var(--ink);color:var(--ink);font:900 clamp(30px,9vw,40px)/1.2 var(--display);padding:12px 14px;width:100%;text-align:left;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;overflow-wrap:anywhere}
+.word.peek,.word.open{background:var(--marker)}
+.word:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--stamp);outline-offset:2px}
+.note{margin:0;font-size:14px;color:var(--ink-soft)}
+.note.live{font-weight:900;color:var(--ink);min-height:1.6em;font-size:15px}
+.rows{display:grid;gap:0}
+.row{appearance:none;width:100%;background:none;border:0;border-top:1.5px solid var(--line);padding:11px 4px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;text-align:left;color:var(--ink);font:inherit}
+.row:first-child{border-top:0}
+.row .who{font-size:13px;font-weight:700;color:var(--ink-soft);grid-column:1}
+.row .say{grid-column:1;font-size:17px;font-weight:700;line-height:1.4;overflow-wrap:anywhere;min-width:0}
+.row .say2{grid-column:1;font-size:15px;font-weight:700;color:var(--ground);overflow-wrap:anywhere;min-width:0}
+.row .side{grid-column:2;grid-row:1 / span 3;font-size:13px;font-weight:700;color:var(--ink-soft);text-align:right;display:grid;justify-items:end;gap:5px}
+.row.you .who{color:var(--ground)}
+.row.pending .say{color:var(--ink-soft);font-weight:500;font-size:15px}
+button.row{cursor:pointer}
+button.row:hover{background:var(--hover)}
+.row.sel,.row.sel:hover{background:var(--marker)}
+.row.out .say{text-decoration:line-through;text-decoration-color:var(--stamp);text-decoration-thickness:2px}
+.stamp{display:inline-block;border:2.5px solid var(--stamp);color:var(--stamp);font:900 13px/1 var(--display);padding:4px 7px;transform:rotate(-5deg)}
+.stamp.pop{animation:stamp .28s cubic-bezier(.2,1.5,.5,1) both}
+@keyframes stamp{from{transform:rotate(-5deg) scale(2.6);opacity:0}to{transform:rotate(-5deg) scale(1);opacity:1}}
+.tally{font-variant-numeric:tabular-nums}
+.tally.bump{animation:bump .25s ease-out}
+@keyframes bump{50%{transform:scale(1.5);color:var(--stamp)}}
+.report{appearance:none;background:none;border:0;padding:0;font:500 12px var(--body);color:var(--ink-soft);text-decoration:underline;cursor:pointer}
+.say-form{display:grid;gap:8px}
+.say-form label{font-size:15px;font-weight:900}
+input{font:700 16px var(--body);color:var(--ink);background:var(--white);border:2px solid var(--ink);padding:0 12px;min-height:50px;width:100%;min-width:0}
+.err{margin:0;color:var(--stamp);font-size:14px;font-weight:700;min-height:1.4em}
+.go{min-height:52px;width:100%;border:0;background:var(--stamp);color:var(--white);font:900 16px var(--body);cursor:pointer;padding:0 10px}
+.go:disabled{background:var(--line);color:var(--ink-soft);cursor:default}
+.go.alt{background:var(--paper);color:var(--ink)}
+.go.line{background:var(--white);color:var(--ink);border:2px solid var(--ink)}
+.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.conf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.conf button{min-height:48px;border:2px solid var(--ink);background:var(--white);color:var(--ink);font:700 14px/1.25 var(--body);cursor:pointer;padding:4px}
+.conf button[aria-pressed="true"]{background:var(--ink);color:var(--marker)}
+.conf small{display:block;font-size:12px;font-weight:500}
+.verdict{background:var(--marker);padding:18px;display:grid;gap:8px;min-width:0}
+.verdict .t{font:900 clamp(30px,9vw,42px)/1.15 var(--display);text-wrap:balance}
+.verdict .d{font-size:16px;font-weight:700;overflow-wrap:anywhere}
+.verdict .pts{font-size:14px;font-weight:900;color:var(--stamp)}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding-top:10px;border-top:2px solid var(--ink)}
+.pair b{display:block;font:900 22px/1.25 var(--display);overflow-wrap:anywhere}
+.pair span{font-size:12px;font-weight:700}
+.tut{background:var(--marker);padding:14px 16px;display:grid;gap:8px;font-size:14px}
+.tut b.h{font:900 19px var(--display)}
+.tut ul{margin:0;padding:0;list-style:none;display:grid;gap:3px}
+.tut .go{min-height:44px;background:var(--ink);color:var(--marker)}
+.banner{background:var(--stamp);color:var(--white);padding:12px 16px;font-weight:900;overflow-wrap:anywhere}
+.share img{display:block;width:100%;height:auto}
+textarea{width:100%;min-height:90px;font:500 14px var(--body);padding:8px;border:2px solid var(--ink);background:var(--white);color:var(--ink);resize:none}
+details{background:var(--paper);padding:12px 16px}
+summary{font-weight:900;cursor:pointer}
+.mine{display:grid;gap:8px;padding-top:10px;font-size:14px}
+.mine div{border-top:1.5px solid var(--line);padding-top:8px;overflow-wrap:anywhere}
+.mine small{display:block;color:var(--ink-soft)}
+.board{display:grid;gap:6px;font-size:14px}
+.board b{font-weight:900}
+.demo{font-size:12px;color:var(--ground-soft);margin:0;line-height:1.5}
+@media (prefers-reduced-motion:reduce){.stamp.pop,.tally.bump{animation:none}}
+</style>
+</head>
+<body>
+
+
+<main>
+  <header class="top">
+    <h1>誰是臥底</h1>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <div class="modes">
+    <select id="cat" aria-label="題目類別"></select>
+    <button class="mini" id="dailyBtn">每日一題</button>
+    <button class="mini" id="mute" aria-label="切換音效"></button>
+  </div>
+
+  <section class="tut" id="tut" hidden>
+    <b class="h">怎麼玩</b>
+    <div>六個人，五個拿到同一個詞，一個拿到很像的詞。你不知道自己是哪邊。每人講一句話，投出臥底。</div>
+    <ul>
+      <li>假設你的詞是「雞排」：</li>
+      <li>太白：裹粉炸的一大片雞肉</li>
+      <li>太虛：這個很好</li>
+      <li>剛好：下班經過很難不買</li>
+    </ul>
+    <button class="go" id="tutOk">知道了</button>
+  </section>
+
+  <div class="banner" id="banner" hidden></div>
+  <section class="file" id="fail" hidden>
+    <b id="failText"></b>
+    <button class="go" id="retry">再試一次</button>
+  </section>
+  <section class="verdict" id="verdict" hidden></section>
+  <div class="actions" id="actions" hidden></div>
+  <section class="file share" id="share" hidden></section>
+
+  <section class="file" id="comeback" hidden>
+    <span class="label">你被抓了，還有一次機會</span>
+    <b>自己打出多數人的詞，打中就翻盤。只有一次機會。</b>
+    <form class="say-form" id="backForm">
+      <label for="backGuess">多數人拿到的詞是</label>
+      <input id="backGuess" maxlength="12" autocomplete="off" placeholder="從他們講的話推理">
+      <p class="err" id="backErr"></p>
+      <button class="go" type="submit">就是這個</button>
+    </form>
+  </section>
+
+  <section class="file wordcard">
+    <span class="label" id="wordLabel"></span>
+    <button class="word" id="word" aria-label="按住偷看你的詞"></button>
+  </section>
+
+  <section class="file" id="table">
+    <span class="label" id="tableLabel"></span>
+    <p class="note" id="note"></p>
+    <p class="note live" id="live" hidden aria-live="polite"></p>
+    <div class="rows" id="rows"></div>
+    <form class="say-form" id="form" hidden>
+      <label for="say">輪到你，用一句話描述你的詞</label>
+      <input id="say" maxlength="30" autocomplete="off" placeholder="講太白會被抓，太虛也會被抓">
+      <label for="nick" class="label">暱稱（會顯示給之後的玩家）</label>
+      <input id="nick" maxlength="8" autocomplete="off" placeholder="匿名網友">
+      <p class="err" id="err"></p>
+      <button class="go" id="sayBtn" type="submit">送出這句話</button>
+    </form>
+    <div class="votebar">
+      <div class="conf" id="conf" hidden>
+        <button id="confCasual" aria-pressed="true">隨便猜<small>對 +1，錯 0</small></button>
+        <button id="confSure" aria-pressed="false">有把握<small>對 +3，錯 -2</small></button>
+      </div>
+      <button class="go" id="voteBtn" disabled hidden></button>
+      <button class="go line" id="skipBtn" hidden>直接看結果</button>
+    </div>
+  </section>
+
+  <details id="mineBox">
+    <summary>我的句子</summary>
+    <div class="mine" id="mine"></div>
+  </details>
+
+  <section class="file" id="boardBox" hidden>
+    <span class="label">昨日榜</span>
+    <div class="board" id="board"></div>
+  </section>
+
+  <p class="demo">同桌的句子來自之前的玩家，人數不足時由標記「系統角色」的角色補上。句子通過審核後才會給別人看。</p>
+</main>
+
+<script>
+const API={url:'https://jcqjuxdfauoogggvmvsb.supabase.co',key:'sb_publishable_lxibDGz3bN4P5lnKFNeraA_9PXimKhn'};
+const RANKS=[[0,"路人"],[5,"線民"],[15,"刑警"],[30,"探長"],[50,"神探"]];
+const rankOf=s=>[...RANKS].reverse().find(r=>s>=r[0])[1];
+const nextRank=s=>RANKS.find(r=>s<r[0]);
+const SAY_ERR={short:"至少寫兩個字。",long:"最多 30 個字。",word:"不能直接講出你的詞，換個說法。",bad:"這句有不雅用字，換個說法。",private:"不能放電話、網址或帳號。",empty:"這句太空泛，多給一點線索。",too_many:"今天寫太多句了，明天再來。"};
+const $=id=>document.getElementById(id);
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+let stats={played:0,right:0,score:0,streak:0,best:0},reported=store.get("wd-reported",[]),muted=store.get("wd-mute",false);
+let S=null,pick=null,sure=false,skip=false,dailyDone=false,mineList=[];
+
+function player(){
+  let id="";try{id=localStorage.getItem("hd_player")||""}catch{}
+  id=id.replace(/"/g,"");
+  if(!/^[0-9a-f-]{36}$/.test(id)){
+    id=crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g,()=>(crypto.getRandomValues(new Uint8Array(1))[0]&15).toString(16));
+    try{localStorage.setItem("hd_player",id)}catch{}
+  }
+  return id;
+}
+async function rpc(fn,body){
+  const c=new AbortController(),to=setTimeout(()=>c.abort(),10000);
+  try{
+    const r=await fetch(`${API.url}/rest/v1/rpc/${fn}`,{method:"POST",headers:{apikey:API.key,"Content-Type":"application/json"},body:JSON.stringify(body),signal:c.signal});
+    if(!r.ok)throw new Error("http "+r.status);
+    return await r.json();
+  }finally{clearTimeout(to)}
+}
+function fail(msg){
+  $("failText").textContent=msg||"連不上伺服器，請確認網路後再試。";
+  $("fail").hidden=false;
+}
+
+/* Sound and vibration */
+const Fx={ctx:null,
+  on(){if(muted)return null;if(!this.ctx){try{this.ctx=new(window.AudioContext||window.webkitAudioContext)()}catch{}}return this.ctx},
+  tone(f,d=.08,type="square",v=.04){const c=this.on();if(!c)return;const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(v,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);o.connect(g).connect(c.destination);o.start();o.stop(c.currentTime+d+.01)},
+  stamp(){const c=this.on();if(!c)return;this.tone(110,.22,"triangle",.3);this.tone(70,.3,"sine",.3);try{navigator.vibrate&&navigator.vibrate(40)}catch{}},
+  buzz(ms=12){if(!muted){try{navigator.vibrate&&navigator.vibrate(ms)}catch{}}}
+};
+
+function renderMute(){$("mute").textContent=muted?"音效關":"音效開"}
+function renderMeta(total){if(total)S_total=total;$("meta").textContent=stats.played?`${rankOf(stats.score)}・${stats.score} 分・連勝 ${stats.streak||0}`:`題庫 ${S_total||100} 組`}
+let S_total=0;
+function renderDaily(){$("dailyBtn").textContent=dailyDone?"今日已玩":"每日一題";$("dailyBtn").disabled=dailyDone}
+function renderMine(){
+  const m=$("mine");m.innerHTML="";
+  if(!mineList.length){const d=document.createElement("div");d.textContent="玩完一題，這裡會記下你的句子，之後顯示它騙過多少人。";m.append(d);return}
+  const st={pending:"審核中",live:"上線中",rejected:"未通過審核",hidden:"被檢舉下架"};
+  mineList.forEach(x=>{const d=document.createElement("div");d.textContent="「"+x.text+"」";const s=document.createElement("small");
+    const rate=x.shown?`${x.shown} 人讀過，騙過 ${Math.round((1-x.suspected/x.shown)*100)}%`:"還沒有人讀過";
+    s.textContent=`${x.word}・${st[x.status]||""}・${rate}`;d.append(s);m.append(d)});
+}
+function renderBoard(b){
+  const box=$("boardBox");box.hidden=true;
+  if(!b||(!b.best&&!b.worst))return;
+  const el=$("board");el.innerHTML="";
+  const row=(k,v)=>{const d=document.createElement("div");const s=document.createElement("b");s.textContent=k+"：";d.append(s,v);el.append(d)};
+  row("詞組",`${b.a}／${b.b}`);
+  if(b.best)row("最會騙人",`「${b.best.text}」— ${b.best.name}`);
+  if(b.worst)row("最爛的一句",`「${b.worst.text}」— ${b.worst.name}`);
+  box.hidden=false;
+}
+async function loadHome(){
+  try{
+    const h=await rpc("uc_home",{p_player:player()});
+    stats=h.stats;dailyDone=h.daily_done;mineList=h.mine;
+    const sel=$("cat"),cur=store.get("wd-cat","全部");sel.innerHTML="";
+    [{cat:"全部",n:h.total},...h.cats].forEach(c=>{const o=document.createElement("option");o.value=c.cat;o.textContent=`${c.cat}（${c.n}）`;sel.append(o)});
+    sel.value=[...sel.options].some(o=>o.value===cur)?cur:"全部";
+    renderMeta(h.total);renderDaily();renderMine();renderBoard(h.board);
+  }catch{}
+}
+
+function reset(){
+  ["verdict","actions","share","comeback","form","voteBtn","conf","skipBtn","live","banner","fail"].forEach(id=>$(id).hidden=true);
+  $("say").value="";$("err").textContent="";$("rows").innerHTML="";$("word").textContent="";$("word").classList.remove("open","peek");
+}
+async function start(mode,challenge){
+  reset();pick=null;sure=false;skip=false;S=null;
+  $("note").textContent="發牌中……";
+  let r;
+  try{r=await rpc("uc_start",{p_player:player(),p_mode:mode,p_cat:mode==="random"?$("cat").value||null:null,p_challenge:challenge||null})}
+  catch{return fail()}
+  if(r.error==="too_fast"){await wait(1100);return start(mode,challenge)}
+  if(r.error==="daily_done"){dailyDone=true;renderDaily();return start("random")}
+  if(r.error==="bad_challenge"){history.replaceState(null,"",location.pathname);return start("random")}
+  if(r.error)return fail("現在玩的人太多，等一下再試。");
+  S={...r,seats:r.seats,mine:null,shown:0,phase:"read",tally:{},culprit:null,result:null};
+  stats=r.stats;renderMeta();
+  if(r.friend){$("banner").hidden=false;$("banner").textContent=`${r.friend} 挑戰你：他的句子在這桌，他可能就是臥底。`}
+  if(r.mode==="daily"){$("banner").hidden=false;$("banner").textContent="每日一題：今天全站同一組詞，只能玩一次。"}
+  $("word").textContent=S.word;
+  $("wordLabel").textContent="按住偷看";
+  $("note").textContent="你不知道自己是不是臥底。聽別人怎麼講，再決定要講多白。";
+  renderRows();
+  const me=S;
+  await speak(3,me);if(S!==me)return;
+  S.phase="say";$("form").hidden=false;renderRows();
+}
+async function speak(until,me){
+  while(S===me&&S.shown<until){await wait(S.shown?420:150);if(S!==me)return;S.shown++;Fx.tone(520,.05);renderRows()}
+}
+const showWord=v=>{if(S&&S.phase!=="end"){$("word").classList.toggle("peek",v);if(v){Fx.tone(740,.05);Fx.buzz()}}};
+{const w=$("word");
+w.addEventListener("pointerdown",e=>{e.preventDefault();showWord(true)});
+["pointerup","pointerleave","pointercancel","blur"].forEach(t=>w.addEventListener(t,()=>showWord(false)));
+w.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();showWord(true)}});
+w.addEventListener("keyup",()=>showWord(false));
+w.addEventListener("contextmenu",e=>e.preventDefault());}
+
+/* Seat order on screen: three before you, two after. You are always index 5. */
+function people(){
+  const a=S.seats.slice(0,3),b=S.seats.slice(3);
+  return[...a,{i:5,name:"你",you:true,text:S.mine},...b];
+}
+function renderRows(){
+  if(!S)return;
+  const box=$("rows");box.innerHTML="";
+  const voting=S.phase==="vote",end=S.phase==="end",rev=S.phase==="reveal";
+  const f=S.result;
+  people().forEach((p,pos)=>{
+    if(!p.you&&pos>=S.shown)return;
+    if(p.you&&!S.mine&&S.phase!=="say")return;
+    const row=document.createElement(voting?"button":"div");
+    row.className="row"+(p.you?" you":"")+(pick===p.i&&voting?" sel":"")+(S.culprit===p.i&&(end||S.stampOut)?" out":"");
+    const who=document.createElement("span");who.className="who";who.textContent=p.name+(p.sys?"・系統角色":p.friend?"・出題者":"");
+    const say=document.createElement("span");say.className="say";
+    if(p.text)say.textContent=p.text;else{say.textContent="想一句話……";row.classList.add("pending")}
+    row.append(who,say);
+    const side=document.createElement("span");side.className="side";
+    if(rev||end){
+      const n=document.createElement("span");n.className="tally";n.id="t"+p.i;n.textContent=`${S.tally[p.i]||0} 票`;side.append(n);
+      if(S.culprit===p.i&&(end||S.stampOut))side.append(mkStamp("出局",S.popOut));
+      if(end&&f&&((p.you&&f.you_spy)||(!p.you&&f.spy_seat===p.i)))side.append(mkStamp("臥底",S.popSpy));
+      if(end&&p.sid){
+        const r=document.createElement("button");r.className="report";const done=reported.includes(p.sid);r.textContent=done?"已檢舉":"檢舉";r.disabled=done;
+        r.onclick=()=>{reported.push(p.sid);store.set("wd-reported",reported);r.textContent="已檢舉";r.disabled=true;rpc("uc_report",{p_player:player(),p_sid:p.sid}).catch(()=>{})};
+        side.append(r);
+      }
+    }else if(voting&&p.you)side.textContent="投自己";
+    if(side.childNodes.length)row.append(side);
+    if(voting)row.onclick=()=>{pick=p.i;Fx.tone(640,.05);Fx.buzz();renderRows();const b=$("voteBtn");b.disabled=false;b.textContent=p.you?"我才是臥底":`投 ${p.name}`};
+    box.append(row);
+  });
+  S.popOut=false;S.popSpy=false;
+}
+function mkStamp(t,pop){const s=document.createElement("span");s.className="stamp"+(pop?" pop":"");s.textContent=t;return s}
+
+$("form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const t=$("say").value.trim(),name=$("nick").value.trim();
+  if(!t){$("err").textContent=SAY_ERR.short;return}
+  const btn=$("sayBtn");btn.disabled=true;
+  let r;
+  try{r=await rpc("uc_say",{p_round:S.id,p_player:player(),p_text:t,p_name:name})}
+  catch{btn.disabled=false;$("err").textContent="送出失敗，請再試一次。";return}
+  btn.disabled=false;
+  if(r.error){$("err").textContent=SAY_ERR[r.error]||"這句不能用，換個說法。";return}
+  store.set("wd-name",name);
+  $("err").textContent="";$("form").hidden=true;Fx.tone(880,.07);Fx.buzz();
+  /* Review runs in the background; a line stays out of the pool until it passes */
+  fetch(`${API.url}/functions/v1/undercover-moderate`,{method:"POST",headers:{apikey:API.key},keepalive:true}).catch(()=>{});
+  S.mine=t;S.seats=[...S.seats,...r.seats];S.phase="after";S.shown=4;renderRows();
+  const me=S;await speak(6,me);if(S!==me)return;
+  S.phase="vote";
+  $("note").textContent="六句都講完了。投臥底，覺得是自己也可以投自己。";
+  const b=$("voteBtn");b.hidden=false;b.disabled=true;b.textContent="先選一個嫌疑人";$("conf").hidden=false;renderConf();renderRows();
+});
+function renderConf(){$("confCasual").setAttribute("aria-pressed",!sure);$("confSure").setAttribute("aria-pressed",sure)}
+$("confCasual").onclick=()=>{sure=false;renderConf()};
+$("confSure").onclick=()=>{sure=true;renderConf();Fx.tone(660,.05)};
+
+$("voteBtn").onclick=async()=>{
+  if(pick===null||!S)return;
+  const b=$("voteBtn");b.disabled=true;Fx.tone(300,.1,"square",.05);
+  let r;
+  try{r=await rpc("uc_vote",{p_round:S.id,p_player:player(),p_pick:pick,p_sure:sure})}
+  catch{b.disabled=false;$("err").textContent="";return fail("投票送不出去，請再按一次。")}
+  if(r.error)return fail("這一題已經結束了。");
+  $("fail").hidden=true;
+  reveal(r);
+};
+/* The other five votes are estimates from how past players treated these lines, so the reveal names no voters */
+async function reveal(r){
+  const me=S;
+  S.phase="reveal";S.tally={};skip=false;
+  $("voteBtn").hidden=true;$("conf").hidden=true;$("live").hidden=false;$("skipBtn").hidden=false;
+  $("note").textContent="票數依過去玩家對這些句子的懷疑程度換算，只有你那票是當場投的。";
+  renderRows();$("table").scrollIntoView({block:"start",behavior:"smooth"});
+  const seq=[];r.tally.forEach((n,i)=>{for(let k=0;k<n;k++)seq.push(i)});
+  const list=shuffle(seq);
+  await wait(300);
+  const nameOf=i=>i===5?"你":S.seats[i].name;
+  for(const i of list){
+    if(S!==me)return;
+    S.tally[i]=(S.tally[i]||0)+1;
+    if(!skip){
+      $("live").textContent=`${nameOf(i)} 再加一票`;
+      renderRows();const el=$("t"+i);if(el)el.classList.add("bump");
+      Fx.tone(420+S.tally[i]*80,.07);Fx.buzz(8);
+      await wait(420);
+    }
+  }
+  if(S!==me)return;
+  $("skipBtn").hidden=true;
+  S.culprit=r.culprit;S.stampOut=true;S.popOut=true;
+  $("live").textContent=`${nameOf(r.culprit)} ${S.tally[r.culprit]} 票，出局`;
+  Fx.stamp();renderRows();
+  await wait(skip?150:500);if(S!==me)return;
+  if(r.need_comeback){
+    $("comeback").hidden=false;$("backGuess").value="";$("backErr").textContent="";
+    $("comeback").scrollIntoView({block:"center",behavior:"smooth"});
+    return;
+  }
+  finish(r);
+}
+$("skipBtn").onclick=()=>{skip=true};
+$("backForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const g=$("backGuess").value.trim();
+  if(g.length<2){$("backErr").textContent="至少打兩個字。";return}
+  let r;
+  try{r=await rpc("uc_comeback",{p_round:S.id,p_player:player(),p_guess:g})}
+  catch{$("backErr").textContent="送出失敗，請再試一次。";return}
+  if(r.error==="own"){$("backErr").textContent="那是你自己的詞，再想想。";return}
+  if(r.error==="short"){$("backErr").textContent="至少打兩個字。";return}
+  if(r.error)return fail("這一題已經結束了。");
+  $("comeback").hidden=true;finish(r);
+});
+function finish(f){
+  const before=rankOf(stats.score);
+  S.result=f;S.phase="end";S.popSpy=true;Fx.stamp();
+  stats=f.stats;
+  const yv=f.your_votes,others=5-Math.max(0,yv-(f.pick===5?1:0));
+  const culpritName=f.culprit===5?"你":S.seats[f.culprit].name;
+  let t,d;
+  if(f.you_spy){
+    if(f.culprit===5){if(f.back){t="絕地翻盤";d="你被抓了，但打中多數人的詞，反殺全桌。"}else{t="當場抓包";d=`你是臥底，得到 ${yv} 票，翻盤也失敗。`}}
+    else if(f.pick===5){t="有自知之明";d="你發現自己是臥底，還敢承認。"}
+    else{t="影帝";d=`你是臥底，換算五票裡騙過 ${others} 票。`}
+  }else{
+    if(f.pick===5){t="自己嚇自己";d="你不是臥底，卻投了自己。"}
+    else if(f.picked_spy&&f.sure){t="鐵口直斷";d="你押了有把握，也真的抓到臥底。"}
+    else if(f.picked_spy){t="神探";d=`你抓到臥底${yv?`，自己也吃了 ${yv} 票`:""}。`}
+    else if(f.sure){t="自信過剩";d="你押了有把握，結果投錯人。"}
+    else if(f.culprit===5){t="含冤出局";d=`你不是臥底，但被投了 ${yv} 票。`}
+    else{t="冤枉好人";d="你投錯人，真正的臥底還在笑。"}
+    if(f.bot_back)d+=` ${culpritName} 雖然被抓，卻猜中你的詞，翻盤了。`;
+  }
+  S.title=t;
+  if(S.mode==="daily"){dailyDone=true}
+  $("word").classList.add("open");$("wordLabel").textContent="你的詞";
+  $("note").textContent=(f.you_spy?"你拿到的是不同的詞。":"你和大多數人同一個詞。")+" 票數依過去玩家的判斷換算。";
+  $("live").hidden=true;
+  renderRows();renderMeta();renderDaily();
+  const after=rankOf(stats.score),nr=nextRank(stats.score);
+  const v=$("verdict");v.hidden=false;v.innerHTML="";
+  const mk=(c,x)=>{const e=document.createElement("div");e.className=c;e.textContent=x;return e};
+  v.append(mk("t",t),mk("d",d));
+  if(S.friend)v.append(mk("d",S.seats.find(x=>x.friend)&&f.spy_seat===S.seats.find(x=>x.friend).i?`${S.friend} 真的是臥底。`:`${S.friend} 不是臥底。`));
+  v.append(mk("pts",`${f.pts>=0?"+":""}${f.pts} 分・連勝 ${stats.streak}・最佳 ${stats.best}`));
+  v.append(mk("pts",after!==before?`階級變動：${before} → ${after}`:nr?`${after}，再 ${nr[0]-stats.score} 分升${nr[1]}`:`最高階級：${after}`));
+  const pr=document.createElement("div");pr.className="pair";
+  [["多數人的詞",f.civ],["臥底的詞",f.spy]].forEach(([a,b])=>{const c=document.createElement("div");const s=document.createElement("span"),w=document.createElement("b");s.textContent=a;w.textContent=b;c.append(s,w);pr.append(c)});
+  v.append(pr);
+  buildActions(t);
+  loadHome();
+  scrollTo({top:0,behavior:"smooth"});
+}
+
+/* Sharing */
+function buildActions(t){
+  const a=$("actions");a.hidden=false;a.innerHTML="";
+  const link=`${location.origin}${location.pathname}#c-${S.id}`;
+  const text=`誰是臥底\n我的稱號：${t}\n我的一句話：「${S.mine}」\n猜猜我拿到什麼詞？\n${link}`;
+  const mkBtn=(cls,txt,fn)=>{const b=document.createElement("button");b.className="go "+cls;b.textContent=txt;b.onclick=()=>fn(b);a.append(b)};
+  mkBtn("alt","複製戰績",b=>copy(text,b));
+  mkBtn("alt","挑戰朋友",b=>copy(`${S.mine ? "這句是我講的，你猜我是不是臥底：\n" : ""}${link}`,b));
+  mkBtn("alt","產生結算圖",()=>showImage(t));
+  mkBtn("","下一題",()=>{if(location.hash)history.replaceState(null,"",location.pathname);start("random");scrollTo({top:0,behavior:"smooth"})});
+}
+async function copy(text,b){
+  try{await navigator.clipboard.writeText(text);b.textContent="已複製"}
+  catch{b.textContent="請手動複製";const box=$("share");box.hidden=false;box.innerHTML="";const x=document.createElement("textarea");x.readOnly=true;x.value=text;x.setAttribute("aria-label","要複製的文字");box.append(x);x.select()}
+}
+function wrapLines(c,text,maxW){
+  const out=[];let line="";
+  for(const ch of text){if(c.measureText(line+ch).width>maxW){out.push(line);line=ch}else line+=ch}
+  if(line)out.push(line);return out;
+}
+async function showImage(t){
+  try{await document.fonts.ready}catch{}
+  const css=getComputedStyle(document.documentElement);
+  const col=n=>css.getPropertyValue(n).trim();
+  const serif=(n)=>`900 ${n}px "Noto Serif TC","Songti TC",serif`,sans=(w,n)=>`${w} ${n}px "Noto Sans TC","PingFang TC",sans-serif`;
+  const cv=document.createElement("canvas");cv.width=1080;cv.height=1350;const c=cv.getContext("2d");
+  c.fillStyle=col("--ground");c.fillRect(0,0,1080,1350);
+  c.fillStyle=col("--paper");c.fillRect(48,48,984,1254);
+  c.fillStyle=col("--ink");c.font=serif(58);c.textAlign="left";c.fillText("誰是臥底",96,136);
+  c.font=sans(700,38);c.textAlign="right";c.fillText(`${rankOf(stats.score)}・連勝 ${stats.streak||0}`,984,132);
+  c.textAlign="left";c.fillRect(96,168,888,5);
+  let size=150;c.font=serif(size);while(c.measureText(t).width>780&&size>70){size-=6;c.font=serif(size)}
+  const tw=c.measureText(t).width;
+  c.save();c.translate(540,312);c.rotate(-.04);
+  c.strokeStyle=col("--stamp");c.lineWidth=10;c.strokeRect(-tw/2-34,-size*.72,tw+68,size*1.34);
+  c.fillStyle=col("--stamp");c.textAlign="center";c.textBaseline="middle";c.fillText(t,0,8);c.restore();
+  c.textAlign="left";c.textBaseline="alphabetic";
+  c.fillStyle=col("--ink-soft");c.font=sans(700,38);c.fillText("我的一句話",96,540);
+  const fs=S.mine.length<=10?104:S.mine.length<=18?86:68,lh=fs*1.5;
+  c.font=sans(900,fs);const ls=wrapLines(c,"「"+S.mine+"」",860);
+  let y=580;
+  ls.forEach(l=>{c.fillStyle=col("--marker");c.fillRect(88,y,Math.min(904,c.measureText(l).width+24),lh-10);c.fillStyle=col("--ink");c.fillText(l,100,y+fs*1.08);y+=lh});
+  c.fillStyle=col("--ink");c.font=serif(66);c.fillText("猜猜我拿到什麼詞？",96,1120);
+  c.fillRect(96,1158,420,84);
+  c.font=sans(700,34);c.textAlign="right";c.fillStyle=col("--ink-soft");c.fillText("happydog.tw",984,1214);c.textAlign="left";
+  const box=$("share");box.hidden=false;box.innerHTML="";
+  const img=document.createElement("img");img.alt=`誰是臥底結算圖，稱號${t}`;img.src=cv.toDataURL("image/png");
+  const save=document.createElement("button");save.className="go";save.textContent="存圖片";
+  const tip=document.createElement("p");tip.className="note";tip.textContent="手機也可以長按圖片儲存。";
+  save.onclick=async()=>{const blob=await new Promise(r=>cv.toBlob(r,"image/png"));const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="誰是臥底.png";a.click()};
+  box.append(img,save,tip);box.scrollIntoView({block:"nearest",behavior:"smooth"});
+}
+
+$("cat").onchange=()=>{store.set("wd-cat",$("cat").value);start("random")};
+$("dailyBtn").onclick=()=>start("daily");
+$("mute").onclick=()=>{muted=!muted;store.set("wd-mute",muted);renderMute()};
+$("tut").hidden=store.get("wd-tut",false);
+$("tutOk").onclick=()=>{store.set("wd-tut",true);$("tut").hidden=true};
+$("retry").onclick=()=>{$("fail").hidden=true;if(S&&S.phase==="vote")return;start("random")};
+$("nick").value=store.get("wd-name","")||"";
+renderMute();renderMeta();
+loadHome();
+{const m=location.hash.match(/^#c-([0-9a-f-]{36})$/);if(m)start("challenge",m[1]);else start("random");}
+window.addEventListener("hashchange",()=>{const m=location.hash.match(/^#c-([0-9a-f-]{36})$/);if(m)start("challenge",m[1])});
+</script>
+
+</body>
+</html>
