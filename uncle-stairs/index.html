@@ -167,7 +167,12 @@ const Snd=(()=>{let c=null,on=store.get('dgSound')!=='off',timer=0,next=0,pos=0,
  return{init,isOn:()=>on,toggle(){on=!on;store.set('dgSound',on?'on':'off');if(on&&playing)play();else halt();return on},
   musicOn(){playing=true;play()},musicOff(){playing=false;halt()},
   land(){tone(150,.05,'square',.035)},spring(){tone(240,.16,'square',.05,720)},hurt(){tone(170,.22,'sawtooth',.08,55)},crack(){tone(420,.1,'triangle',.06,90)},
-  zone(){tone(392,.1);setTimeout(()=>tone(523,.16),100)},die(){tone(330,.7,'square',.06,40)}}})();
+  zone(){tone(392,.1);setTimeout(()=>tone(523,.16),100)},
+  /* 大叔的慘叫：合成人聲母音「啊——」，破音拉高後一路往下掉，尾音收成「嗚」 */
+  die(){if(!c||!on)return;if(c.state==='suspended')c.resume();const t=c.currentTime,end=t+1.3,out=c.createGain();out.gain.setValueAtTime(.0001,t);out.gain.exponentialRampToValueAtTime(.3,t+.04);out.gain.setValueAtTime(.3,t+.75);out.gain.exponentialRampToValueAtTime(.0001,end);
+   const shape=c.createWaveShaper(),cv=new Float32Array(257);for(let i=0;i<257;i++){const x=i/128-1;cv[i]=Math.tanh(x*2.4)}shape.curve=cv;shape.connect(out);out.connect(c.destination);
+   [[850,5,1,430],[1300,6,.7,780],[2700,8,.25,2300]].forEach(([f,q,a,to])=>{const b=c.createBiquadFilter(),m=c.createGain();b.type='bandpass';b.Q.value=q;b.frequency.setValueAtTime(f,t);b.frequency.setValueAtTime(f,t+.7);b.frequency.exponentialRampToValueAtTime(to,end);m.gain.value=a*2.2;b.connect(m).connect(shape);[['sawtooth',0,1],['square',-14,.25]].forEach(([ty,de,lv])=>{const o=c.createOscillator(),l=c.createGain();o.type=ty;o.detune.value=de;l.gain.value=lv;o.frequency.setValueAtTime(230,t);o.frequency.exponentialRampToValueAtTime(370,t+.13);o.frequency.setValueAtTime(350,t+.5);o.frequency.exponentialRampToValueAtTime(82,end);const v=c.createOscillator(),vg=c.createGain();v.frequency.value=8.5;vg.gain.setValueAtTime(5,t);vg.gain.linearRampToValueAtTime(28,t+.6);v.connect(vg).connect(o.frequency);o.connect(l).connect(b);o.start(t);v.start(t);o.stop(end);v.stop(end)})})},
+  thud(){tone(120,.28,'sine',.28,38)}}})();
 
 /* ---------- 美術 ---------- */
 const PAL={u:'#2f6fd0',k:'#2a2620',s:'#e0a878',w:'#f4f1e6',r:'#d92b1f',b:'#6b7a4a',n:'#70431f',e:'#17140c'};
@@ -202,7 +207,8 @@ const W=200,CEIL=10,PW=10,PH=16,SP=46,MAXHP=12,WALL=8;
 let H=400,S=null,mode='home';
 const cv=$('#cv'),g=cv.getContext('2d');
 const lifeEl=$('#life');for(let i=0;i<MAXHP;i++)lifeEl.append(document.createElement('i'));
-const speedAt=f=>Math.min(44+f*.3,150);
+/* 每秒加快 0.9，約 2 分半到頂；移動和墜落一起加快才接得到 */
+const speedAt=t=>Math.min(40+t*.9,170);
 const rand=(a,b)=>a+Math.random()*(b-a);
 
 function fit(fresh){const st=$('#stage'),aw=st.clientWidth,ah=st.clientHeight-(parseFloat(getComputedStyle(st).paddingBottom)||0);if(!aw||!ah)return;
@@ -227,21 +233,21 @@ function updateHud(){if(S.floor!==hudFloor){hudFloor=S.floor;$('#fl').textConten
  if(S.hp!==hudHp){hudHp=S.hp;[...lifeEl.children].forEach((e,i)=>e.classList.toggle('on',i<S.hp));lifeEl.classList.toggle('low',S.hp<=4);lifeEl.setAttribute('aria-label','血量 '+S.hp+' 格')}}
 function showZone(t){const z=$('#zone');z.textContent=t;z.classList.add('on');clearTimeout(zoneTimer);zoneTimer=setTimeout(()=>z.classList.remove('on'),1400)}
 function damage(n){S.hp=Math.max(0,S.hp-n);S.flash=.25;S.hurtT=.4;if(!calm)S.shake=.25;Snd.hurt();if(S.hp===0)kill()}
-function kill(){if(S.dead)return;S.dead=true;S.on=null;S.vy=-170;Snd.die()}
+function kill(){if(S.dead)return;S.dead=true;S.on=null;S.vy=-170;Snd.musicOff();Snd.die()}
 
 function step(dt){S.t+=dt;S.flash=Math.max(0,S.flash-dt);S.shake=Math.max(0,S.shake-dt);S.inv=Math.max(0,S.inv-dt);S.noLand=Math.max(0,S.noLand-dt);S.hurtT=Math.max(0,S.hurtT-dt);S.fade=Math.max(0,S.fade-dt);
- if(S.dead){S.deadT+=dt;S.vy+=620*dt;S.y+=S.vy*dt;if(S.y>H+30&&S.deadT>.5)gameOver();return}
- const v=speedAt(S.floor),d=v*dt;S.scroll+=d;const nf=1+Math.floor(S.scroll/SP);
+ if(S.dead){S.deadT+=dt;S.vy+=620*dt;S.y+=S.vy*dt;if(S.y>H+30&&S.deadT>1.35){Snd.thud();gameOver()}return}
+ const v=speedAt(S.t),d=v*dt,boost=v-40;S.scroll+=d;const nf=1+Math.floor(S.scroll/SP);
  if(nf!==S.floor){S.floor=nf;const z=zoneAt(nf);if(z!==S.zone){S.prevZone=S.zone;S.zone=z;S.fade=1.5;showZone('抵達 '+z.name);Snd.zone()}}
  for(const p of S.plats){p.y0=p.y;p.y-=d;if(p.gone)p.gone+=dt}
  S.plats=S.plats.filter(p=>p.y>-14&&p.gone<.5);
  let last=S.plats.length?S.plats[S.plats.length-1].y:H;while(last<H+SP*2){last+=SP;spawn(last)}
- let vx=S.input*108;if(S.input){S.face=S.input;S.walk+=dt}
+ let vx=S.input*(108+boost*.25);if(S.input){S.face=S.input;S.walk+=dt}
  if(S.on){const p=S.on;if(p.type==='belt')vx+=p.dir*42;
   if(p.type==='flip'){p.timer+=dt;if(p.timer>.42&&!p.gone){p.gone=.001;Snd.crack();S.on=null;S.vy=0}}
   if(S.on){S.y=p.y-PH;if(S.x+PW-1<=p.x||S.x+1>=p.x+p.w){S.on=null;S.vy=-v*.1}}}
  S.x=Math.max(WALL,Math.min(W-WALL-PW,S.x+vx*dt));
- if(!S.on){const b0=S.y+PH;S.vy=Math.min(S.vy+640*dt,280);S.y+=S.vy*dt;const b1=S.y+PH;
+ if(!S.on){const b0=S.y+PH;S.vy=Math.min(S.vy+(640+boost*2)*dt,280+boost*.6);S.y+=S.vy*dt;const b1=S.y+PH;
   if(!S.noLand)for(const p of S.plats){if(p.gone)continue;if(b0<=p.y0+1&&b1>=p.y&&S.x+PW-1>p.x&&S.x+1<p.x+p.w){land(p);break}}}
  if(S.y<CEIL&&!S.dead){S.y=CEIL;if(!S.inv){S.inv=.8;damage(5)}S.on=null;S.noLand=.3;S.vy=Math.max(S.vy,50)}
  if(S.y>H+8&&!S.dead){S.hp=0;kill();S.vy=0}
