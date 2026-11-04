@@ -195,7 +195,7 @@ summary{font-weight:900;cursor:pointer}
     <div class="board" id="board"></div>
   </section>
 
-  <p class="demo">同桌的句子來自之前的玩家，人數不足時由標記「系統角色」的角色補上。句子通過審核後才會給別人看。</p>
+  <p class="demo">同桌的句子來自之前的玩家，人數不足時由標記「系統角色」的角色補上。你的句子會給之後的玩家看，不當內容可以檢舉。</p>
 </main>
 
 <script>
@@ -361,8 +361,6 @@ $("form").addEventListener("submit",async e=>{
   if(r.error){$("err").textContent=SAY_ERR[r.error]||"這句不能用，換個說法。";return}
   store.set("wd-name",name);
   $("err").textContent="";$("form").hidden=true;Fx.tone(880,.07);Fx.buzz();
-  /* Review runs in the background; a line stays out of the pool until it passes */
-  fetch(`${API.url}/functions/v1/undercover-moderate`,{method:"POST",headers:{apikey:API.key},keepalive:true}).catch(()=>{});
   S.mine=t;S.seats=[...S.seats,...r.seats];S.phase="after";S.shown=4;renderRows();
   const me=S;await speak(6,me);if(S!==me)return;
   S.phase="vote";
