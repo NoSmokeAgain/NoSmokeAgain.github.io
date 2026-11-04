@@ -250,11 +250,12 @@ function action(){
   const P=G.P,N=G.next;
   if(!N.started){
     if(P.x<N.x-32)return;
-    N.started=true;tone(600,.08,.12,'triangle');
+    N.started=true;N.t=tick;tone(600,.08,.12,'triangle');
     const d=N.x-P.x;
     if(d>markGap()+5)cast(`${P_name()}：太早喊了！`,1.4);
     return;
   }
+  if(tick-(N.t||0)<.4)return; /* 起跑鍵多按一下不算遞棒 */
   const gap=N.x-P.x;
   if(gap>3.6){drop();return}
   if(gap<.5)handoff('bump');
