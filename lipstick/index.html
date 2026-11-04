@@ -78,7 +78,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 #lbSend:disabled{opacity:.5}
 #lbMsg{margin:9px 0 0;font-weight:700;line-height:1.6}
 #lbMsg:empty{display:none}
-.lbtabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 6px}
+#lbGap{margin:4px 0 0;font-weight:700;color:var(--red);line-height:1.6}
+#lbGap:empty{display:none}
+.lbtabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:10px 0 6px}
 .lbtabs button{border:0;background:#f4e3e6;border-radius:8px;padding:8px;font-weight:700;color:var(--mute)}
 .lbtabs button[aria-selected="true"]{background:var(--ink);color:var(--cream)}
 #lbList{list-style:none;margin:0;padding:0;font-variant-numeric:tabular-nums}
@@ -107,7 +109,7 @@ button{font:inherit;color:inherit;cursor:pointer}
   <p class="tagline">十關，公車、貓、颱風都想害妳。</p>
   <button class="btn" id="start">開始擦</button>
   <button class="btn alt" id="stage2" hidden>直接玩後 10 關</button>
-  <span style="font-size:11px;opacity:.6">版本 9</span>
+  <span style="font-size:11px;opacity:.6">版本 10</span>
 </div>
 <div id="play" class="screen" hidden>
   <button class="snd" aria-pressed="true"></button>
@@ -132,11 +134,12 @@ button{font:inherit;color:inherit;cursor:pointer}
   <section class="board" aria-label="上榜">
     <form id="lbForm"><input id="lbName" maxlength="8" placeholder="取個暱稱上榜（最多 8 字）" autocomplete="off" aria-label="暱稱"><button id="lbSend" type="submit">上榜</button></form>
     <p id="lbMsg" role="status"></p>
+    <p id="lbGap"></p>
   </section>
   <div class="acts"><button class="btn" id="rUp" style="background:var(--red)" hidden>進入後 10 關</button><button class="btn" id="rShare" disabled>分享卡片</button><button class="btn alt" id="rAgain">再擦一次</button></div>
   <section class="board" aria-label="排行榜">
     <h2>排行榜</h2>
-    <div class="lbtabs" role="tablist"><button role="tab" data-p="week" aria-selected="true">本週榜</button><button role="tab" data-p="all" aria-selected="false">總榜</button></div>
+    <div class="lbtabs" role="tablist"><button role="tab" data-p="week" aria-selected="true">本週榜</button><button role="tab" data-p="queen" aria-selected="false">女王榜</button><button role="tab" data-p="all" aria-selected="false">歷史榜</button></div>
     <ol id="lbList"></ol>
   </section>
   <div class="tally" id="tally"></div>
@@ -441,19 +444,29 @@ function pickEnd(avg,cover,spill){if(cover<.15)return END.none;if(spill>1.1)retu
 const LB={url:'https://jcqjuxdfauoogggvmvsb.supabase.co/rest/v1/rpc/',key:'sb_publishable_lxibDGz3bN4P5lnKFNeraA_9PXimKhn',game:'lipstick'};
 function lbPlayer(){let id='';try{id=localStorage.getItem('hd_player')||''}catch(e){}if(!/^[0-9a-f-]{36}$/.test(id)){id=crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g,()=>(crypto.getRandomValues(new Uint8Array(1))[0]&15).toString(16));try{localStorage.setItem('hd_player',id)}catch(e){}}return id}
 async function lbCall(fn,body){const c=new AbortController(),to=setTimeout(()=>c.abort(),8000);try{const r=await fetch(LB.url+fn,{method:'POST',headers:{apikey:LB.key,'Content-Type':'application/json'},body:JSON.stringify(body),signal:c.signal});if(!r.ok)throw new Error('http '+r.status);return await r.json()}finally{clearTimeout(to)}}
-let lbPeriod='week',lbRun=null;const lbGame=()=>STAGES[stage][2];
-async function lbLoad(){const ol=$('#lbList');try{const rows=await lbCall('lb_top',{p_game:lbGame(),p_period:lbPeriod,p_player:lbPlayer(),p_limit:20});ol.replaceChildren();if(!rows.length){const li=document.createElement('li');li.className='empty';li.textContent='還沒有人上榜，妳可以當第一個。';ol.append(li);return}rows.forEach(r=>{const li=document.createElement('li');if(r.is_me)li.className='me';[String(r.rank),r.nickname,r.score+'%'].forEach(v=>{const s=document.createElement('span');s.textContent=v;li.append(s)});ol.append(li)})}catch(e){ol.replaceChildren();const li=document.createElement('li');li.className='empty';li.textContent='排行榜暫時連不上，稍後再試。';ol.append(li)}}
-function lbInit(run){lbRun=run;lbPeriod='week';$('#lbMsg').textContent='';$('#lbSend').disabled=false;$('#lbSend').textContent='上榜';try{$('#lbName').value=localStorage.getItem('hd_nick')||''}catch(e){}document.querySelectorAll('.lbtabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.p=='week'));lbLoad()}
-document.querySelector('.lbtabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lbPeriod=b.dataset.p;document.querySelectorAll('.lbtabs button').forEach(x=>x.setAttribute('aria-selected',x==b));Snd.click();lbLoad()});
-$('#lbForm').addEventListener('submit',async e=>{e.preventDefault();const name=$('#lbName').value.trim(),msg=$('#lbMsg'),btn=$('#lbSend');if(!name){msg.textContent='先取個暱稱。';return}if(!lbRun)return;btn.disabled=true;msg.textContent='送出中…';
+const LB_TABS={week:['lipstick','week'],queen:['lipstick2','all'],all:['lipstick','all']};
+let lbTab='week',lbRun=null;const lbGame=()=>STAGES[stage][2],lbPer=()=>stage==0?'week':'all';
+function lbTitle(rank,total){if(total<20)return '';const q=rank/total*100;return q<=1?'彩妝女王':q<=10?'手比外科醫師穩':q<=50?'出門沒問題':'小丑實習生'}
+function lbRow(r){const li=document.createElement('li');if(r.is_me)li.className='me';[String(r.rank),r.nickname,r.score+'%'].forEach(v=>{const s=document.createElement('span');s.textContent=v;li.append(s)});return li}
+async function lbLoad(){const ol=$('#lbList'),[game,per]=LB_TABS[lbTab],say=t=>{const li=document.createElement('li');li.className='empty';li.textContent=t;return li};
+ try{const[top,near]=await Promise.all([lbCall('lb_top',{p_game:game,p_period:per,p_player:lbPlayer(),p_limit:10}),lbCall('lb_context',{p_game:game,p_period:per,p_player:lbPlayer()}).catch(()=>[])]);ol.replaceChildren();
+  if(!top.length){ol.append(say(lbTab=='queen'?'女王榜還沒有人，晉級後就能上榜。':'還沒有人上榜，妳可以當第一個。'));return}
+  top.forEach(r=>ol.append(lbRow(r)));const last=top[top.length-1].rank,rest=near.filter(r=>r.rank>last);if(rest.length){if(rest[0].rank>last+1){const li=say('⋯');ol.append(li)}rest.forEach(r=>ol.append(lbRow(r)))}
+ }catch(e){ol.replaceChildren(say('排行榜暫時連不上，稍後再試。'))}}
+function lbSetTab(t){lbTab=t;document.querySelectorAll('.lbtabs button').forEach(x=>x.setAttribute('aria-selected',x.dataset.p==t))}
+function lbInit(run){lbRun=run;lbSetTab(stage==0?'week':'queen');$('#lbMsg').textContent='';$('#lbGap').textContent='';$('#lbSend').disabled=false;$('#lbSend').textContent='上榜';try{$('#lbName').value=localStorage.getItem('hd_nick')||''}catch(e){}lbLoad()}
+document.querySelector('.lbtabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lbSetTab(b.dataset.p);Snd.click();lbLoad()});
+$('#lbForm').addEventListener('submit',async e=>{e.preventDefault();const name=$('#lbName').value.trim(),msg=$('#lbMsg'),gap=$('#lbGap'),btn=$('#lbSend');if(!name){msg.textContent='先取個暱稱。';return}if(!lbRun)return;btn.disabled=true;msg.textContent='送出中…';gap.textContent='';
  try{const res=await lbCall('lb_submit',{p_game:lbGame(),p_player:lbPlayer(),p_nickname:name,p_score:lbRun.avg,p_details:lbRun.details});
-  if(res!='ok'){btn.disabled=false;msg.textContent={bad_name:'這個暱稱不能用，換一個。',too_fast:'送太快了，等 30 秒再試。',too_busy:'現在人太多，等一下再試。',bad_score:'這次的成績無法上榜。'}[res]||'送出失敗，再試一次。';return}
+  if(res!='ok'){btn.disabled=false;msg.textContent={bad_name:'這個暱稱不能用，換一個。',too_fast:'送太快了，等 30 秒再試。',too_busy:'現在人太多，等一下再試。',bad_score:'這次的成績無法上榜。',bad_game:'這個榜還沒開放。'}[res]||'送出失敗，再試一次。';return}
   try{localStorage.setItem('hd_nick',name)}catch(err){}
   btn.textContent='已上榜';
-  const[w]=await lbCall('lb_my_rank',{p_game:lbGame(),p_period:'week',p_player:lbPlayer()});
-  let line=w&&w.my_rank?`本週第 ${w.my_rank} 名`:'已上榜';if(w&&w.total>=5)line+=`，贏過 ${w.beat_pct}% 的人`;if(w&&w.my_score>lbRun.avg)line+=`（妳的最佳是 ${w.my_score}%）`;msg.textContent=line+'。';Snd.scene();
-  lbLoad();
-  if(w&&w.my_rank){const rankLine=w.total>=5?`本週第 ${w.my_rank} 名，贏過 ${w.beat_pct}% 的人`:`本週第 ${w.my_rank} 名`;applyCard({avg:lbRun.avg,end:lbRun.end,rankLine},true)}
+  const per=lbPer(),label=stage==0?'本週':'女王榜',[[w],near]=await Promise.all([lbCall('lb_my_rank',{p_game:lbGame(),p_period:per,p_player:lbPlayer()}),lbCall('lb_context',{p_game:lbGame(),p_period:per,p_player:lbPlayer()}).catch(()=>[])]);
+  if(!w||!w.my_rank){msg.textContent='已上榜。';lbLoad();return}
+  const title=lbTitle(w.my_rank,w.total),pct=w.total>=20?`，贏過 ${w.beat_pct}% 的人`:'';msg.textContent=`${title?title+'！':''}${label}第 ${w.my_rank} 名${pct}${w.my_score>lbRun.avg?`（妳的最佳是 ${w.my_score}%）`:''}。`;
+  const above=near.find(r=>r.rank==w.my_rank-1);gap.textContent=above?`再多 ${above.score-w.my_score+1}% 就超過第 ${above.rank} 名：${above.nickname}`:(w.my_rank==1?'目前沒有人贏妳。':'');
+  Snd.scene();lbLoad();
+  const rankLine=title?`${title}・${w.total>=20?`贏過 ${w.beat_pct}% 的人`:`${label}第 ${w.my_rank} 名`}`:`${label}第 ${w.my_rank} 名`;applyCard({avg:lbRun.avg,end:lbRun.end,rankLine},true)
  }catch(err){btn.disabled=false;msg.textContent='連線失敗，再試一次。'}});
 let cardURL='',cardFile=null;
 async function makeCard(res){
